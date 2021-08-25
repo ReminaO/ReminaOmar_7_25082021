@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt'); // import Bcrypt module
-const User = require('../models/User'); // import modèle user
+const User = require('../models/user'); // import modèle user
 const jwt = require('jsonwebtoken'); // import jsonwebtoken module
 const CryptoJS = require("crypto-js"); // import crypto tool
 
@@ -13,7 +13,7 @@ exports.signup = (req, res, next) => {
         password: hash
     });
     
-    user.save()
+    User.save()
         .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
         .catch(error => res.status(400).json({ error }));
     })

@@ -10,10 +10,13 @@ exports.signup = (req, res, next) => {
     .then(hash => {
     const user = new User({
         email: CryptoJS.SHA256(req.body.email), //cryptage de l'adresse mail avec la fonction crypto
-        password: hash
+        password: hash,
+        userName: req.body.username,
+        bio: req.body.bio,
+        isAdmin: req.body.isAdmin
     });
     
-    User.save()
+    user.save()
         .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
         .catch(error => res.status(400).json({ error }));
     })

@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 
+const messagesRoutes = require('./routes/messages');
 const userRoutes = require('./routes/user');
 
 const app = express();
@@ -17,6 +18,8 @@ app.use(bodyParser.json());
   
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
+//Définition du chemin des routes
+app.use('/api/messages', messagesRoutes);
 app.use('/api/auth', userRoutes);
 
 module.exports = app;

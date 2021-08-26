@@ -13,6 +13,6 @@ const profileCtrl = require('../controllers/profile');
 
 //Routes pour appeler le controller profile
 router.get('/:id', auth, profileCtrl.getOneProfile);
-router.put('/:id', auth, multer, messagesCtrl.modifyProfile)
+router.put('/:id', auth, multer, profileCtrl.modifyProfile)
 
 module.exports = router;//Export du fichier

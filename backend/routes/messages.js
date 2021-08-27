@@ -16,7 +16,7 @@ router.post('/', auth, multer, messagesCtrl.createMessages);
 router.post('/:id/like', auth, messagesCtrl.likeMessages);
 router.put('/:id', auth, multer, messagesCtrl.modifyMessages)
 router.delete('/:id/', auth, messagesCtrl.deleteMessages);
-router.get('/:id', auth, messagesCtrl.getOneMessages);
+router.get('/:id/', auth, messagesCtrl.getOneMessage);
 router.get('/', auth, messagesCtrl.getAllMessages);
 
 

@@ -1,8 +1,9 @@
+//import des modules
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 
-const profileRoutes = require('./routes/profile')
+//import des routes
 const messagesRoutes = require('./routes/messages');
 const userRoutes = require('./routes/user');
 
@@ -21,7 +22,6 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 
 //Définition du chemin des routes
 app.use('/api/messages', messagesRoutes);
-app.use('/api/auth', userRoutes);
-app.use('/api/profile', profileRoutes);
+app.use('/api/user', userRoutes);
 
 module.exports = app;

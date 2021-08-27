@@ -9,6 +9,7 @@ const userRoutes = require('./routes/user');
 
 const app = express();
 
+//Mise en place des headers pour autoriser la communication entre nos deux serveurs front et back
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
@@ -17,7 +18,8 @@ app.use((req, res, next) => {
   });
 
 app.use(bodyParser.json());
-  
+
+//Définition du chemin contenant les images
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 //Définition du chemin des routes

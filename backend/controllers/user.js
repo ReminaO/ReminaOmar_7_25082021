@@ -10,7 +10,11 @@ exports.signup = (req, res, next) => {
     .then(hash => {
     const user = new User({
         email: CryptoJS.SHA256(req.body.email), //cryptage de l'adresse mail avec la fonction crypto
-        password: hash
+        password: hash,
+        username: req.body.username,
+        bio: req.body.bio,
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+        isAdmin: req.body.isAdmin
     });
     
     user.save()

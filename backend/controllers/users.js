@@ -14,7 +14,6 @@ exports.signup = (req, res, next) => {
         username: req.body.username,
         bio: req.body.bio,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-        isAdmin: req.body.isAdmin
     });
     
     user.save()

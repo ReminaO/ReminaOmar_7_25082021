@@ -1,8 +1,8 @@
-// Ipmport du model
-const Message = require('../models/like');
-
 //Import du module
 var asyncLib = require('async');
+
+// Import du model
+const Message = require('../models/like');
 
 // Constants
 const DISLIKED = 0;

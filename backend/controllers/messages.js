@@ -7,7 +7,7 @@ exports.createMessages = (req, res, next) => {
   // récupère et transforme chaine en objet js
   const messageObject = JSON.parse(req.body.message);
   // Efface L'id prédéfini pour en créer une nouvelle
-    delete messageObject._id;
+    delete messageObject.id;
     const message = new Message ({
       ...messageObject,
       attachement: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
@@ -29,18 +29,18 @@ exports.modifyMessages = (req, res, next) => {
     } : { ...req.body };
   
   // Met a jour la base de données avec les nouveaux éléments 
-    Message.updateOne({ _id: req.params.id }, { ...messageObject, _id: req.params.id })
+    Message.updateOne({ id: req.params.id }, { ...messageObject, id: req.params.id })
         .then(() => res.status(200).json({ message: 'Message modifiée !' }))
         .catch(error => res.status(400).json({ error }));
 };
 
 // Controllers por effacer une message grâce a l'ID
 exports.deleteMessages = (req, res, next) => {
-  Message.findOne({ _id: req.params.id })
+  Message.findOne({ id: req.params.id })
     .then(message => {
       const filename = message.imageUrl.split('/images/')[1];
       fs.unlink(`images/${filename}`, () => {
-        message.deleteOne({ _id: req.params.id })
+        message.deleteOne({ id: req.params.id })
         .then(() => res.status(200).json({ message: 'message supprimée !' }))
         .catch(error => res.status(400).json({ error }));
       });
@@ -51,7 +51,7 @@ exports.deleteMessages = (req, res, next) => {
 
 // Controllers pour afficher une message grâce a l'ID
 exports.getOneMessage = (req, res, next) => {
-    Message.findOne({ _id: req.params.id })
+    Message.findOne({ id: req.params.id })
         .then(message => res.status(200).json(message))
         .catch(error => res.status(404).json({ error }));
 };

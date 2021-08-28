@@ -1,6 +1,9 @@
 //Import des modules
 const fs = require('fs');
+
+//import des modèles
 const Message = require('../models/message');
+const User = require('../models/user');
 
 // Controllers pour créer une message
 exports.createMessages = (req, res, next) => {
@@ -12,6 +15,7 @@ exports.createMessages = (req, res, next) => {
       ...messageObject,
       attachement: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
       likes: 0,
+      userId: User.id
       
     });
   // sauvegarde la nouvelle message dans la bas de données
@@ -47,13 +51,6 @@ exports.deleteMessages = (req, res, next) => {
     })
     .catch(error => res.status(500).json({ error }));
     
-};
-
-// Controllers pour afficher une message grâce a l'ID
-exports.getOneMessage = (req, res, next) => {
-    Message.findOne({ id: req.params.id })
-        .then(message => res.status(200).json(message))
-        .catch(error => res.status(404).json({ error }));
 };
 
 // Controllers pour afficher toutes les messages

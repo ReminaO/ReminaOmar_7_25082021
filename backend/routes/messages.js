@@ -15,7 +15,6 @@ const messagesCtrl = require('../controllers/messages');
 router.post('/', auth, multer, messagesCtrl.createMessages);
 router.put('/:id', auth, multer, messagesCtrl.modifyMessages)
 router.delete('/:id/', auth, messagesCtrl.deleteMessages);
-router.get('/:id/', auth, messagesCtrl.getOneMessage);
 router.get('/', auth, messagesCtrl.getAllMessages);
 
 

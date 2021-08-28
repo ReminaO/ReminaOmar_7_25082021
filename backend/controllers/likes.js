@@ -6,7 +6,8 @@ const Message = require('../models/like');
 
 // Constants
 const DISLIKED = 0;
-const LIKED    = 1;
+const LIKED = 1;
+
 
 // Routes
 module.exports = {

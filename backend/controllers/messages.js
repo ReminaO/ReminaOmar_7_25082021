@@ -15,7 +15,7 @@ exports.createMessages = (req, res, next) => {
       ...messageObject,
       attachement: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
       likes: 0,
-      userId: User.id
+      userId: User.username
       
     });
   // sauvegarde la nouvelle message dans la bas de données
@@ -59,4 +59,3 @@ exports.getAllMessages = (req, res, next) => {
       .then(message => res.status(200).json(message))
       .catch(error => res.status(400).json({ error }));
 }
-

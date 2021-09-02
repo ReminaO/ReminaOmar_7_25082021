@@ -1,4 +1,4 @@
-const https = require('https');
+const http = require('http');
 
 const app = require('./app');
 
@@ -36,7 +36,7 @@ const errorHandler = error => {
   }
 };
 
-const server = https.createServer(app);
+const server = http.createServer(app);
 
 server.on('error', errorHandler);
 server.on('listening', () => {

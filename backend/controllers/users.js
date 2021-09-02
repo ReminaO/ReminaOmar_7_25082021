@@ -14,14 +14,13 @@ exports.signup = (req, res, next) => {
         username: req.body.username,
         bio: req.body.bio,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+        isAdmin: 0
     });
-    
     user.save()
         .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
         .catch(error => res.status(400).json({ error }));
     })
         .catch(error => res.status(500).json({ error }));
-    
 };
 
 // Controllers pour se connecter au site

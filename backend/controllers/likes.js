@@ -2,7 +2,7 @@
 var asyncLib = require('async');
 
 // Import du model
-const Message = require('../models/like');
+const models = require('../models');
 
 // Constants
 const DISLIKED = 0;
@@ -11,6 +11,7 @@ const LIKED = 1;
 
 // Routes
 module.exports = {
+  
   likeMessage: function(req, res) {
 
     // Params
@@ -200,84 +201,5 @@ module.exports = {
    });
   }
 }
-exports.likeMessages = (req, res, next) => {
-
-    const choice = {
-      LIKE: 1,
-      DISLIKE: -1,
-      RESET: 0,
-    }
-    const messageId = req.params.id;
-    const { userId, like: userChoice } = req.body;
-  
-    if (!(Number.isInteger(userChoice) && (userChoice >= -1 && userChoice <= 1))) {
-      console.log('error ');
-      return null
-    }
-  
-    Message.findOne({ _id: req.params.id })
-      .then(message => {
-        // Condition si la message n'est plus aimée ou n'est plus dislikée
-        if (userChoice === choice.RESET) {
-          console.log('reset all likes ')
-          removeUser(userId, message.usersLiked);
-          removeUser(userId, message.usersDisliked);
-        }
-      // Condition si la message est likée
-        if (userChoice === choice.LIKE) {
-          console.log('user liked the message ');
-          if (message.usersLiked.find(u => u === userId)) {
-            console.log('user already voted ‍');
-            return 'you have déjà voté !';
-          }
-          message['usersLiked'].push(userId);
-          message['likes'] = message['usersLiked'].length;
-  
-          if (message.usersDisliked.find(u => u === userId)) {
-            removeUser(userId, message.userDislikes);
-          }
-        }
-        // Condition si la message est dislikée
-        if (userChoice === choice.DISLIKE) {
-          console.log('user hate the message ');
-          if (message.usersDisliked.find(u => u === userId)) {
-            console.log('user already voted ‍');
-            return 'you have déjà voté !';
-          }
-          message['usersDisliked'].push(userId);
-          message['dislikes'] = message['usersDisliked'].length;
-  
-          if (message.usersLiked.find(u => u === userId)) {
-            removeUser(userId, message.usersLiked);
-          }
-        }
-  
-        message.likes = message.usersLiked.length;
-        message.dislikes = message.usersDisliked.length;
-  
-        //console.log(message)
-        const { usersLiked, usersDisliked, likes, dislikes } = message;
-        const fields = {
-          usersLiked, usersDisliked, likes, dislikes
-        }
-  
-        // Met a jour la base de données avec le nouveau statut
-        message.findByIdAndUpdate(messageId, fields, { new: true })
-          .then(messageLike => {
-            res.status(200).json({ message: 'Statut mis a jour !', messageLike })
-          })
-          .catch(error => res.status(500).json({ error }))
-      })
-      .catch(error => res.status(500).json({ error }));
-  }
-  
-  const removeUser = (userId, likesTab) => {
-    const index = likesTab.indexOf(userId);
-    if (index > -1) {
-      likesTab.splice(index, 1);
-    }
-  
-    return likesTab;
-  }  
   
   

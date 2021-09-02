@@ -38,15 +38,15 @@ module.exports = (sequelize, DataTypes) => {
     messageId: {
       type: DataTypes.INTEGER,
       references: {
-        model: Message,
-        key: id
+        model: "Message",
+        key: "id"
       }
     },
     userId: {
       type: DataTypes.INTEGER,
       references: {
-        model: User,
-        key: id
+        model: "User",
+        key: "id"
       }
     }
   }, {

@@ -15,8 +15,6 @@ exports.createMessages = (req, res, next) => {
       ...messageObject,
       attachement: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
       likes: 0,
-      userId: User.username
-      
     });
   // sauvegarde la nouvelle message dans la bas de données
     message.save()

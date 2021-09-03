@@ -15,6 +15,7 @@ const multer = require('../middleware/multer-config');
 router.post('/signup', userCtrl.signup);
 router.post('/login', userCtrl.login);
 router.get('/:id/profile', auth, userCtrl.getOneProfile);
-router.put('/:id/profile', auth, multer, userCtrl.modifyProfile)
+router.put('/:id/profile', auth, multer, userCtrl.modifyProfile);
+router.delete('/:id/profile', auth, userCtrl.deleteProfile);
 
 module.exports = router; // Export du fichier

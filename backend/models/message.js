@@ -13,13 +13,13 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       models.Message.belongsTo(models.User, {
         onDelete: 'cascade',
-        foreignKey: 'userId',
-        as: 'username',
+        foreignKey: {
+          allowNull: false
+        }
       })
     }
   };
   Message.init({
-    userId: DataTypes.INTEGER,
     title: DataTypes.STRING,
     content: DataTypes.STRING,
     attachement: DataTypes.STRING,

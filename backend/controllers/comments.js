@@ -10,7 +10,7 @@ exports.createComment = (req, res, next) => {
       const comment = new Comment ({
           ...commentObject,
           comment: req.body.post,
-          userName: req.body.username,
+          username: req.body.userName,
       });
     // sauvegarde la nouvelle comment dans la bas de données
       comment.save()
@@ -22,7 +22,11 @@ exports.createComment = (req, res, next) => {
 exports.deleteComment = (req, res, next) => {
     comment.findOne({ id: req.params.id })
     .then(comment => {
-        comment.deleteOne({ id: req.params.id })
+        comment.destroy({
+          where: {
+            id: req.params.id
+          }
+        })
         .then(() => res.status(200).json({ message: 'message supprimée !' }))
         .catch(error => res.status(400).json({ error }));
     });

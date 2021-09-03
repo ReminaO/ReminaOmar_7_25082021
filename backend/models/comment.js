@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       models.Comment.belongsTo(models.User, {
         onDelete: 'cascade',
         foreignKey: 'userId',
-        as: 'username',
+        as: 'user',
       });
 
       models.Comment.belongsTo(models.Message, {

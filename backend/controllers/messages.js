@@ -3,7 +3,6 @@ const fs = require('fs');
 
 //import des modèles
 const Message = require('../models/message');
-const User = require('../models/user');
 
 // Controllers pour créer une message
 exports.createMessages = (req, res, next) => {

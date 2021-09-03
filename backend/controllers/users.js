@@ -36,9 +36,9 @@ exports.login = (req, res, next) => {
                         return res.status(401).json({ error: 'Mot de passe incorrect !' });
                     }
                     res.status(200).json({
-                        userId: user._id,
+                        userId: user.id,
                         token: jwt.sign(
-                            { userId: user._id },
+                            { userId: user.id },
                             'RANDOM_TOKEN_SECRET',
                             { expiresIn: '24h' },
                         )
@@ -67,18 +67,22 @@ exports.modifyProfile = (req, res, next) => {
     
     // Met a jour la base de données avec les nouveaux éléments 
       User.updateOne({ id: req.params.id }, { ...userObject, id: req.params.id })
-          .then(() => res.status(200).json({ message: 'Profile modifiée !' }))
+          .then(() => res.status(200).json({ message: 'Profil modifié !' }))
           .catch(error => res.status(400).json({ error }));
 };
   
 // Controllers por effacer un profil grâce a l'ID
-exports.deleteMessages = (req, res, next) => {
+exports.deleteProfile = (req, res, next) => {
     User.findOne({ id: req.params.id })
       .then(user => {
         const filename = user.imageUrl.split('/images/')[1];
         fs.unlink(`images/${filename}`, () => {
-          user.destroy()
-          .then(() => res.status(200).json({ message: 'message supprimée !' }))
+            user.destroy({
+                where: {
+            id: req.params.id
+          }
+        })
+          .then(() => res.status(200).json({ message: 'Profil supprimé !' }))
           .catch(error => res.status(400).json({ error }));
         });
       })

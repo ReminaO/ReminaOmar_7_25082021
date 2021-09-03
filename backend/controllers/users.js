@@ -57,7 +57,7 @@ exports.getOneProfile = (req, res, next) => {
         .catch(error => res.status(404).json({ error }));
 };
 
-// Controllers pour modifier une message
+// Controllers pour modifier un profil
 exports.modifyProfile = (req, res, next) => {
     const userObject = req.file ?
     {

@@ -4,7 +4,7 @@ const fs = require('fs');
 //import des modèles
 const Message = require('../models/message');
 
-// Controllers pour créer une message
+// Controllers pour créer un message
 exports.createMessages = (req, res, next) => {
   // récupère et transforme chaine en objet js
   const messageObject = JSON.parse(req.body.message);
@@ -15,13 +15,13 @@ exports.createMessages = (req, res, next) => {
       attachement: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
       likes: 0,
     });
-  // sauvegarde la nouvelle message dans la bas de données
+  // sauvegarde le nouveau message dans la base de données
     message.save()
       .then(() => res.status(201).json({ message: 'Message enregistrée !'}))
       .catch(error => res.status(400).json({ error }));
 };
 
-// Controllers pour modifier une message
+// Controllers pour modifier un message
 exports.modifyMessages = (req, res, next) => {
   const messageObject = req.file ?
   {
@@ -35,7 +35,7 @@ exports.modifyMessages = (req, res, next) => {
         .catch(error => res.status(400).json({ error }));
 };
 
-// Controllers por effacer une message grâce a l'ID
+// Controllers por effacer un message grâce a l'ID
 exports.deleteMessages = (req, res, next) => {
   Message.findOne({ id: req.params.id })
     .then(message => {

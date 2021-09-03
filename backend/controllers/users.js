@@ -10,8 +10,8 @@ exports.signup = (req, res, next) => {
     .then(hash => {
     const user = new User({
         email: CryptoJS.SHA256(req.body.email), //cryptage de l'adresse mail avec la fonction crypto
-        password: hash,
         username: req.body.username,
+        password: hash,
         bio: req.body.bio,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
         isAdmin: 0
@@ -69,5 +69,20 @@ exports.modifyProfile = (req, res, next) => {
       User.updateOne({ id: req.params.id }, { ...userObject, id: req.params.id })
           .then(() => res.status(200).json({ message: 'Profile modifiée !' }))
           .catch(error => res.status(400).json({ error }));
+};
+  
+// Controllers por effacer un profil grâce a l'ID
+exports.deleteMessages = (req, res, next) => {
+    User.findOne({ id: req.params.id })
+      .then(user => {
+        const filename = user.imageUrl.split('/images/')[1];
+        fs.unlink(`images/${filename}`, () => {
+          user.destroy()
+          .then(() => res.status(200).json({ message: 'message supprimée !' }))
+          .catch(error => res.status(400).json({ error }));
+        });
+      })
+      .catch(error => res.status(500).json({ error }));
+      
   };
   

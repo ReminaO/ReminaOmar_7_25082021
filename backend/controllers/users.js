@@ -1,92 +1,305 @@
 const bcrypt = require('bcrypt'); // import Bcrypt module
 const User = require('../models/user'); // import modèle user
 const jwt = require('jsonwebtoken'); // import jsonwebtoken module
-const CryptoJS = require("crypto-js"); // import crypto tool
+const models = require('../models/')
+const asyncLib = require('async');
+
+
+const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 // Controllers pour créer un compte
 exports.signup = (req, res, next) => {
-    //Hachage du mot de passe
-    bcrypt.hash(req.body.password, 10)
-    .then(hash => {
-    const user = new User({
-        email: CryptoJS.SHA256(req.body.email), //cryptage de l'adresse mail avec la fonction crypto
-        username: req.body.username,
-        password: hash,
-        bio: req.body.bio,
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-        isAdmin: 0
-    });
-    user.save()
-        .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
-        .catch(error => res.status(400).json({ error }));
-    })
-        .catch(error => res.status(500).json({ error }));
+    //Paramètres
+    const email = req.body.email;
+    const username = req.body.username;
+    const password = req.body.password;
+    const bio = req.body.bio;
+    const imageUrl = "https://pic.onlinewebfonts.com/svg/img_24787.png";
+    const isAdmin = 0;
+
+    //Vérification des champs vides
+    if (username == null || email == null || password == null) {
+        return res.status(400).json({
+            'error': 'Merci de renseigner tous las champs !'
+        });
+    }
+
+    //Vérification de la longuer de l'username
+    if (username >= 13 || username <= 4) {
+        return res.status(400).json({'error' : 'le username doit comporter entre 5 et 12 caractères'})
+    }
+
+    //Vérification de l'email avec RegEx
+    if (!EMAIL_REGEX.test(req.body.email)) {
+        return res.status(400).json({ 'error': 'email is not valid' });
+    }
+    asyncLib.waterfall([
+        // 1. Vérification de l'existance de l'utilisateur
+        function(done) { // done = paramètre principal
+            models.User.findOne({
+                    attributes: ['email'],
+                    where: { email: email }
+                })
+                .then(function(userFound) { // userFound sera le paramètre suivant
+                    done(null, userFound);
+                })
+                .catch(function(err) {
+                    return res.status(500).json({ 'error': 'unable to verify user' });
+                });
+        },
+        // 2. Si l'utilisateur n'existe pas, le mot de passe est hashé
+        function(userFound, done) { 
+            if (!userFound) {
+                // Mot de passe salé 12 fois (paramètre par défait)
+                bcrypt.hash(password, 12, function(err, bcryptedPassword) { // nouveau paramètre
+                    done(null, userFound, bcryptedPassword);
+                });
+            } else {
+                return res.status(409).json({ error: 'Utilisateur déjà existant' });
+            }
+        },
+
+        // 3. Création d'un nouvel utilisateur dans la DB
+        function(userFound, bcryptedPassword, done) { 
+            // Utilisation du model pour la création d'un nouel utilisateur
+            models.User.create({
+                email: email,
+                username: username,
+                password: bcryptedPassword,
+                bio : bio,
+                imageUrl: imageUrl,
+                isAdmin: isAdmin
+                })
+                .then(function(newUser) {
+                    done(newUser); 
+                })
+                .catch(function(err) {
+                    return res.status(500).json({ 'error': 'Impossible de créer le compte' });
+                });
+        }
+    ],
+        // 4. utilisateur créé, retourne new User id
+        function(newUser) {
+            if (newUser) {
+                return res.status(201).json({
+                    'userId': newUser.id
+                });
+            } else {
+                return res.status(500).json({ 'error': 'utilisateur ne peut être ajouté' });
+            }
+        });
 };
 
 // Controllers pour se connecter au site
 exports.login = (req, res, next) => {
-    User.findOne({ email: CryptoJS.SHA256(req.body.email).toString() }) // appel de l'adresse mail crypté et conversion de l'objet en string
-        .then(user => {
-            if (!user) {
-                return res.status(401).json({ error: 'Utilisateur non trouvé !' });
-            }
-            bcrypt.compare(req.body.password, user.password) // comparaison du mot de passe enregistré avec le mot de passe saisi
-                .then(valid => {
-                    if (!valid) {
-                        return res.status(401).json({ error: 'Mot de passe incorrect !' });
-                    }
-                    res.status(200).json({
-                        userId: user.id,
-                        token: jwt.sign(
-                            { userId: user.id },
-                            'RANDOM_TOKEN_SECRET',
-                            { expiresIn: '24h' },
-                        )
-                    })
-                    .catch(error => res.status(500).json({ error }));
+    //Paramètres
+    const email = req.body.email;
+    const password = req.body.password;
+
+    if (email == null || password == null) {
+        return res.status(400).json({ 'error': 'missing parameters' });
+    }
+
+    asyncLib.waterfall([
+
+        // 1. Vérification que l'utilisateur existe
+        function(done) {
+            models.User.findOne({
+                    where: { email: email }
                 })
-                .catch(error => res.status(500).json({ error }));
-        });
+                .then(function(userFound) {
+                    done(null, userFound);
+                })
+                .catch(function(err) {
+                    return res.status(500).json({ 'error': 'unable to verify user' });
+                });
+        },
+
+        // 2. si l'utilisateur existe le hash du mot de passe est comparé
+        function(userFound, done) {
+            if (userFound) {
+                bcrypt.compare(password, userFound.password, function(errBycrypt, resBycrypt) {
+                    done(null, userFound, resBycrypt);
+                });
+            } else {
+                return res.status(404).json({ 'error': 'Utilisateur non trouvé dasn la base de données' });
+            }
+        },
+
+        // 3. si le hash correspond, l'utilisateur est selectionné
+        function(userFound, resBycrypt, done) {
+            if (resBycrypt) {
+                done(userFound);
+            } else {
+                return res.status(403).json({ 'error': 'Mot de passe invalide' });
+            }
+        }
+
+        // 4. Retourne userId avec un token unique
+    ], function(userFound) {
+        if (userFound) {
+            return res.status(200).json({
+                userId: userFound.id,
+                // créé un token avec la method jwt.sign
+                token: jwt.sign({ userId: userFound.id },
+                    // must be a long non specific and random characters
+                    process.env.DB_TOKEN,
+                    // make the token expires after 8h
+                    { expiresIn: process.env.DB_EXPIRES_IN }
+                ),
+                isAdmin: userFound.isAdmin
+            });
+        } else {
+            return res.status(500).json({ 'error': 'cannot log on user' });
+        }
+    });
 }
 
 // Controllers pour afficher le profil grâce a l'ID
 
 exports.getOneProfile = (req, res, next) => {
-    User.findOne({ id: req.params.id })
-        .then(message => res.status(200).json(message))
-        .catch(error => res.status(404).json({ error }));
+    // Récupération des information du profile
+    models.User.findOne({
+        attributes: ['id', 'email', 'username', 'bio', 'imageUrl', 'isAdmin'],
+        where: { id: req.body.userId }
+    }).then((user) => {
+        if (user) {
+            res.status(201).json(user); // confirmation si trouvé
+        } else {
+            res.status(404).json({ 'error': 'Utilisateur non trouvé' });
+        }
+    }).catch((err) => {
+        res.status(500).json({ 'error': 'cannot fetch user' });
+    });
 };
+
 
 // Controllers pour modifier un profil
 exports.modifyProfile = (req, res, next) => {
-    const userObject = req.file ?
-    {
-      ...JSON.parse(req.body.user),
-      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-      } : { ...req.body };
-    
-    // Met a jour la base de données avec les nouveaux éléments 
-      User.updateOne({ id: req.params.id }, { ...userObject, id: req.params.id })
-          .then(() => res.status(200).json({ message: 'Profil modifié !' }))
-          .catch(error => res.status(400).json({ error }));
+    // Paramètre
+    const username = req.body.username;
+    const email = req.body.email;
+    const bio = req.body.bio;
+    const password = req.body.password;
+    const imageUrl = req.body && req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null;
+
+    const emailExists =  User.findOne({ where: { email: email } });
+    const usernameExists = User.findOne({ where: { username:username } });
+
+    if (emailExists != null || usernameExists !== null) {
+        return res.status(406).json({ error: "Email déja existant" })
+    } else {
+
+        asyncLib.waterfall([
+
+                // Checks if the request is sent from an registered user
+                function(done) {
+                    models.User.findOne({
+                            where: { id: req.body.userId }
+                        }).then(function(userFound) {
+                            done(null, userFound);
+                        })
+                        .catch(function(err) {
+                            return res.status(500).json({ 'error': 'impossible de vérifier l\'utilisateur' });
+                        });
+                },
+
+                function(userFound, done) {
+
+                    // Vérification que l'utilisateur est le propriétaire du profil
+                    if (userFound.id == req.body.userId) {
+
+                        // Vérification du mot de passe
+                        if (password !== "") {
+                            bcrypt.hash(password, 12)
+                                .then(hash => {
+                                    userFound.update({
+                                            username: (username ? username : userFound.username),
+                                            email: (email ? email : userFound.email),
+                                            password: hash,
+                                            bio: bio,
+                                            imageUrl: (imageUrl ? imageUrl : userFound.imageUrl)
+                                        })
+                                        .then(function() {
+                                            done(userFound);
+                                        })
+                                        .catch(function(err) {
+                                            res.status(500).json({ 'error': 'Impossible de mettre a jour l\'utilisateur' });
+                                        })
+                                })
+                                // Si Mot de passe absent
+                        } else if (password == "") {
+                            userFound.update({
+                                    username: (username ? username : userFound.username),
+                                    email: (email ? email : userFound.email),
+                                    imageUrl: (imageUrl ? imageUrl : userFound.imageUrl),
+                                    bio: (bio ? bio : userFound.bio ),
+                                    password: userFound.password,
+                                })
+                                .then(function() {
+                                    done(userFound);
+                                })
+                                .catch(function(err) {
+                                    res.status(500).json({ 'error': 'cannot update user' });
+                                })
+                        } else {
+                            res.status(404).json({ 'error': 'user not found' });
+                        }
+                    } else {
+                        res.status(401).json({ 'error': 'user not allowed' });
+                    }
+                },
+            ],
+            function(userFound) {
+                if (userFound) {
+                    return res.status(201).json(userFound);
+                } else {
+                    return res.status(500).json({ 'error': 'cannot update user profile' });
+                }
+            });
+    }
 };
   
 // Controllers por effacer un profil grâce a l'ID
 exports.deleteProfile = (req, res, next) => {
-    User.findOne({ id: req.params.id })
-      .then(user => {
-        const filename = user.imageUrl.split('/images/')[1];
-        fs.unlink(`images/${filename}`, () => {
-            user.destroy({
-                where: {
-            id: req.params.id
-          }
-        })
-          .then(() => res.status(200).json({ message: 'Profil supprimé !' }))
-          .catch(error => res.status(400).json({ error }));
-        });
-      })
-      .catch(error => res.status(500).json({ error }));
+    asyncLib.waterfall([
+
+        // Vérification que la requête soit envoyé par un compte existant
+        function(done) {
+            models.User.findOne({
+                    where: { id: req.body.userId }
+                }).then(function(userFound) {
+                    done(null, userFound);
+                })
+                .catch(function(err) {
+                    return res.status(500).json({ 'error': 'impossible de vérifiér l\'utilisateur' });
+                });
+        },
+
+        function(userFound, done) {
+            //Vérification que la requête soit envoyé par le propriétaire du compteChecks if the user is the owner of the targeted one
+            if (userFound.id == req.body.userId || userFound.isAdmin == true) { // or if he's admin
+
+                // Soft-deletion modifying the post the ad a timestamp to deletedAt
+                models.User.destroy({
+                        where: { id: req.params.id }
+                    })
+                    .then(() => res.status(200).json({ message: 'Utilisateur supprimé' })) // send confirmation if done
+                    .catch(error => res.status(500).json({ 'error': 'L\'utilisateur ne peut être supprimé' }))
+
+            } else {
+                res.status(401).json({ 'error': 'Utilisateur non autorisé' });
+            }
+        },
+    ],
+
+    function(userFound) {
+        if (userFound) {
+            return res.status(201).json({ 'message': 'profile supprimé' });
+        } else {
+            return res.status(500).json({ 'error': 'Le profil ne peut être supprimé' });
+        }
+    });
       
   };
   

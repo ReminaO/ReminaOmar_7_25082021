@@ -104,7 +104,31 @@ const store = createStore({
       .catch(function () {
       });
     }
-  }
+  },
+
+  modifyInfos: ({ commit }) => {
+    const fd = new FormData();
+      fd.append("imageUrl", user.imageUrl);
+      fd.append("username", user.username);
+      fd.append("email", user.email);
+      fd.append("password", user.password);
+    instance.put(`/${user.userId}/profile`, fd)
+      .then(function (response) {
+        commit('user', response.data);
+    })
+    .catch(function () {
+    });
+  },
+
+  deleteInfos: ({ commit }) => {
+    instance.delete(`/${user.userId}/profile`)
+    .then(function (response) {
+      commit('userInfos', response.data);
+    })
+    .catch(function () {
+    });
+  },
+  
 })
 
 export default store;

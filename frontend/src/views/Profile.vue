@@ -6,18 +6,37 @@
     </nav>
     <h1 class="card__title">Espace Perso</h1>
     <p class="card__subtitle">Voilà donc qui je suis...</p>
-    <p>{{user.username}}</p> <p>{{user.email}}</p> <p>{{user.bio}} </p>
-    <img :src="user.imageUrl"/>
+    <form ref="form">
+      <img :src="user.imageUrl"/><br>
+      <input v-if='!toggle' class="image" type="file" ref="image" @change="fileSelected">
+        <!-- Modifier ma photo de profil -->
+      <br><br>
+      <label for="pseudo">Pseudo : {{pseudoMessage}} {{user.username}}</label><br>
+      <input v-if='!toggle' type="text" id="pseudo" v-model="pseudoMessage" name="pseudo"> <br>
+      <label for="email"> Email : {{user.email}}</label><br>
+      <input v-if='!toggle' type="text" id="email" name="email"> <br> 
+      <label for="bio">Petit mot sur moi : {{user.bio}} </label><br>
+      <textarea v-if='!toggle' type="bio" id="bio" name="bio"></textarea><br>
+      <button v-if='!toggle' @click="modifyProfile()" class="button">
+        enregistrer
+      </button>
+    </form>
+    
+    
     <div class="form-row">
       <button @click="logout()" class="button">
         Déconnexion
       </button>
-      <!-- <button @click="modify()"class="button">
+    </div>
+    <div class="form-row">
+      <button @click="toggle = !toggle" class="button">
         Modifier
       </button>
-      <button @click="delete()"class="button">
+    </div>
+    <div class="form-row">
+      <button @click="deleteProfile()" class="button">
         Supprimer
-      </button> -->
+      </button> 
     </div>
   </div>
 </template>
@@ -34,6 +53,12 @@ export default {
     }
     this.$store.dispatch('getUserInfos');
   },
+  data () {
+   return {
+     toggle: true,
+     pseudoMessage : [],
+   }
+ },
   computed: {
     ...mapState({
       user: 'userInfos',
@@ -42,6 +67,17 @@ export default {
   methods: {
     logout: function () {
       this.$store.commit('logout');
+      this.$router.push('/');
+    },
+    fileSelected: function () {
+      this.image = this.$refs.image.files[0];
+      this.user.imageUrl = URL.createObjectURL(this.image)
+    },
+    modifyProfile: function () {
+      this.$store.dispatch('modifyInfos');
+    },
+    deleteProfile: function () {
+      this.$store.dispatch('deleteInfos');
       this.$router.push('/');
     }
   }
@@ -56,4 +92,5 @@ export default {
 img {
   height: 100px;
 }
+
 </style>>

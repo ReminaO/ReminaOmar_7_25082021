@@ -161,7 +161,7 @@ exports.getOneProfile = (req, res, next) => {
     // Récupération des information du profile
     models.User.findOne({
         attributes: ['id', 'email', 'username', 'bio', 'imageUrl', 'isAdmin'],
-        where: { id: req.body.userId }
+        where: { id: req.params.id }
     }).then((user) => {
         if (user) {
             res.status(201).json(user); // confirmation si trouvé
@@ -195,7 +195,7 @@ exports.modifyProfile = (req, res, next) => {
                 // Checks if the request is sent from an registered user
                 function(done) {
                     models.User.findOne({
-                            where: { id: req.body.userId }
+                            where: { id: req.params.id }
                         }).then(function(userFound) {
                             done(null, userFound);
                         })
@@ -207,7 +207,7 @@ exports.modifyProfile = (req, res, next) => {
                 function(userFound, done) {
 
                     // Vérification que l'utilisateur est le propriétaire du profil
-                    if (userFound.id == req.body.userId) {
+                    if (userFound.id == req.params.id) {
 
                         // Vérification du mot de passe
                         if (password !== "") {
@@ -267,7 +267,7 @@ exports.deleteProfile = (req, res, next) => {
         // Vérification que la requête soit envoyé par un compte existant
         function(done) {
             models.User.findOne({
-                    where: { id: req.body.userId }
+                    where: { id: req.params.id}
                 }).then(function(userFound) {
                     done(null, userFound);
                 })
@@ -278,7 +278,7 @@ exports.deleteProfile = (req, res, next) => {
 
         function(userFound, done) {
             //Vérification que la requête soit envoyé par le propriétaire du compteChecks if the user is the owner of the targeted one
-            if (userFound.id == req.body.userId || userFound.isAdmin == true) { // or if he's admin
+            if (userFound.id == req.params.id || userFound.isAdmin == true) { // or if he's admin
 
                 // Soft-deletion modifying the post the ad a timestamp to deletedAt
                 models.User.destroy({

@@ -2,11 +2,13 @@ import { createStore } from 'vuex'
 
 const axios = require('axios');
 
-const instance = axios.create({
-  baseURL: 'http://localhost:3000/api/users/'
-});
+// const instance = axios.create({
+//   baseURL: 'http://localhost:3000/api/users/',
+//   headers: {'Authorization': 'Bearer '+ `${this.token}`}
+// });
 
 let user = localStorage.getItem('user');
+// let tokenAccess = localStorage.getItem('token');
 if (!user) {
  user = {
     userId: -1,
@@ -15,7 +17,7 @@ if (!user) {
 } else {
   try {
     user = JSON.parse(user);
-    instance.defaults.headers.common['Authorization'] = user.token;
+    //instance.defaults.headers.common = {'Authorization': `bearer ${user.token}`};
   } catch (ex) {
     user = {
       userId: -1,
@@ -23,6 +25,12 @@ if (!user) {
     };
   }
 }
+
+
+const instance = axios.create({
+  baseURL: 'http://localhost:3000/api/users/',
+  headers: {'Authorization': 'Bearer '+ `${user.token}`}
+});
 
 // Create a new store instance.
 const store = createStore({
@@ -34,16 +42,16 @@ const store = createStore({
         username: '',
         bio: '',
         imageUrl: '',
-    },
+    },    
   },
   mutations: {
     setStatus: function (state, status) {
       state.status = status;
     },
-    logUser: function (state, user) {
-      instance.defaults.headers.common['Authorization'] = user.token;
-      localStorage.setItem('user', JSON.stringify(user));
-      state.user = user;
+      logUser: function (state, user) {
+        //instance.defaults.headers.common = {'Authorization': `bearer ${user.token}`};
+        localStorage.setItem('user', JSON.stringify(user));
+        state.user = user;
     },
     userInfos: function (state, userInfos) {
       state.userInfos = userInfos;
@@ -87,10 +95,11 @@ const store = createStore({
         });
       });
     },
-    getUserInfos: ({commit}) => {
-      instance.get('/:id/profile')
+    
+    getUserInfos: ({ commit }) => {
+      instance.get(`/${user.userId}/profile`)
       .then(function (response) {
-        commit('userInfos', response.data.infos);
+        commit('userInfos', response.data);
       })
       .catch(function () {
       });

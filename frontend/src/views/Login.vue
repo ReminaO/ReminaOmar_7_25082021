@@ -40,6 +40,7 @@ export default {
   data: function () {
     return {
       mode: 'login',
+      id: '',
       email: '',
       username: '',
       password: '',
@@ -49,7 +50,7 @@ export default {
   },
   mounted: function () {
     if (this.$store.state.user.userId != -1) {
-      this.$router.push('/profile');
+      this.$router.push('/wall');
       return ;
     }
   },
@@ -107,6 +108,10 @@ export default {
 </script>
 
 <style scoped>
+    .card {
+        margin: 15% 25%;
+        width: 50%;
+        }
   .form-row {
     display: flex;
     margin: 16px 0px;

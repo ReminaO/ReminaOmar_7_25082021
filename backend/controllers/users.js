@@ -176,90 +176,52 @@ exports.getOneProfile = (req, res, next) => {
 
 // Controllers pour modifier un profil
 exports.modifyProfile = (req, res, next) => {
-    // Paramètre
-    const username = req.body.username;
-    const email = req.body.email;
-    const bio = req.body.bio;
-    const password = req.body.password;
-    const imageUrl = req.body && req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null;
+    // Paramètres
+    let username = req.body.username;
+    let bio = req.body.bio;
+    let imageUrl = req.body && req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null;
 
-    const emailExists =  User.findOne({ where: { email: email } });
-    const usernameExists = User.findOne({ where: { username:username } });
-
-    if (emailExists != null || usernameExists !== null) {
-        return res.status(406).json({ error: "Email déja existant" })
-    } else {
-
+    // const emailExists = models.User.findOne({ where: { email: email } });
+    // const usernameExists = models.User.findOne({ where: { username: username } });
         asyncLib.waterfall([
-
-                // Checks if the request is sent from an registered user
-                function(done) {
-                    models.User.findOne({
-                            where: { id: req.params.id }
-                        }).then(function(userFound) {
-                            done(null, userFound);
+            // Vérifie que la requête est envoyé par un compte existant
+            function (done) {
+                models.User.findOne({
+                    attributes: ['id', 'bio', 'imageUrl', 'username'],
+                    where: { id: req.params.id }
+                }).then(function (userFound) {
+                    done(null, userFound);
+                })
+                    .catch(function () {
+                        return res.status(500).json({ 'error': 'impossible de vérifier l\'utilisateur' });
+                    });
+            },
+            function (userFound, done) {
+                // Vérification que l'utilisateur est le propriétaire du profil
+                if (userFound.id == req.body.userId) {
+                    userFound.update({
+                        username: (username ? username : userFound.username),
+                        bio: (bio ? bio : userFound.bio),
+                        imageUrl: (imageUrl ? imageUrl : userFound.imageUrl)
+                    })
+                        .then(function () {
+                            done(userFound);
                         })
-                        .catch(function(err) {
-                            return res.status(500).json({ 'error': 'impossible de vérifier l\'utilisateur' });
-                        });
-                },
-
-                function(userFound, done) {
-
-                    // Vérification que l'utilisateur est le propriétaire du profil
-                    if (userFound.id == req.params.id) {
-
-                        // Vérification du mot de passe
-                        if (password !== "") {
-                            bcrypt.hash(password, 12)
-                                .then(hash => {
-                                    userFound.update({
-                                            username: (username ? username : userFound.username),
-                                            email: (email ? email : userFound.email),
-                                            password: hash,
-                                            bio: bio,
-                                            imageUrl: (imageUrl ? imageUrl : userFound.imageUrl)
-                                        })
-                                        .then(function() {
-                                            done(userFound);
-                                        })
-                                        .catch(function(err) {
-                                            res.status(500).json({ 'error': 'Impossible de mettre a jour l\'utilisateur' });
-                                        })
-                                })
-                                // Si Mot de passe absent
-                        } else if (password == "") {
-                            userFound.update({
-                                    username: (username ? username : userFound.username),
-                                    email: (email ? email : userFound.email),
-                                    imageUrl: (imageUrl ? imageUrl : userFound.imageUrl),
-                                    bio: (bio ? bio : userFound.bio ),
-                                    password: userFound.password,
-                                })
-                                .then(function() {
-                                    done(userFound);
-                                })
-                                .catch(function(err) {
-                                    res.status(500).json({ 'error': 'cannot update user' });
-                                })
-                        } else {
-                            res.status(404).json({ 'error': 'user not found' });
-                        }
-                    } else {
-                        res.status(401).json({ 'error': 'user not allowed' });
-                    }
-                },
-            ],
-            function(userFound) {
+                        .catch(function () {
+                            res.status(500).json({ 'error' : 'Impossible de mettre a jour l\'utilisateur' });
+                        })
+                }
+            }
+        ],
+            function (userFound) {
                 if (userFound) {
                     return res.status(201).json(userFound);
                 } else {
                     return res.status(500).json({ 'error': 'cannot update user profile' });
                 }
             });
-    }
-};
-  
+        };
+
 // Controllers por effacer un profil grâce a l'ID
 exports.deleteProfile = (req, res, next) => {
     asyncLib.waterfall([

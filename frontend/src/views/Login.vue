@@ -1,4 +1,16 @@
 <template>
+<div class="container">
+  <nav class="navbar navbar-expand navbar-light bg-light">
+      <router-link to="/wall" class="navbar-brand">Groupomania</router-link>
+      <div class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <router-link to="/wall" class="nav-link">Accueil</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/profile" class="nav-link">Profil</router-link>
+        </li>
+      </div>
+    </nav>
   <div class="card">
     <h1 class="card__title" v-if="mode == 'login'">Connexion</h1>
     <h1 class="card__title" v-else>Inscription</h1>
@@ -30,6 +42,7 @@
         <span v-else>Créer mon compte</span>
       </button>
     </div>
+  </div>
   </div>
 </template>
 
@@ -132,4 +145,8 @@ export default {
   .form-row__input::placeholder {
     color:#aaaaaa;
   }
+  .navbar{
+  display: flex;
+  justify-content: space-between;
+}
 </style>>

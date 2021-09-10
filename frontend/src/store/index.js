@@ -62,7 +62,17 @@ const store = createStore({
         token: '',
       }
       localStorage.removeItem('user');
-    }
+    },
+    // modifyProfile: function (state, user) {
+    //   this.user.imageUrl = this.$refs.image;
+    //   this.user.username = this.$refs.username;
+    //   this.user.email = this.$refs.email;
+    //   this.user.bio = this.$refs.bio;
+    //   return state.user = user;
+    // },
+    // deleteProfile: function (state, user) {
+      
+    // }
   },
   actions: {
     login: ({commit}, userInfos) => {
@@ -103,32 +113,28 @@ const store = createStore({
       })
       .catch(function () {
       });
-    }
-  },
+    },
 
-  modifyInfos: ({ commit }) => {
-    const fd = new FormData();
-      fd.append("imageUrl", user.imageUrl);
-      fd.append("username", user.username);
-      fd.append("email", user.email);
-      fd.append("password", user.password);
-    instance.put(`/${user.userId}/profile`, fd)
-      .then(function (response) {
-        commit('user', response.data);
-    })
-    .catch(function () {
-    });
-  },
-
-  deleteInfos: ({ commit }) => {
-    instance.delete(`/${user.userId}/profile`)
-    .then(function (response) {
-      commit('userInfos', response.data);
-    })
-    .catch(function () {
-    });
-  },
+    modifyInfos: ({ commit }, userInfos) => {
+      instance.put(`/${user.userId}/profile`, userInfos)
+        .then(function (response) {
+          commit('userInfos', response.data);
+      })
+        .catch(function (error) {
+          console.log(error);
+      });
+    },
   
+    deleteInfos: ({ index }) => {
+      instance.delete(`/${user.userId}/profile`)
+        .then(function (response) {
+          user.splice(index, 1);
+          alert(response.data);
+      })
+      .catch(function () {
+      });
+    },
+  },
 })
 
 export default store;

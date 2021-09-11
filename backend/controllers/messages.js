@@ -11,7 +11,7 @@ const ITEMS_LIMIT = 50;
 // Controllers pour créer un message
 exports.createMessages = (req, res, next) => {
   //Vérification d'un fichier existant ou laisse le lien vide
-  const attachement = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null;
+  const attachement = req.file ? `${req.protocol}://${req.get('host')}/images/post${req.file.filename}` : null;
 
   asyncLib.waterfall([
 

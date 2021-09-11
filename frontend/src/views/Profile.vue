@@ -1,21 +1,9 @@
 <template>
 <div class="container">
-    <nav class="navbar navbar-expand navbar-light bg-light">
-      <div>
-        <router-link to="/wall" class="navbar-brand">Groupomania</router-link>
-      </div>
-      <div class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <router-link to="/wall" class="nav-link">Accueil</router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/profile" class="nav-link">Profil</router-link>
-        </li>
-      </div>
-    </nav>
+  <Nav />
   <h1>Espace Perso</h1>
   <div class="card formulaire">
-    <div class="form-row">
+    <div class="form-group">
         <!-- Modifier ma photo de profil -->
         <img :src="user.imageUrl"/><br>
         <input v-if='!toggle' class="image" type="file" ref="image" @change="fileSelected()">
@@ -27,6 +15,8 @@
         
         <label for="bio">Petit mot sur moi : {{user.bio}} </label><br>
         <textarea v-if='!toggle' class="form-row__input" type="bio" id="bio" name="bio" ref="bio" v-model="bio"></textarea><br>
+        <label for="isAdmin">Admin : {{user.isAdmin}} </label>
+        <input class="form-row__input" type="checkbox" id="isAdmin" name="isAdmin" ref="isAdmin" v-model="isAdmin"> <br>
         <button v-if='!toggle' @click="modifyProfile()" class="button">
           enregistrer
         </button>
@@ -43,13 +33,44 @@
       </button> 
     </div>
   </div>
+  
+<Footer />
 </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from 'vuex';
+const axios = require('axios');
+import Nav from '@/components/Nav.vue';
+import Footer from '@/components/Footer.vue';
+let user = localStorage.getItem('user');
+// let tokenAccess = localStorage.getItem('token');
+if (!user) {
+ user = {
+    userId: -1,
+    token: '',
+  }; 
+} else {
+  try {
+    user = JSON.parse(user);
+    //instance.defaults.headers.common = {'Authorization': `bearer ${user.token}`};
+  } catch (ex) {
+    user = {
+      userId: -1,
+      token: '',
+    };
+  }
+}
+const instance = axios.create({
+  baseURL: 'http://localhost:3000/api/users/',
+  headers: {'Authorization': 'Bearer '+ `${user.token}`}
+});
 export default {
   name: 'Profile',
+  components: {
+    Nav,
+    Footer
+  },
   data () {
    return {
     toggle: true,
@@ -58,6 +79,7 @@ export default {
     username: '',
     bio: '',
     imageUrl:'',
+    isAdmin:''
    }
  },
   mounted: function () {
@@ -84,26 +106,24 @@ export default {
       this.user.imageUrl = URL.createObjectURL(this.image)
     },
     modifyProfile: function () {
-      const self = this;
-      this.$store.dispatch('modifyInfos', {
-        username: this.$refs.username,
-        bio: this.$refs.bio,
-        imageUrl: this.$refs.imageUrl
-      }).then(function () {
-        self.$router.push('/profile');
-      }, function (error) {
-        console.log(error);
+      const formData = new FormData();
+        formData.append('image', this.image);
+        formData.append('username', this.username);
+        formData.append('bio', this.bio);
+      
+      instance.put(`/${user.userId}/profile`, formData, {
+      })
+      .then(response => {
+        this.username = response.data 
+        this.bio = response.data 
+        this.image = response.data 
+        this.$router.go("/profile");
       })
     },
     deleteProfile: function () {
       const self = this;
-      this.$store.dispatch('deleteInfos', {
-        email: this.user.email,
-        username: this.user.sername,
-        bio: this.user.bio,
-        image: this.user.imageUrl,
-        password:'this.user.password',
-      }).then(function () {
+      this.$store.dispatch('deleteInfos')
+      .then(function () {
         self.$router.push('/')
       }, function (error) {
         console.log(error);
@@ -126,6 +146,9 @@ img {
 .form-row {
   display: flex;
   flex-direction: column;
+}
+.form-group {
+  text-align: center;
 }
 
 .form-row__input {

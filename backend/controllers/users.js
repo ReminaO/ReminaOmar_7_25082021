@@ -188,7 +188,7 @@ exports.modifyProfile = (req, res, next) => {
             function (done) {
                 models.User.findOne({
                     attributes: ['id', 'bio', 'imageUrl', 'username'],
-                    where: { id: req.params.id }
+                    where: { id: req.params.id}
                 }).then(function (userFound) {
                     done(null, userFound);
                 })
@@ -198,7 +198,7 @@ exports.modifyProfile = (req, res, next) => {
             },
             function (userFound, done) {
                 // Vérification que l'utilisateur est le propriétaire du profil
-                if (userFound.id == req.body.userId) {
+                if (userFound) {
                     userFound.update({
                         username: (username ? username : userFound.username),
                         bio: (bio ? bio : userFound.bio),

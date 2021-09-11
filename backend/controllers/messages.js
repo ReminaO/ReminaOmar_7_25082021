@@ -1,6 +1,6 @@
 //Import des modules
 const fs = require('fs');
-
+const asyncLib = require('async');
 //import des modèles
 const models = require('../models/');
 
@@ -18,7 +18,7 @@ exports.createMessages = (req, res, next) => {
     // 1. recherche de l'utilisateur
     function (done) {
      models.User.findOne({
-        where: { id: req.body.userId }
+        where: { id: req.params.id }
       })
         .then(function (userFound) {
           done(null, userFound);

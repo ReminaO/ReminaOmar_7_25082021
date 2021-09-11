@@ -38,18 +38,30 @@ const store = createStore({
     status: '',
     user: user,
     userInfos: {
-        email: '',
-        username: '',
-        bio: '',
-        imageUrl: '',
-    },    
+      email: '',
+      username: '',
+      bio: '',
+      imageUrl: '',
+      isAdmin:'',
+    },
+    message: [],
+    messageInfos: {
+      title:'',
+      content: '',
+      attachement: '',
+      likes: '',
+    },
+    comment: [],
+    commentInfos: {
+      userName: '',
+      post: ''
+    }
   },
   mutations: {
     setStatus: function (state, status) {
       state.status = status;
     },
-      logUser: function (state, user) {
-        //instance.defaults.headers.common = {'Authorization': `bearer ${user.token}`};
+    logUser: function (state, user) {
         localStorage.setItem('user', JSON.stringify(user));
         state.user = user;
     },
@@ -63,16 +75,16 @@ const store = createStore({
       }
       localStorage.removeItem('user');
     },
-    // modifyProfile: function (state, user) {
-    //   this.user.imageUrl = this.$refs.image;
-    //   this.user.username = this.$refs.username;
-    //   this.user.email = this.$refs.email;
-    //   this.user.bio = this.$refs.bio;
-    //   return state.user = user;
-    // },
-    // deleteProfile: function (state, user) {
-      
-    // }
+    deleteInfos: function (state) {
+      state.user = {
+        userId: -1,
+        token: '',
+      }
+      localStorage.removeItem('user');
+    },
+    messageInfos: function (state, messageInfos) {
+      state.messageinfos = messageInfos;
+    }
   },
   actions: {
     login: ({commit}, userInfos) => {
@@ -105,7 +117,6 @@ const store = createStore({
         });
       });
     },
-    
     getUserInfos: ({ commit }) => {
       instance.get(`/${user.userId}/profile`)
       .then(function (response) {
@@ -114,22 +125,19 @@ const store = createStore({
       .catch(function () {
       });
     },
-
-    modifyInfos: ({ commit }, userInfos) => {
-      instance.put(`/${user.userId}/profile`, userInfos)
-        .then(function (response) {
-          commit('userInfos', response.data);
-      })
-        .catch(function (error) {
-          console.log(error);
-      });
-    },
-  
-    deleteInfos: ({ index }) => {
+    deleteInfos: ({ commit }) => {
       instance.delete(`/${user.userId}/profile`)
         .then(function (response) {
-          user.splice(index, 1);
+          commit('deleteInfos', user.id)
           alert(response.data);
+      })
+      .catch(function () {
+      });
+    },
+    getAllMessages: ({ commit }) => {
+      instance.get(`/`)
+      .then(function (response) {
+        commit('userInfos', response.data);
       })
       .catch(function () {
       });

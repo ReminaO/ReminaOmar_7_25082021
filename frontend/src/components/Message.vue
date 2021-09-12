@@ -34,6 +34,17 @@
         </div>
       </div>
       <div>
+        <label v-if='!toggle' class="form-row__input"  id="title" name="title" ref="title">Titre: </label><br>
+        <input v-if='!toggle' class="form-row__input" type="text" id="title" name="title" ref="title" v-model="title"><br><br>
+
+        <label v-if='!toggle' class="form-row__input" for="attachment">Image : </label><br>
+        <input v-if='!toggle' type="file" ref="image" @change="imgSelected()">
+        <br><br>
+        <label v-if='!toggle' class="form-row__input"  id="content" name="content" ref="content">Exprimez vous: </label><br>
+        <textarea v-if='!toggle' class="form-row__input" type="content" id="content" name="content" ref="content" v-model="content"></textarea><br>
+      <button v-if='!toggle' @click="modifyMessage()" class="button">
+        enregistrer
+      </button>
       <button @click="toggle = !toggle" class="button">
         Modifier
       </button><br>
@@ -42,6 +53,7 @@
       </button>
       </div> 
     <br>
+    <Comment />
     </div>
     </div>
 </div>
@@ -51,9 +63,13 @@
 
 <script>
 import { mapState } from 'vuex';
+import Comment from '@/components/Comment.vue';
+
 const axios = require('axios');
 
+
 let user = localStorage.getItem('user');
+let message = localStorage.getItem('message');
 if (!user) {
  user = {
     userId: -1,
@@ -77,6 +93,9 @@ const instance = axios.create({
 
 export default {
   name: 'Home',
+  components : {
+    Comment
+  },
   data () {
     return{
       toggle: true
@@ -86,8 +105,12 @@ export default {
   computed : {
     ...mapState(['status']),
     user: 'userInfos',
-    message: 'messageInfos',
-    comment : "commentInfos"
+    message() {
+        return this.$store.state.message
+    },
+    comment() {
+        return this.$store.state.comment
+    }
     },     
   
   mounted: function () {
@@ -110,24 +133,43 @@ export default {
       formData.append('image', this.attachement);
       formData.append('content', this.content);
       formData.append('title', this.title);
-      formData.append('user', this.userId);
+      formData.append('user', this.user);
       instance.post(`/post`, formData, {
       })
       .then(response => {
         this.title = response.data 
         this.content = response.data 
         this.attachement = response.data
-        this.userId = response.data 
+        this.user = response.data 
         this.$router.go("/wall");
       })
     },
+    modifyMessage: function () {
+      const formData = new FormData();
+      formData.append('image', this.attachement);
+      formData.append('content', this.content);
+      formData.append('title', this.title);
+      instance.put(`/${message.id}/post`, formData, {
+      })
+      .then(response => {
+        this.title = response.data 
+        this.content = response.data 
+        this.attachement = response.data
+        this.$router.go("/wall");
+      })
+    },
+    deleteMessage: function () {
+      const self = this;
+      this.$store.dispatch('deleteMessage')
+      .then(function () {
+        self.$router.go('/wall')
+      }, function (error) {
+        console.log(error);
+      })
+    }
 }
 </script>
 
 <style scoped>
-.navbar{
-  display: flex;
-  justify-content: space-between;
-}
 
 </style>

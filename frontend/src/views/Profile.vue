@@ -40,8 +40,10 @@
 <script>
 import { mapState } from 'vuex';
 const axios = require('axios');
+
 import Nav from '@/components/Nav.vue';
 import Footer from '@/components/Footer.vue';
+
 let user = localStorage.getItem('user');
 // let tokenAccess = localStorage.getItem('token');
 if (!user) {
@@ -162,8 +164,6 @@ img {
     color: black;
   }
   
-
-
 .formulaire {
   display: flex;
 }

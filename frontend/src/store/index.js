@@ -4,6 +4,7 @@ const axios = require('axios');
 
 let user = localStorage.getItem('user');
 let message = localStorage.getItem('message');
+let comment = localStorage.getItem('comment');
 if (!user) {
  user = {
     userId: -1,
@@ -44,6 +45,7 @@ const store = createStore({
       content: '',
       attachement: '',
       likes: '',
+      userName: ''
     },
     comment: [],
     commentInfos: {
@@ -68,6 +70,8 @@ const store = createStore({
         token: '',
       }
       localStorage.removeItem('user');
+      localStorage.removeItem('message');
+      localStorage.removeItem('comment');
     },
     deleteInfos: function (state) {
       state.user = {
@@ -79,11 +83,34 @@ const store = createStore({
     messageInfos: function (state, messageInfos) {
       state.messageinfos = messageInfos;
     },
-    
-    message: function (state, user) {
-      localStorage.setItem('message', JSON.stringify(user));
+    deleteMessage: function (state) {
+      state.message = {
+        email: '',
+        username: '',
+        bio: '',
+        imageUrl: '',
+        isAdmin:'',
+      }
+      localStorage.removeItem('message');
+    },
+    message: function (state, message) {
+      localStorage.setItem('message', JSON.stringify(message));
       state.message = message;
-  },
+    },
+    commentInfos: function (state, commentInfos) {
+      state.commentinfos = commentInfos;
+    },
+    comment: function (state, comment) {
+      localStorage.setItem('comment', JSON.stringify(comment));
+      state.comment = comment;
+    },
+    deleteComment: function (state) {
+      state.comment = {
+        userName: '',
+        post: ''
+      }
+      localStorage.removeItem('comment');
+    },
   },
   actions: {
     login: ({commit}, userInfos) => {
@@ -145,12 +172,30 @@ const store = createStore({
     deleteMessage: ({ commit }) => {
       instance.delete(`messages/${message.userId}/post`)
         .then(function (response) {
-          commit('deleteInfos', message.id)
+          commit('deleteMessage', message.id)
           alert(response.data);
       })
       .catch(function () {
       });
     },
+    getAllComments: ({ commit }) => {
+      instance.get(`comments`)
+      .then(function (response) {
+        commit('messageInfos', response.data);
+        commit('comment', response.data);
+      })
+      .catch(function () {
+      });
+    },
+    deletecomment: ({ commit }) => {
+      instance.delete(`comments/${comment.userId}/post`)
+        .then(function (response) {
+          commit('deleteComment', message.id)
+          alert(response.data);
+      })
+      .catch(function () {
+      });
+    }
   },
 })
 

@@ -26,7 +26,7 @@ exports.signup = (req, res, next) => {
 
     //Vérification de la longuer de l'username
     if (username >= 13 || username <= 4) {
-        return res.status(400).json({'error' : 'le username doit comporter entre 5 et 12 caractères'})
+        return res.status(400).json({'error' : 'le pseudo doit comporter entre 5 et 12 caractères'})
     }
 
     //Vérification de l'email avec RegEx

@@ -11,7 +11,7 @@ const ITEMS_LIMIT = 50;
 // Controllers pour créer un message
 exports.createMessages = (req, res, next) => {
   //Vérification d'un fichier existant ou laisse le lien vide
-  const attachement = req.file ? `${req.protocol}://${req.get('host')}/images/post${req.file.filename}` : null;
+  const attachement = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : "";
 
   asyncLib.waterfall([
 
@@ -32,9 +32,11 @@ exports.createMessages = (req, res, next) => {
     function (userFound, done) {
       if (userFound) {
         models.Message.create({
+          title: req.body.title,
           content: req.body.content,
           attachement: attachement,
-          UserId: userFound.id
+          userId: userFound.id,
+          likes : 0,  
         })
           .then(function (newPost) {
             done(newPost);

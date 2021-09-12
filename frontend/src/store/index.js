@@ -28,7 +28,7 @@ if (!user) {
 
 
 const instance = axios.create({
-  baseURL: 'http://localhost:3000/api/users/',
+  baseURL: 'http://localhost:3000/api/',
   headers: {'Authorization': 'Bearer '+ `${user.token}`}
 });
 
@@ -90,7 +90,7 @@ const store = createStore({
     login: ({commit}, userInfos) => {
       commit('setStatus', 'loading');
       return new Promise((resolve, reject) => {
-        instance.post('/login', userInfos)
+        instance.post('users/login', userInfos)
         .then(function (response) {
           commit('setStatus', '');
           commit('logUser', response.data);
@@ -106,7 +106,7 @@ const store = createStore({
       commit('setStatus', 'loading');
       return new Promise((resolve, reject) => {
         commit;
-        instance.post('/signup', userInfos)
+        instance.post('users/signup', userInfos)
         .then(function (response) {
           commit('setStatus', 'created');
           resolve(response);
@@ -118,7 +118,7 @@ const store = createStore({
       });
     },
     getUserInfos: ({ commit }) => {
-      instance.get(`/${user.userId}/profile`)
+      instance.get(`users/${user.userId}/profile`)
       .then(function (response) {
         commit('userInfos', response.data);
       })
@@ -126,7 +126,7 @@ const store = createStore({
       });
     },
     deleteInfos: ({ commit }) => {
-      instance.delete(`/${user.userId}/profile`)
+      instance.delete(`users/${user.userId}/profile`)
         .then(function (response) {
           commit('deleteInfos', user.id)
           alert(response.data);
@@ -135,9 +135,9 @@ const store = createStore({
       });
     },
     getAllMessages: ({ commit }) => {
-      instance.get(`/`)
+      instance.get(`messages`)
       .then(function (response) {
-        commit('userInfos', response.data);
+        commit('messageInfos', response.data);
       })
       .catch(function () {
       });

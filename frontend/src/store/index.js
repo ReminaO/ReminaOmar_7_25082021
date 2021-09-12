@@ -2,13 +2,8 @@ import { createStore } from 'vuex'
 
 const axios = require('axios');
 
-// const instance = axios.create({
-//   baseURL: 'http://localhost:3000/api/users/',
-//   headers: {'Authorization': 'Bearer '+ `${this.token}`}
-// });
-
 let user = localStorage.getItem('user');
-// let tokenAccess = localStorage.getItem('token');
+let message = localStorage.getItem('message');
 if (!user) {
  user = {
     userId: -1,
@@ -17,7 +12,6 @@ if (!user) {
 } else {
   try {
     user = JSON.parse(user);
-    //instance.defaults.headers.common = {'Authorization': `bearer ${user.token}`};
   } catch (ex) {
     user = {
       userId: -1,
@@ -84,7 +78,12 @@ const store = createStore({
     },
     messageInfos: function (state, messageInfos) {
       state.messageinfos = messageInfos;
-    }
+    },
+    
+    message: function (state, user) {
+      localStorage.setItem('message', JSON.stringify(user));
+      state.message = message;
+  },
   },
   actions: {
     login: ({commit}, userInfos) => {
@@ -138,6 +137,16 @@ const store = createStore({
       instance.get(`messages`)
       .then(function (response) {
         commit('messageInfos', response.data);
+        commit('message', response.data);
+      })
+      .catch(function () {
+      });
+    },
+    deleteMessage: ({ commit }) => {
+      instance.delete(`messages/${message.userId}/post`)
+        .then(function (response) {
+          commit('deleteInfos', message.id)
+          alert(response.data);
       })
       .catch(function () {
       });

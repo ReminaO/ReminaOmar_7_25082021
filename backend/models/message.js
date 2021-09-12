@@ -23,7 +23,14 @@ module.exports = (sequelize, DataTypes) => {
     title: DataTypes.STRING,
     content: DataTypes.STRING,
     attachement: DataTypes.STRING,
-    likes: DataTypes.INTEGER
+    likes: DataTypes.INTEGER,
+    userName:{
+      type: DataTypes.STRING,
+      references : {
+        model : 'User',
+        key : 'username'
+      }
+    },
   }, {
     sequelize,
     modelName: 'Message',

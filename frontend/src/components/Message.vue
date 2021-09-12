@@ -21,19 +21,30 @@
 <div class = "row">
   <div class="card">
     <div v-for="message in messages" :key="message.id">
-        
+      <div>
+        <img :src="users.map((user) => { 
+          if (user.id === message.userId) {
+            return user.imageUrl
+            };
+            }).join('')" 
+        class="h-12 w-12 rounded-full flex-none"/>
+        <div class=" ml-3 flex flex-col">
+            <p class="font-semibold"> {{ message.userName }} </p>
+            <p class="font-thin text-sm"> {{dateTime(message.createdAt)}} </p>
+        </div>
+      </div>
+      <div>
+      <button @click="toggle = !toggle" class="button">
+        Modifier
+      </button><br>
+      <button v-if="user.id == message.UserId || user.isAdmin == 1" name="delete" class="button" @click="deleteMessage()">
+        Supprimer
+      </button>
+      </div> 
     <br>
     </div>
     </div>
 </div>
-    <!-- <div class="form-row">
-      <button @click="toggle = !toggle" class="button">
-        Modifier
-      </button><br>
-      <button @click="deleteMessage()" class="button">
-        Supprimer
-      </button> 
-    </div> -->
   
   </div>
 </template>
@@ -68,10 +79,7 @@ export default {
   name: 'Home',
   data () {
     return{
-      title:'',
-      content: '',
-      attachement: '',
-      likes: '',
+      toggle: true
     }
       
   },
@@ -99,11 +107,10 @@ export default {
   },
   addMessage: function () {
       const formData = new FormData();
-        formData.append('image', this.attachement);
-        formData.append('content', this.content);
-        formData.append('title', this.title);
-        formData.append('user', this.userId);
-      
+      formData.append('image', this.attachement);
+      formData.append('content', this.content);
+      formData.append('title', this.title);
+      formData.append('user', this.userId);
       instance.post(`/post`, formData, {
       })
       .then(response => {

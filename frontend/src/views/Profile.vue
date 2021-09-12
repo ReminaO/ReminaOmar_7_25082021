@@ -16,7 +16,6 @@
         <label for="bio">Petit mot sur moi : {{user.bio}} </label><br>
         <textarea v-if='!toggle' class="form-row__input" type="bio" id="bio" name="bio" ref="bio" v-model="bio"></textarea><br>
         <label for="isAdmin">Admin : {{user.isAdmin}} </label>
-        <input class="form-row__input" type="checkbox" id="isAdmin" name="isAdmin" ref="isAdmin" v-model="isAdmin"> <br>
         <button v-if='!toggle' @click="modifyProfile()" class="button">
           enregistrer
         </button>
@@ -163,10 +162,7 @@ img {
     color: black;
   }
   
-.navbar{
-  display: flex;
-  justify-content: space-between;
-}
+
 
 .formulaire {
   display: flex;

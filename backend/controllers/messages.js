@@ -1,8 +1,10 @@
 //Import des modules
 const fs = require('fs');
 const asyncLib = require('async');
+const jwtUtils = require('../utils/jwt.utils');
 //import des modèles
 const models = require('../models/');
+
 
 
 //Paramètres
@@ -10,21 +12,30 @@ const ITEMS_LIMIT = 50;
 
 // Controllers pour créer un message
 exports.createMessages = (req, res, next) => {
+  // Obtention du header d'authentification
+  const headerAuth  = req.headers['authorization']; 
+  const userId      = jwtUtils.getUserId(headerAuth);
+
+  // Paramètres
+  const title   = req.body.title;
+  const content = req.body.content;
+  
+
   //Vérification d'un fichier existant ou laisse le lien vide
-  const attachement = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : "";
+  const attachement = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null;
 
   asyncLib.waterfall([
 
     // 1. recherche de l'utilisateur
     function (done) {
      models.User.findOne({
-        where: { id: req.params.id }
+        where: { id: userId }
       })
         .then(function (userFound) {
           done(null, userFound);
         })
         .catch(function (err) {
-          return res.status(500).json({ 'error': 'Utilisateur inexistant' });
+          return res.status(500).json({ 'error': 'Impossible de vérifier l\'utilisateur' });
         });
     },
       
@@ -32,17 +43,17 @@ exports.createMessages = (req, res, next) => {
     function (userFound, done) {
       if (userFound) {
         models.Message.create({
-          title: req.body.title,
-          content: req.body.content,
+          title: title,
+          content: content,
           attachement: attachement,
           userId: userFound.id,
-          likes : 0,  
+          likes: 0,
         })
           .then(function (newPost) {
             done(newPost);
           });
       } else {
-        res.status(404).json({ 'error': 'Utilisateur inexistant' });
+        res.status(404).json({ 'error': 'Utilisateur introuvable' });
       }
     },
     // 3. Confirmation une fois fait
@@ -57,12 +68,15 @@ exports.createMessages = (req, res, next) => {
 };
 // Controllers pour modifier un message
 exports.modifyMessages = (req, res, next) => {
+  const headerAuth  = req.headers['authorization']; 
+  const userId = jwtUtils.getUserId(headerAuth);
+  
   asyncLib.waterfall([
 
     // Vérification que la requête soit envoyé d'un compte existant
     function (done) {
       models.User.findOne({
-        where: { id: req.body.userId }
+        where: { id: userId }
       }).then(function (userFound) {
         done(null, userFound);
       })

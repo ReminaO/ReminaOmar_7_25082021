@@ -144,7 +144,7 @@ exports.login = (req, res, next) => {
                 token: jwt.sign({ userId: userFound.id },
                     // must be a long non specific and random characters
                     process.env.DB_TOKEN,
-                    // make the token expires after 8h
+                    // make the token expires after 24h
                     { expiresIn: process.env.DB_EXPIRES_IN }
                 ),
                 isAdmin: userFound.isAdmin

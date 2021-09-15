@@ -4,10 +4,14 @@ const asyncLib = require('async');
 const jwtUtils = require('../utils/jwt.utils');
 //import des modèles
 const models = require('../models/');
+const User = require('../models/user');
+const Comment = require('../models/comment');
 
 
 
 //Paramètres
+const TITLE_LIMIT   = 2;
+const CONTENT_LIMIT = 2;
 const ITEMS_LIMIT = 50;
 
 // Controllers pour créer un message
@@ -24,11 +28,19 @@ exports.createMessages = (req, res, next) => {
   //Vérification d'un fichier existant ou laisse le lien vide
   const attachement = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null;
 
+  if (title == null || content == null) {
+    return res.status(400).json({ 'error': 'champs manquant' });
+  }
+
+  if (title.length <= TITLE_LIMIT || content.length <= CONTENT_LIMIT) {
+    return res.status(400).json({ 'error': 'champs invalide' });
+  }
+
   asyncLib.waterfall([
 
     // 1. recherche de l'utilisateur
     function (done) {
-     models.User.findOne({
+      models.User.findOne({
         where: { id: userId }
       })
         .then(function (userFound) {
@@ -46,8 +58,9 @@ exports.createMessages = (req, res, next) => {
           title: title,
           content: content,
           attachement: attachement,
-          userId: userFound.id,
+          UserId: userFound.id,
           likes: 0,
+          userName: userFound.username,
         })
           .then(function (newPost) {
             done(newPost);
@@ -62,7 +75,7 @@ exports.createMessages = (req, res, next) => {
     if (newPost) {
       return res.status(201).json(newPost);
     } else {
-      return res.status(500).json({ 'error': 'Le message ne peut être posté' });
+      return res.status(500).json({ 'error': 'Le message ne peut être publié' });
     }
   })
 };

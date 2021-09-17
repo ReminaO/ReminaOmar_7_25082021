@@ -163,7 +163,7 @@ const store = createStore({
     getAllMessages: ({ commit }) => {
       instance.get(`messages`)
       .then(function (response) {
-        commit('messageInfos', response.data);
+        // commit('messageInfos', response.data);
         commit('message', response.data);
       })
       .catch(function () {

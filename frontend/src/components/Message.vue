@@ -133,14 +133,14 @@ export default {
       formData.append('image', this.attachement);
       formData.append('content', this.content);
       formData.append('title', this.title);
-      formData.append('user', this.user);
+      formData.append('username', this.userName);
       instance.post(`/post`, formData, {
       })
       .then(response => {
         this.title = response.data 
         this.content = response.data 
         this.attachement = response.data
-        this.user = response.data 
+        this.userName = response.data 
         this.$router.go("/wall");
       })
     },

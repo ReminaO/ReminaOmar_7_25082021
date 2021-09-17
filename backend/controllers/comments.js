@@ -5,6 +5,8 @@ const asyncLib = require('async');
 // Controllers pour créer un commenataire
 exports.createComment = (req, res, next) => {
      // Paramètre
+     const headerAuth  = req.headers['authorization']; 
+     const userId = jwtUtils.getUserId(headerAuth);
      const content = req.body;
 
      if (content == null) {
@@ -16,7 +18,7 @@ exports.createComment = (req, res, next) => {
          // 1. recherche l'utilsateur
          function(done) {
              models.User.findOne({
-                     where: { id: req.body.userId }
+                     where: { id: userId }
                  })
                  .then(function(userFound) {
                      done(null, userFound);
@@ -56,12 +58,15 @@ exports.createComment = (req, res, next) => {
   
 // Controllers pour effacer un commentaire grâce a l'ID
 exports.deleteComment = (req, res, next) => {
+    //Paramètres
+    const headerAuth  = req.headers['authorization']; 
+    const userId = jwtUtils.getUserId(headerAuth);
   asyncLib.waterfall([
 
     // Vérifie que l'utilisateur soit existant
     function(done) {
         models.User.findOne({
-                where: { id: req.body.userId }
+                where: { id: userId }
             }).then(function(userFound) {
                 done(null, userFound);
             })
@@ -124,13 +129,17 @@ exports.deleteComment = (req, res, next) => {
 
   
 // Controllers pour modifier un commentaire
-exports.modifyComment = (req, res, next) => {
+      exports.modifyComment = (req, res, next) => {
+      //Paramètres
+    const headerAuth  = req.headers['authorization']; 
+    const userId = jwtUtils.getUserId(headerAuth);
+      
   asyncLib.waterfall([
 
     // Checks if the request is sent from an registered user
     function(done) {
         User.findOne({
-                where: { id: req.body.userId }
+                where: { id: userId }
             }).then(function(userFound) {
                 done(null, userFound);
             })

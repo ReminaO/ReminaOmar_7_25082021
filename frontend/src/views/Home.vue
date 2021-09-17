@@ -1,5 +1,5 @@
 <template>
-<div class="container">
+<div class="container-fluid">
   <Nav />
   <Message />
   <Footer />
@@ -21,7 +21,7 @@ export default {
     Message
   },
   computed : {
-    ...mapState(['status'])
+    ...mapState(['status']),
   },
 }
 </script>

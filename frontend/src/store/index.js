@@ -39,7 +39,7 @@ const store = createStore({
       imageUrl: '',
       isAdmin:'',
     },
-    message: [],
+    messages: [],
     messageInfos: {
       title:'',
       content: '',
@@ -47,12 +47,13 @@ const store = createStore({
       likes: '',
       userName: ''
     },
-    comment: [],
+    comments: [],
     commentInfos: {
       userName: '',
       post: ''
     }
   },
+  
   mutations: {
     setStatus: function (state, status) {
       state.status = status;
@@ -84,28 +85,28 @@ const store = createStore({
       state.messageinfos = messageInfos;
     },
     deleteMessage: function (state) {
-      state.message = {
-        email: '',
-        username: '',
-        bio: '',
-        imageUrl: '',
-        isAdmin:'',
+      state.messages = {
+        attachement:'',
+        content:'',
+        title:'',
+        userName:'',
+        likes:'',
       }
       localStorage.removeItem('message');
     },
-    message: function (state, message) {
+    message: function (state, messages) {
       localStorage.setItem('message', JSON.stringify(message));
-      state.message = message;
+      state.messages = messages;
     },
     commentInfos: function (state, commentInfos) {
       state.commentinfos = commentInfos;
     },
-    comment: function (state, comment) {
+    comment: function (state, comments) {
       localStorage.setItem('comment', JSON.stringify(comment));
-      state.comment = comment;
+      state.comments = comments;
     },
     deleteComment: function (state) {
-      state.comment = {
+      state.comments = {
         userName: '',
         post: ''
       }
@@ -163,7 +164,6 @@ const store = createStore({
     getAllMessages: ({ commit }) => {
       instance.get(`messages`)
       .then(function (response) {
-        // commit('messageInfos', response.data);
         commit('message', response.data);
       })
       .catch(function () {
@@ -181,7 +181,6 @@ const store = createStore({
     getAllComments: ({ commit }) => {
       instance.get(`comments`)
       .then(function (response) {
-        commit('messageInfos', response.data);
         commit('comment', response.data);
       })
       .catch(function () {

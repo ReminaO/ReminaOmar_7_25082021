@@ -1,4 +1,5 @@
 <template>
+<div class='container-fluid'>
     <nav class="navbar navbar-expand navbar-light bg-light">
       <div>
         <router-link to="/wall" class="navbar-brand">Groupomania</router-link>
@@ -11,10 +12,11 @@
           <router-link to="/profile" class="nav-link">Profil</router-link>
         </li>
         <li class="nav-item">
-          <router-link @click="logout()" to="/" class="nav-link">Deconnexion</router-link>
+          <router-link @click="logout()" to="/" class="nav-link">Déconnexion</router-link>
         </li>
       </div>
     </nav>
+  </div>
 </template>
 <script>
 import { mapState } from 'vuex'

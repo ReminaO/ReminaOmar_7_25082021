@@ -81,7 +81,6 @@ export default {
   },
   computed : {
     ...mapState(['status']),
-    user: 'userInfos',
     message() {
         return this.$store.state.message
     },

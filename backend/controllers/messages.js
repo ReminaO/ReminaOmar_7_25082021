@@ -140,13 +140,17 @@ exports.modifyMessages = (req, res, next) => {
     })
 }
   // Controllers por effacer un message grâce a l'ID
-  exports.deleteMessages = (req, res, next) => {
+exports.deleteMessages = (req, res, next) => {
+     // Obtention du header d'authentification
+  const headerAuth  = req.headers['authorization']; 
+  const userId = jwtUtils.getUserId(headerAuth);
+  
     asyncLib.waterfall([
 
       // Vérification que la requête est envoye d'un compte existant
       function (done) {
         models.User.findOne({
-          where: { id: req.body.userId }
+          where: { id: userId }
         }).then(function (userFound) {
           done(null, userFound);
         })
@@ -218,9 +222,9 @@ exports.modifyMessages = (req, res, next) => {
           limit: (!isNaN(limit)) ? limit : null,
           offset: (!isNaN(offset)) ? offset : null,
           include: [{ // Links the post with User and Comments tables
-            model: User,
-            Comment,
-            attributes: ['username', 'imageUrl', 'isAdmin']
+            model: models.User,
+            model: models.Comment,
+            attributes: ['title', 'content', 'attachement', 'likes', 'userName']
           }]
         }).then(function (posts) {
           done(posts)

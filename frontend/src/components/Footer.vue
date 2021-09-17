@@ -1,5 +1,6 @@
 <template>
-    <div class="row social">
+<div class="container-fluid">
+    <div class="row">
         <div class="col col-sm12 col-md12">
             <ul class="footer-link">
                 <li><a href="#">Mentions Légales</a></li>
@@ -8,6 +9,7 @@
             </ul>
         </div>
     </div>
+</div>
 </template>
 <script>
 import { mapState } from 'vuex'

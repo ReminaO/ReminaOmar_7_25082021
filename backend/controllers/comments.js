@@ -5,6 +5,7 @@ const asyncLib = require('async');
 // Controllers pour créer un commenataire
 exports.createComment = (req, res, next) => {
      // Paramètre
+    // Obtention du header d'authentification
      const headerAuth  = req.headers['authorization']; 
      const userId = jwtUtils.getUserId(headerAuth);
      const content = req.body;
@@ -58,7 +59,7 @@ exports.createComment = (req, res, next) => {
   
 // Controllers pour effacer un commentaire grâce a l'ID
 exports.deleteComment = (req, res, next) => {
-    //Paramètres
+    // Obtention du header d'authentification
     const headerAuth  = req.headers['authorization']; 
     const userId = jwtUtils.getUserId(headerAuth);
   asyncLib.waterfall([
@@ -129,8 +130,8 @@ exports.deleteComment = (req, res, next) => {
 
   
 // Controllers pour modifier un commentaire
-      exports.modifyComment = (req, res, next) => {
-      //Paramètres
+    exports.modifyComment = (req, res, next) => {
+    // Obtention du header d'authentification
     const headerAuth  = req.headers['authorization']; 
     const userId = jwtUtils.getUserId(headerAuth);
       

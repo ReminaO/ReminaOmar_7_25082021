@@ -1,5 +1,5 @@
 <template>
-<div class="container">
+<div class="container-fluid">
   <div class="card">
     <h1 class="card__title" v-if="mode == 'login'">Connexion</h1>
     <h1 class="card__title" v-else>Inscription</h1>

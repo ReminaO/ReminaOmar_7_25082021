@@ -98,19 +98,18 @@ export default {
   },
   data () {
     return{
-      toggle: true
+      toggle: true,
+      attachement:'',
+      content:'',
+      title:'',
+      userName:'',
+      likes:'',
+      messages: []
     }
       
   },
   computed : {
     ...mapState(['status']),
-    user: 'userInfos',
-    message() {
-        return this.$store.state.message
-    },
-    comment() {
-        return this.$store.state.comment
-    }
     },     
   
   mounted: function () {
@@ -149,7 +148,7 @@ export default {
       formData.append('image', this.attachement);
       formData.append('content', this.content);
       formData.append('title', this.title);
-      instance.put(`/${message.id}/post`, formData, {
+      instance.put(`/${message.userId}/post`, formData, {
       })
       .then(response => {
         this.title = response.data 

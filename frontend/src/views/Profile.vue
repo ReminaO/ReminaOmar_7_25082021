@@ -1,5 +1,5 @@
 <template>
-<div class="container">
+<div class="container-fluid">
   <Nav />
   <h1>Espace Perso</h1>
   <div class="card formulaire">

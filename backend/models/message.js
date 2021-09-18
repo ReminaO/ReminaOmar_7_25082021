@@ -13,9 +13,11 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       models.Message.belongsTo(models.User, {
         onDelete: 'cascade',
-        foreignKey: 'userId',
-        as: 'user',
-      })
+        foreignKey: {
+          allowNull: false
+        }
+      });
+      models.Message.hasMany(models.Comment);
     }
   };
   Message.init({

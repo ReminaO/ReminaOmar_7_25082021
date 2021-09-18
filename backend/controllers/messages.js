@@ -4,8 +4,6 @@ const asyncLib = require('async');
 const jwtUtils = require('../utils/jwt.utils');
 //import des modèles
 const models = require('../models/');
-const User = require('../models/user');
-const Comment = require('../models/comment');
 
 
 
@@ -221,10 +219,10 @@ exports.deleteMessages = (req, res, next) => {
           attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
           limit: (!isNaN(limit)) ? limit : null,
           offset: (!isNaN(offset)) ? offset : null,
-          include: [{ // Links the post with User and Comments tables
-            model: models.User,
-            model: models.Comment,
-            attributes: ['title', 'content', 'attachement', 'likes', 'userName']
+          include: [{ // Relie le message avec les tables User and Comments
+            model: models.User, 
+            attributes: ['username', 'imageUrl'],
+            Model: models.Comment,
           }]
         }).then(function (posts) {
           done(posts)

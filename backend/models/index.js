@@ -34,4 +34,28 @@ Object.keys(db).forEach(modelName => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
+db.user = require("./user")(sequelize, Sequelize)
+db.post = require("./message")(sequelize, Sequelize)
+db.comment = require("./comment")(sequelize, Sequelize)
+
+// POSTS
+db.user.hasMany(db.post);
+
+db.post.belongsTo(db.user, {
+    foreignKey: "userId",
+});
+
+// COMMENTS
+db.user.hasMany(db.comment);
+
+db.comment.belongsTo(db.user, {
+    foreignKey: "userId",
+});
+db.post.hasMany(db.comment);
+
+db.comment.belongsTo(db.post, {
+    foreignKey: "postId",
+});
+
+module.exports = db;
 module.exports = db;

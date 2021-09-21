@@ -14,7 +14,7 @@
     <div v-for="comment in comments" :key="comment.id">
       <div>
         <img :src="users.map((user) => { 
-          if (user.id === comment.userId) {
+          if (this.$store.state.user.userId === comment.userId) {
             return user.imageUrl
             };
             }).join('')" 
@@ -32,7 +32,7 @@
         <button @click="toggle = !toggle" class="button">
         Modifier
         </button><br>
-        <button v-if="user.id == comment.UserId || user.isAdmin == 1" name="delete" class="button" @click="deleteMessage()">
+        <button v-if="this.$store.state.user.userId == comment.UserId || this.$store.state.user.isAdmin == 1" name="delete" class="button" @click="deleteMessage()">
         Supprimer
         </button>
       </div> 
@@ -81,11 +81,17 @@ export default {
   },
   computed : {
     ...mapState(['status']),
-    message() {
-        return this.$store.state.message
+    user (){
+        return this.$store.state.userinfos
     },
-    comment() {
-        return this.$store.state.comment
+    users() {
+        return this.$store.state.users
+    },
+    messages() {
+        return this.$store.state.messages
+    },
+    comments() {
+        return this.$store.state.comments
     }
     },     
   

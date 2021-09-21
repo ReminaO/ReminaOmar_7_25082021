@@ -116,7 +116,7 @@ const userId = req.body.userId;
   exports.getAllComments = (req, res, next) => {
     models.Comment.findAll({
       include: [{ // relie le poste et l'utilisateur
-          model: User,
+          model: models.User,
           attributes: ['username', 'imageUrl', 'isAdmin']
       }]
   })

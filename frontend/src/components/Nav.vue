@@ -2,7 +2,7 @@
 <div class='container-fluid'>
     <nav class="navbar navbar-expand navbar-light bg-light">
       <div>
-        <router-link to="/wall" class="navbar-brand">Groupomania</router-link>
+        <router-link to="/wall" class="navbar-brand"><img :src="require(`../assets/icon.png`)" alt="logo">Groupomania</router-link>
       </div>
       <div class="navbar-nav mr-auto">
         <li class="nav-item">
@@ -39,5 +39,8 @@ computed: {
 .navbar{
   display: flex;
   justify-content: space-between;
+}
+img { 
+  height: 50px;
 }
 </style>

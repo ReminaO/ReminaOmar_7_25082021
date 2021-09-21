@@ -1,6 +1,10 @@
 <template>
 <div class="container-fluid">
+  <div class='logo'>
+    <img :src="require(`../assets/icon-above-font.png`)" :alt="logo">
+  </div>
   <div class="card">
+    
     <h1 class="card__title" v-if="mode == 'login'">Connexion</h1>
     <h1 class="card__title" v-else>Inscription</h1>
     <p class="card__subtitle" v-if="mode == 'login'">Tu n'as pas encore de compte ? <span class="card__action" @click="switchToCreateAccount()">Créer un compte</span></p>
@@ -111,7 +115,6 @@ export default {
 
 <style scoped>
     .card {
-        margin: 15% 25%;
         width: 50%;
         }
   .form-row {
@@ -133,5 +136,15 @@ export default {
   }
   .form-row__input::placeholder {
     color:#aaaaaa;
+  }
+
+  .logo img{
+    height: 300px;
+    object-fit: contain;
+  }
+  .container-fluid {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
   }
 </style>>

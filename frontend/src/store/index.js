@@ -51,7 +51,8 @@ const store = createStore({
     commentInfos: {
       userName: '',
       post: ''
-    }
+    },
+    users: []
   },
   
   mutations: {

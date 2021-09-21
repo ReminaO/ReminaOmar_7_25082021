@@ -22,15 +22,18 @@
   <div class="card">
     <div v-for="message in messages" :key="message.id">
       <div>
-        <img :src="users.map((user) => { 
-          if (user.id === message.userId) {
-            return user.imageUrl
-            };
-            }).join('')" 
-        class="h-12 w-12 rounded-full flex-none"/>
+        <img v-if="users.map((user) => {
+          if (this.$store.state.user.userId === message.UserId) 
+          return this.$store.state.user.imageUrl;}).join('') !== (null || '')" 
+          :src="users.map((user) => {
+          if (this.$store.state.user.userId === message.UserId) 
+          return user.profilePhoto;}).join('')"/>
         <div class=" ml-3 flex flex-col">
             <p class="font-semibold"> {{ message.userName }} </p>
-            <p class="font-thin text-sm"> {{dateTime(message.createdAt)}} </p>
+            <p class="font-semibold"> Titre : {{ message.title }} </p>
+            <p class="font-semibold"> {{ message.content }} </p>
+            <img :src="message.attachement"/>
+            <p class="font-thin text-sm"> {{message.createdAt}} </p>
         </div>
       </div>
       <div>
@@ -42,20 +45,20 @@
         <br><br>
         <label v-if='!toggle' class="form-row__input"  id="content" name="content" ref="content">Exprimez vous: </label><br>
         <textarea v-if='!toggle' class="form-row__input" type="content" id="content" name="content" ref="content" v-model="content"></textarea><br>
-      <button v-if='!toggle' @click="modifyMessage()" class="button">
-        enregistrer
-      </button>
-      <button @click="toggle = !toggle" class="button">
-        Modifier
-      </button><br>
-      <button v-if="user.id == message.UserId || user.isAdmin == 1" name="delete" class="button" @click="deleteMessage()">
-        Supprimer
-      </button>
+        <button v-if='!toggle' @click="modifyMessage()" class="button">
+          enregistrer
+        </button>
+        <button @click="toggle = !toggle" class="button">
+          Modifier
+        </button><br>
+        <button v-if="this.$store.state.user.userId == message.UserId || this.$store.state.user.isAdmin == 1" name="delete" class="button" @click="deleteMessage()">
+          Supprimer
+        </button>
       </div> 
     <br>
     <Comment />
     </div>
-    </div>
+  </div>
 </div>
   
   </div>
@@ -104,12 +107,25 @@ export default {
       title:'',
       userName:'',
       likes:'',
-      messages: []
+      // messages: []
     }
       
   },
   computed : {
     ...mapState(['status']),
+    
+    user (){
+        return this.$store.state.userinfos
+    },
+    users() {
+        return this.$store.state.users
+    },
+    messages() {
+        return this.$store.state.messages
+    },
+    comments() {
+        return this.$store.state.comments
+    }
     },     
   
   mounted: function () {

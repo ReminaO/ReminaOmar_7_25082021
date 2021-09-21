@@ -1,18 +1,18 @@
 <template>
 <div class='container-fluid'>
-    <nav class="navbar navbar-expand navbar-light bg-light">
+    <nav class="navbar navbar-expand navbar-light">
       <div>
-        <router-link to="/wall" class="navbar-brand"><img :src="require(`../assets/icon.png`)" alt="logo">Groupomania</router-link>
+        <img :src="require(`../assets/icon.png`)" alt="logo"><router-link to="/wall" class="navbar-brand logo text-white">Groupomania</router-link>
       </div>
       <div class="navbar-nav mr-auto">
         <li class="nav-item">
-          <router-link to="/wall" class="nav-link">Accueil</router-link>
+          <router-link to="/wall" class="nav-link text-white">Accueil</router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/profile" class="nav-link">Profil</router-link>
+          <router-link to="/profile" class="nav-link text-white">Profil</router-link>
         </li>
         <li class="nav-item">
-          <router-link @click="logout()" to="/" class="nav-link">Déconnexion</router-link>
+          <router-link @click="logout()" to="/" class="nav-link text-white">Déconnexion</router-link>
         </li>
       </div>
     </nav>
@@ -39,8 +39,12 @@ computed: {
 .navbar{
   display: flex;
   justify-content: space-between;
+  background-color:#d65959;
 }
 img { 
   height: 50px;
+}
+.container-fluid{
+  background-color:#d65959;
 }
 </style>

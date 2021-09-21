@@ -1,15 +1,11 @@
 <template>
 <div class="container">
-<div class = "row">
   <div class="card">
-        <label class="form-row__input"  id="post" name="post" ref="post">Commentaire : </label><br>
-        <input class="form-row__input" type="text" id="post" name="post" ref="post" v-model="post"><br><br>
+        <input class="form-row__input" type="text" id="post" name="post" ref="post" v-model="post" placeholder="Commentaire"><br><br>
         <button @click="addPost()" class="button">
           Publier
         </button>
     </div><br>
-</div>
-<div class = "row">
   <div class="card">
     <div v-for="comment in comments" :key="comment.id">
       <div>
@@ -19,9 +15,8 @@
             };
             }).join('')" 
         class="h-12 w-12 rounded-full flex-none"/>
-        <div class=" ml-3 flex flex-col">
-            <p class="font-semibold"> {{ comment.userName }} </p>
-            <p class="font-thin text-sm"> {{dateTime(comment.createdAt)}} </p>
+        <div class=" ml-3">
+            <p> {{ comment.userName }} </p>
         </div>
       </div>
       <div>
@@ -29,15 +24,14 @@
         <button v-if='!toggle' @click="modifyComment()" class="button">
         enregistrer
         </button>
-        <button @click="toggle = !toggle" class="button">
+        <button v-if="this.$store.state.user.userId == comment.UserId || this.$store.state.user.isAdmin == 1" @click="toggle = !toggle" class="button">
         Modifier
         </button><br>
-        <button v-if="this.$store.state.user.userId == comment.UserId || this.$store.state.user.isAdmin == 1" name="delete" class="button" @click="deleteMessage()">
+        <button v-if='!toggle' name="delete" class="button" @click="deleteMessage()">
         Supprimer
         </button>
       </div> 
     <br>
-    </div>
     </div>
 </div>
   
@@ -75,7 +69,8 @@ export default {
   name: 'Home',
   data () {
     return{
-      toggle: true
+      toggle: true,
+      post:''
     }
       
   },
@@ -141,5 +136,22 @@ export default {
 </script>
 
 <style scoped>
-
+.form-row__input {
+    padding:8px;
+    border: none;
+    border-radius: 8px;
+    background:#f2f2f2;
+    font-weight: 500;
+    font-size: 16px;
+    flex:1;
+    min-width: 100px;
+    color: black;
+  }
+  .card {
+    width: 100%;
+    padding: 10px;
+    background-color: #ffffff;
+    color: white;
+  }
+  
 </style>

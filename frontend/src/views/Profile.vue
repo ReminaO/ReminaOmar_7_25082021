@@ -135,6 +135,10 @@ export default {
 </script>
 
 <style scoped>
+html, body{
+  height: 100%;
+  width: 100%;
+}
 .card {
   margin: 5% 15%;
   width: 75%;
@@ -167,9 +171,12 @@ img {
 .formulaire {
   display: flex;
 }
-
 button {
   margin : 0 25%;
   width: 50%;
 }
+.container-fluid {
+  background-color: #ffffff;
+}
+
 </style>>

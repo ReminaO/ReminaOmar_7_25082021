@@ -1,7 +1,5 @@
 //Import des modules
-const fs = require('fs');
 const asyncLib = require('async');
-const jwtUtils = require('../utils/jwt.utils');
 //import des modèles
 const models = require('../models/');
 
@@ -14,14 +12,12 @@ const ITEMS_LIMIT = 50;
 
 // Controllers pour créer un message
 exports.createMessages = (req, res, next) => {
-  // Obtention du header d'authentification
-  const headerAuth  = req.headers['authorization']; 
-  const userId      = jwtUtils.getUserId(headerAuth);
+  
 
   // Paramètres
   const title   = req.body.title;
   const content = req.body.content;
-  
+  const userId =  req.body.userId;
 
   //Vérification d'un fichier existant ou laisse le lien vide
   const attachement = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null;
@@ -79,8 +75,8 @@ exports.createMessages = (req, res, next) => {
 };
 // Controllers pour modifier un message
 exports.modifyMessages = (req, res, next) => {
-  const headerAuth  = req.headers['authorization']; 
-  const userId = jwtUtils.getUserId(headerAuth);
+  
+  const userId = req.body.userId;
   
   asyncLib.waterfall([
 
@@ -139,9 +135,8 @@ exports.modifyMessages = (req, res, next) => {
 }
   // Controllers por effacer un message grâce a l'ID
 exports.deleteMessages = (req, res, next) => {
-     // Obtention du header d'authentification
-  const headerAuth  = req.headers['authorization']; 
-  const userId = jwtUtils.getUserId(headerAuth);
+
+  const userId = req.body.userId;
   
     asyncLib.waterfall([
 

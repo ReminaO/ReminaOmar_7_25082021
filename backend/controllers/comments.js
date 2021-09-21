@@ -5,10 +5,7 @@ const asyncLib = require('async');
 // Controllers pour créer un commenataire
 exports.createComment = (req, res, next) => {
      // Paramètre
-    // Obtention du header d'authentification
-     const headerAuth  = req.headers['authorization']; 
-     const userId = jwtUtils.getUserId(headerAuth);
-     const content = req.body;
+     const userId = req.body.userId;
 
      if (content == null) {
          return res.status(400).json({ 'error': 'missing body' });
@@ -59,9 +56,8 @@ exports.createComment = (req, res, next) => {
   
 // Controllers pour effacer un commentaire grâce a l'ID
 exports.deleteComment = (req, res, next) => {
-    // Obtention du header d'authentification
-    const headerAuth  = req.headers['authorization']; 
-    const userId = jwtUtils.getUserId(headerAuth);
+const userId = req.body.userId;
+
   asyncLib.waterfall([
 
     // Vérifie que l'utilisateur soit existant
@@ -130,10 +126,9 @@ exports.deleteComment = (req, res, next) => {
 
   
 // Controllers pour modifier un commentaire
-    exports.modifyComment = (req, res, next) => {
-    // Obtention du header d'authentification
-    const headerAuth  = req.headers['authorization']; 
-    const userId = jwtUtils.getUserId(headerAuth);
+  exports.modifyComment = (req, res, next) => {
+      
+      const userId = req.body.userId;
       
   asyncLib.waterfall([
 

@@ -17,7 +17,9 @@ module.exports = (sequelize, DataTypes) => {
           allowNull: false
         }
       });
-      models.Message.hasMany(models.Comment);
+      models.Message.hasMany(models.Comment, {
+        onDelete: 'cascade',
+      });
     }
   };
   Message.init({

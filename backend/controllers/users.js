@@ -181,8 +181,6 @@ exports.modifyProfile = (req, res, next) => {
     let bio = req.body.bio;
     let imageUrl = req.body && req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null;
 
-    // const emailExists = models.User.findOne({ where: { email: email } });
-    // const usernameExists = models.User.findOne({ where: { username: username } });
         asyncLib.waterfall([
             // Vérifie que la requête est envoyé par un compte existant
             function (done) {

@@ -1,5 +1,5 @@
 <template>
-<div class="container footer">
+<div class="container-fluid footer">
     <div class="row">
         <div class="col col-sm12 col-md12">
             <ul class="footer-link">

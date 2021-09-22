@@ -21,13 +21,13 @@
         </button>
     </div><br>
     <div class="form-row">
-      <button @click="logout()" class="button">
+      <button @click="logout()" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
         Déconnexion
       </button><br>
-      <button @click="toggle = !toggle" class="button">
+      <button @click="toggle = !toggle" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
         Modifier
       </button><br>
-      <button @click="deleteProfile()" class="button">
+      <button @click="deleteProfile()" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
         Supprimer
       </button> 
     </div>
@@ -174,6 +174,7 @@ img {
 button {
   margin : 0 25%;
   width: 50%;
+  background-color: rgb(19, 16, 168);
 }
 .container-fluid {
   background-color: #ffffff;

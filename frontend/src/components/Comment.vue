@@ -2,7 +2,7 @@
 <div class="container">
   <div class="card">
         <input class="form-row__input" type="text" id="post" name="post" ref="post" v-model="post" placeholder="Commentaire"><br><br>
-        <button @click="addPost()" class="button">
+        <button @click="addPost()" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
           Publier
         </button>
     </div><br>
@@ -21,13 +21,13 @@
       </div>
       <div>
         <input v-if='!toggle' class="form-row__input" type="text" id="post" name="post" ref="post" v-model="post"><br><br>
-        <button v-if='!toggle' @click="modifyComment()" class="button">
+        <button v-if='!toggle' @click="modifyComment()" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
         enregistrer
         </button>
-        <button v-if="this.$store.state.user.userId == comment.UserId || this.$store.state.user.isAdmin == 1" @click="toggle = !toggle" class="button">
+        <button v-if="this.$store.state.user.userId == comment.UserId || this.$store.state.user.isAdmin == 1" @click="toggle = !toggle" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
         Modifier
         </button><br>
-        <button v-if='!toggle' name="delete" class="button" @click="deleteMessage()">
+        <button v-if='!toggle' name="delete" class="button btn-primary" data-bs-toggle="button" autocomplete="off" @click="deleteMessage()">
         Supprimer
         </button>
       </div> 
@@ -148,10 +148,17 @@ export default {
     color: black;
   }
   .card {
-    width: 100%;
     padding: 10px;
     background-color: #ffffff;
     color: white;
   }
-  
+  button {
+  margin : 0 25%;
+  width: 50%;
+  background-color: rgb(19, 16, 168);
+  color:#f2f2f2;
+}
+.form-row__input {
+    width: min(max(100%), 100%);
+}
 </style>

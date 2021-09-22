@@ -1,18 +1,18 @@
 <template>
-<div class="container ">
+<div class="container-fluid">
   <div class="jumbotron text-black">
-    <h1>Accueil - Exprimez vous :)</h1>
+    <h1>Accueil - Exprimez vous 😊</h1>
   </div>
     <div class="card">
           <input class="form-row__input" type="text" id="title" name="title" ref="title" v-model="title" placeholder="Titre"><br><br>
-          <label for="attachment">Image : </label><br>
-          <input  type="file" ref="image" @change="imgSelected()">
+          <label for="attachement">Image : </label><br>
+          <input  type="file" ref="image" @change="imgSelected()" class="form-row__input">
           <br><br>
           <textarea  class="form-row__input" type="content" id="content" name="content" ref="content" v-model="content" placeholder="Exprimez-vous"></textarea><br>
-          <button @click="addMessage()" class="button">
+          <button @click="addMessage()" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
             Publier
           </button>
-      </div><br>
+    </div><br>
     <div class="card">
       <div v-for="message in messages" :key="message.id">
         <div >
@@ -32,19 +32,19 @@
         <div class="update">
           <div>
             <input v-if='!toggle' class="form-row__input" type="text" id="title" name="title" ref="title" v-model="title" placeholder="Modifier le titre"><br><br>
-            <label v-if='!toggle' for="attachment">Image : </label><br>
+            <label v-if='!toggle' for="attachment" class="text-black">Image : </label><br>
             <input v-if='!toggle' type="file" ref="image" @change="imgSelected()">
             <br><br>
             <textarea v-if='!toggle' class="form-row__input" type="content" id="content" name="content" ref="content" v-model="content" placeholder="Modifier le commentaire"></textarea><br>
-            <button v-if='!toggle' @click="modifyMessage()" class="button">
+            <button v-if='!toggle' @click="modifyMessage()" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
               enregistrer
             </button>
           </div>
           <div>
-            <button v-if="this.$store.state.user.userId == message.UserId || this.$store.state.user.isAdmin == 1" @click="toggle = !toggle" class="button">
+            <button v-if="this.$store.state.user.userId == message.UserId || this.$store.state.user.isAdmin == 1" @click="toggle = !toggle" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
               Modifier
             </button><br><br>
-            <button v-if='!toggle' name="delete" class="button" @click="deleteMessage()">
+            <button v-if='!toggle' name="delete" class="button btn-primary" data-bs-toggle="button" autocomplete="off" @click="deleteMessage()">
               Supprimer
             </button><br><br>
           </div>
@@ -186,6 +186,7 @@ export default {
   display: flex;
   justify-content: space-around;
   align-items: center;
+  flex-wrap: wrap;
 }
 .username-display {
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
@@ -203,25 +204,36 @@ export default {
     border-radius: 8px;
     background:#f2f2f2;
     font-weight: 500;
-    font-size: 16px;
+    font-size: clamp(0.5rem, 1rem + 10vw, 1rem);
     flex:1;
-    min-width: 100px;
+    width: min(max(100%), 100%);
     color: black;
   }
-  .container {
+  .container-fluid {
     display: flex;
     flex-direction: column;
     margin-bottom: 100px;
     align-items: center;
     justify-content: center;
+    flex-wrap: wrap;
   }
   .card {
-    width: 85%;
+    width: 80%;
     padding: 10px;
     background-color:#ffffff;
-    color: white;
+    flex-wrap: wrap;
   }
   .jumbotron {
     padding: 10px;
   }
+  button {
+  margin : 0 25%;
+  width: 50%;
+  background-color: rgb(19, 16, 168);
+  color:#f2f2f2;
+}
+.image {
+    width: min(max(100%), 100%);
+    flex-wrap: wrap;
+}
 </style>

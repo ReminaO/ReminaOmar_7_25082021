@@ -27,7 +27,5 @@ export default {
 </script>
 
 <style scoped>
-.container-fluid {
-  background-color: #ffffff;
-}
+
 </style>

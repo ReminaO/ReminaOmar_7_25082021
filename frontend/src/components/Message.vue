@@ -50,6 +50,7 @@
           </div>
         </div> 
       <br>
+      <Vote />
       <Comment />
       </div>
   </div>
@@ -59,6 +60,7 @@
 <script>
 import { mapState } from 'vuex';
 import Comment from '@/components/Comment.vue';
+import Vote from '@/components/Vote.vue';
 
 const axios = require('axios');
 
@@ -87,9 +89,10 @@ const instance = axios.create({
 });
 
 export default {
-  name: 'Home',
+  name: 'Message',
   components : {
-    Comment
+    Comment, 
+    Vote
   },
   data () {
     return{

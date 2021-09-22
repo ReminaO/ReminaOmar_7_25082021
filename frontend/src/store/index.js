@@ -52,7 +52,9 @@ const store = createStore({
       userName: '',
       post: ''
     },
-    users: []
+    users: [],
+    likes: [],
+    dislikes : []
   },
   
   mutations: {

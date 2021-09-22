@@ -66,7 +66,7 @@ const instance = axios.create({
 });
 
 export default {
-  name: 'Home',
+  name: 'Comment',
   data () {
     return{
       toggle: true,

@@ -100,16 +100,15 @@ export default {
   },
   
   methods :{
-  },
-  addPost: function () {
+    addPost: function () {
       const formData = new FormData();
       formData.append('post', this.post);
-      formData.append('user', this.user);
-      instance.post(`/`, formData, {
+      formData.append('username', this.userName);
+      instance.post(`/${user.userId}`, formData, {
       })
       .then(response => {
         this.post = response.data
-        this.user = response.data 
+        this.userName = response.data 
         this.$router.go("/wall");
       })
     },
@@ -132,6 +131,8 @@ export default {
         console.log(error);
       })
     }
+  },
+  
 }
 </script>
 

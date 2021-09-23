@@ -9,12 +9,13 @@
           <input  type="file" ref="image" @change="imgSelected()" class="form-row__input">
           <br><br>
           <textarea  class="form-row__input" type="content" id="content" name="content" ref="content" v-model="content" placeholder="Exprimez-vous"></textarea><br>
-          <button @click="addMessage()" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
+          <button @click="addMessage()" class="button-size btn-primary" data-bs-toggle="button" autocomplete="off">
             Publier
           </button>
     </div><br>
     <div class="card">
       <div v-for="message in messages" :key="message.id">
+        <div class="message-container">
         <div >
           <img  
             :src="users.map((user) => {
@@ -26,7 +27,7 @@
               <p class="title-display text-black"> Titre : {{ message.title }} </p>
               <p class="content-display text-black"> {{ message.content }} </p>
             </div>
-              <img :src="message.attachement" class="img-fluid"/>
+              <img :src="message.attachement" class="img-fluid image"/>
           </div>
         </div>
         <div class="update">
@@ -36,22 +37,24 @@
             <input v-if='!toggle' type="file" ref="image" @change="imgSelected()">
             <br><br>
             <textarea v-if='!toggle' class="form-row__input" type="content" id="content" name="content" ref="content" v-model="content" placeholder="Modifier le commentaire"></textarea><br>
-            <button v-if='!toggle' @click="modifyMessage()" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
+            <button v-if='!toggle' @click="modifyMessage()" class="button-small btn-primary" data-bs-toggle="button" autocomplete="off">
               enregistrer
             </button>
           </div>
           <div>
-            <button v-if="this.$store.state.user.userId == message.UserId || this.$store.state.user.isAdmin == 1" @click="toggle = !toggle" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
+            <button v-if="this.$store.state.user.userId == message.UserId || this.$store.state.user.isAdmin == 1" @click="toggle = !toggle" class="button-small btn-primary" data-bs-toggle="button" autocomplete="off">
               Modifier
             </button><br><br>
-            <button v-if='!toggle' name="delete" class="button btn-primary" data-bs-toggle="button" autocomplete="off" @click="deleteMessage()">
+            <button v-if='!toggle' name="delete" class="button-small btn-primary" data-bs-toggle="button" autocomplete="off" @click="deleteMessage()">
               Supprimer
             </button><br><br>
           </div>
         </div> 
       <br>
       <Vote />
+      <span class="date-format">Publié le {{ formatDate(message.createdAt)}}</span><br><br>
       <Comment />
+      </div>
       </div>
   </div>
 </div>
@@ -59,10 +62,12 @@
 
 <script>
 import { mapState } from 'vuex';
+import moment from 'moment';
 import Comment from '@/components/Comment.vue';
 import Vote from '@/components/Vote.vue';
 
 const axios = require('axios');
+
 
 
 let user = localStorage.getItem('user');
@@ -133,28 +138,32 @@ export default {
   },
   
   methods :{
-    imgSelected: function () {
-      this.attachement = this.$refs.image.files[0];
-      // this.message.attachement = URL.createObjectURL(this.image)
-    },
+  formatDate(value) {
+  if (value) {
+    return moment(String(value)).format('DD/MM/YYYY')
+  }
+},
+  imgSelected: function () {
+    this.attachement = this.$refs.image.files[0];
+    // this.message.attachement = URL.createObjectURL(this.image)
   },
   addMessage: function () {
-      const formData = new FormData();
-      formData.append('image', this.attachement);
-      formData.append('content', this.content);
-      formData.append('title', this.title);
-      formData.append('username', this.userName);
-      instance.post(`/post`, formData, {
-      })
-      .then(response => {
-        this.title = response.data 
-        this.content = response.data 
-        this.attachement = response.data
-        this.userName = response.data 
-        this.$router.go("/wall");
-      })
-    },
-    modifyMessage: function () {
+    const formData = new FormData();
+    formData.append('image', this.attachement);
+    formData.append('content', this.content);
+    formData.append('title', this.title);
+    formData.append('username', this.userName);
+    instance.post(`/post/${user.userId}`, formData, {
+    })
+    .then(response => {
+      this.title = response.data 
+      this.content = response.data 
+      this.attachement = response.data
+      this.userName = response.data 
+      this.$router.go("/wall");
+    })
+  },
+  modifyMessage: function () {
       const formData = new FormData();
       formData.append('image', this.attachement);
       formData.append('content', this.content);
@@ -168,7 +177,7 @@ export default {
         this.$router.go("/wall");
       })
     },
-    deleteMessage: function () {
+  deleteMessage: function () {
       const self = this;
       this.$store.dispatch('deleteMessage')
       .then(function () {
@@ -177,6 +186,8 @@ export default {
         console.log(error);
       })
     }
+  },
+  
 }
 </script>
 
@@ -184,6 +195,7 @@ export default {
 .update {
   display: flex;
   justify-content: space-between;
+  padding: 20px;
 }
 .message-display {
   display: flex;
@@ -223,13 +235,13 @@ export default {
   .card {
     width: 80%;
     padding: 10px;
-    background-color:#ffffff;
     flex-wrap: wrap;
+    border: 5px solid rgb(212, 104, 104);
   }
   .jumbotron {
     padding: 10px;
   }
-  button {
+  .button-size {
   margin : 0 25%;
   width: 50%;
   background-color: rgb(19, 16, 168);
@@ -237,6 +249,22 @@ export default {
 }
 .image {
     width: min(max(100%), 100%);
+    height : 250px;
     flex-wrap: wrap;
+    object-fit: contain;
+}
+/* img { 
+  height: 250px;
+} */
+.button-small {
+  width: 100%;
+  background-color: rgb(19, 16, 168);
+  color:#f2f2f2;
+}
+.message-container {
+  border: 3px solid rgb(231, 154, 154);
+}
+.date-format {
+  padding:10px;
 }
 </style>

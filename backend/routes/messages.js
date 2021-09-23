@@ -12,7 +12,7 @@ const multer = require('../middleware/multer-config');
 const messagesCtrl = require('../controllers/messages');
 
 //Routes pour appeler les controllers messages
-router.post('/post', auth, multer, messagesCtrl.createMessages);
+router.post('/post/:id', auth, multer, messagesCtrl.createMessages);
 router.put('/:id/post', auth, multer, messagesCtrl.modifyMessages)
 router.delete('/:id/post', auth, messagesCtrl.deleteMessages);
 router.get('/', auth, messagesCtrl.getAllMessages);

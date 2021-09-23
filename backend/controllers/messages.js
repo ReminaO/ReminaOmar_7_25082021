@@ -17,7 +17,7 @@ exports.createMessages = (req, res, next) => {
   // Paramètres
   const title   = req.body.title;
   const content = req.body.content;
-  const userId =  req.body.userId;
+  const userId =  req.params.id;
 
   //Vérification d'un fichier existant ou laisse le lien vide
   const attachement = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null;
@@ -76,7 +76,7 @@ exports.createMessages = (req, res, next) => {
 // Controllers pour modifier un message
 exports.modifyMessages = (req, res, next) => {
   
-  const userId = req.body.userId;
+  const userId = req.params.id;
   
   asyncLib.waterfall([
 
@@ -136,7 +136,7 @@ exports.modifyMessages = (req, res, next) => {
   // Controllers por effacer un message grâce a l'ID
 exports.deleteMessages = (req, res, next) => {
 
-  const userId = req.body.userId;
+  const userId = req.params.id;
   
     asyncLib.waterfall([
 

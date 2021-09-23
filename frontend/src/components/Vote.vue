@@ -85,5 +85,6 @@ export default {
 .feeling {
     display: flex;
     justify-content: space-between;
+    padding: 10px;
 }
 </style>

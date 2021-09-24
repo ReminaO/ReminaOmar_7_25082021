@@ -61,13 +61,10 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
 
-    post:{
-      type: DataTypes.STRING,
-      validate: {
-        notEmpty: true, 
-        min: 2,
-      }
+    comment:{
+      type: DataTypes.STRING
     },
+    
   }, {
     sequelize,
     modelName: 'Comment',

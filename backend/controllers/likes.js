@@ -13,11 +13,9 @@ const LIKED = 1;
 module.exports = {
   
   likeMessage: function (req, res) {
-    const headerAuth  = req.headers['authorization']; 
-    const userId = jwtUtils.getUserId(headerAuth);
-
     // Params
-    var messageId = parseInt(req.params.message.id);
+    const userId = req.params.userId;
+    const messageId = parseInt(req.params.message.id);
 
     if (messageId <= 0) {
       return res.status(400).json({ 'error': 'invalid parameters' });
@@ -109,11 +107,9 @@ module.exports = {
     });
   },
   dislikeMessage: function (req, res) {
-    const headerAuth  = req.headers['authorization']; 
-    const userId = jwtUtils.getUserId(headerAuth);
-
    // Params
-   var messageId = parseInt(req.params.message.id);
+   const userId = req.params.userId;
+   const messageId = parseInt(req.params.message.id);
 
    if (messageId <= 0) {
      return res.status(400).json({ 'error': 'invalid parameters' });

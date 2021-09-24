@@ -32,7 +32,7 @@ module.exports = {
           key: 'username',
         }
       },
-      post: {
+      comment: {
         allowNull: false,
         type: Sequelize.STRING
       },

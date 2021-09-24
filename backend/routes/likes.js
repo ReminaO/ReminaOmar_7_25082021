@@ -9,7 +9,7 @@ const auth = require('../middleware/auth');
 const likesCtrl = require('../controllers/likes');
 
 
-router.post('/:messageId/like', auth, likesCtrl.likeMessage);
-router.post('/:messageId/dislike', auth, likesCtrl.dislikeMessage);
+router.post('/:id/like', auth, likesCtrl.likeMessage);
+router.post('/:id/dislike', auth, likesCtrl.dislikeMessage);
 
 module.exports = router;

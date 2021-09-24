@@ -4,59 +4,74 @@ const asyncLib = require('async');
 
 // Controllers pour créer un commenataire
 exports.createComment = (req, res, next) => {
-     // Paramètre
-     const userId = req.body.userId;
+    // Paramètre
+    const comment = req.body.comment;
+    const userId = req.params.userId;
+    const messageId = req.params.messageId;
 
-     if (content == null) {
-         return res.status(400).json({ 'error': 'missing body' });
-     }
- 
-     asyncLib.waterfall([
- 
-         // 1. recherche l'utilsateur
-         function(done) {
-             models.User.findOne({
-                     where: { id: userId }
-                 })
-                 .then(function(userFound) {
-                     done(null, userFound);
-                 })
-                 .catch(function(err) {
-                     return res.status(500).json({ 'error': 'Utilisateur introuvable' });
-                 });
-         },
- 
-         // 2. si trouvé créé le commentaire
-         function(userFound, done) {
-             if (userFound) {
-                 // Créé le post et l'enregistre dans la BD
-                 models.Comment.create({
-                         content: req.body.content,
-                         UserId: userFound.id,
-                         messageId: req.params.id,
-                     })
-                     .then(function(newComment) {
-                         done(newComment)
-                     })
-                     .catch(() => res.status(400).json({ message: "erreur commentaire controller" }));
-             } else {
-                 res.status(404).json({ 'error': 'user not found' });
-             }
-         },
- 
-         // 3. Confiramtion une fois le commenatire créé
-     ], function(newComment) {
-         if (newComment) {
-             return res.status(201).json(newComment);
-         } else {
-             return res.status(500).json({ 'error': 'le commentaire ne peut être envoyé' });
-         }
-     })
+    if (comment == null) {
+        return res.status(400).json({ 'error': 'Champs manquant' });
+    }
+
+    asyncLib.waterfall([
+
+        // 1. recherche l'utilsateur
+        function(done) {
+            models.Message.findOne({
+              where: { id: messageId }
+            })
+            .then(function(messageFound) {
+              done(null, messageFound);
+            })
+            .catch(function(err) {
+              return res.status(500).json({ 'error': 'unable to verify message' });
+            });
+          },
+          function(messageFound, done) {
+            if(messageFound) {
+              models.User.findOne({
+                where: { id: userId }
+              })
+              .then(function(userFound) {
+                done(null, messageFound, userFound);
+              })
+              .catch(function(err) {
+                return res.status(500).json({ 'error': 'unable to verify user' });
+              });
+            }
+          },
+        // 2. si trouvé créé le commentaire
+        function(messagefound, userFound, done) {
+            if (messagefound) {
+                // Créé le postContent et l'enregistre dans la BD
+                models.Comment.create({
+                comment: comment,
+                UserId: userFound.id,
+                messageId: req.params.messageId,
+                userName: userFound.username,
+                    })
+                    .then(function(newComment) {
+                        done(done(null, messageFound, userFound, newComment));
+                    })
+                    .catch(() => res.status(400).json({ message: "erreur commentaire controller" }));
+            } else {
+                res.status(404).json({ 'error': 'user not found' });
+            }
+        },
+
+        // 3. Confiramtion une fois le commenatire créé
+    ], function(newComment) {
+        if (newComment) {
+            return res.status(201).json(newComment);
+        } else {
+            return res.status(500).json({ 'error': 'le commentaire ne peut être envoyé' });
+        }
+    })
 };
   
 // Controllers pour effacer un commentaire grâce a l'ID
 exports.deleteComment = (req, res, next) => {
-const userId = req.body.userId;
+const userId = req.params.id;
 
   asyncLib.waterfall([
 
@@ -90,7 +105,7 @@ const userId = req.body.userId;
         // Checks if the user is the owner of the targeted one
         if (userFound.id == commentFound.userId || userFound.isAdmin == true) { // or if he's admin
 
-            // Soft-deletion modifying the post the ad a timestamp to deletedAt
+            // Soft-deletion modifying the postContent the ad a timestamp to deletedAt
             models.Comment.destroy({
                     where: { id: req.params.id }
                 })
@@ -128,7 +143,7 @@ const userId = req.body.userId;
 // Controllers pour modifier un commentaire
   exports.modifyComment = (req, res, next) => {
       
-      const userId = req.body.userId;
+      const userId = req.params.id;
       
   asyncLib.waterfall([
 
@@ -162,10 +177,10 @@ const userId = req.body.userId;
         // Checks if the user is the owner of the targeted one
         if (userFound.id == commentFound.userId || userFound.isAdmin == true) { // or if he's admin
 
-            // Soft-deletion modifying the post the ad a timestamp to deletedAt
+            // Soft-deletion modifying the postContent the ad a timestamp to deletedAt
             models.Comment.updateOne({
               where: { id: req.params.id },
-              content: req.body.content,
+              postContent: req.body.postContent,
                 })
                 .then(() => res.status(200).json({ message: 'Comment supprimé !' }))
                 .catch(error => res.status(400).json({ error }));

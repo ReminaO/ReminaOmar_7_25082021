@@ -1,11 +1,11 @@
 <template>
 <div class="container">
   <div class="card">
-        <input class="form-row__input" type="text" id="post" name="post" ref="post" v-model="post" placeholder="Commentaire"><br><br>
-        <button @click="addPost()" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
-          Publier
-        </button>
-    </div><br>
+    <input class="form-row__input form-control" type="text" id="comment" name="comment" ref="comment" placeholder="Commentaire"><br><br>
+    <button @click="addPost()" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
+      Publier
+    </button>
+  </div><br>
   <div class="card">
     <div v-for="comment in comments" :key="comment.id">
       <div>
@@ -17,10 +17,11 @@
         class="h-12 w-12 rounded-full flex-none"/>
         <div class=" ml-3">
             <p> {{ comment.userName }} </p>
+            <p> {{ comment.comment}} </p>
         </div>
       </div>
       <div>
-        <input v-if='!toggle' class="form-row__input" type="text" id="post" name="post" ref="post" v-model="post"><br><br>
+        <input v-if='!toggle' class="form-row__input" type="text" id="comment" name="comment" ref="comment" placeholder="Modifier le commentaire"><br><br>
         <button v-if='!toggle' @click="modifyComment()" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
         enregistrer
         </button>
@@ -44,6 +45,8 @@ const axios = require('axios');
 
 let user = localStorage.getItem('user');
 let comment = localStorage.getItem('comment');
+// let message = JSON.parse(localStorage.getItem('message'));
+
 if (!user) {
  user = {
     userId: -1,
@@ -70,7 +73,7 @@ export default {
   data () {
     return{
       toggle: true,
-      post:''
+      post:'',
     }
       
   },
@@ -79,6 +82,7 @@ export default {
     user (){
         return this.$store.state.userinfos
     },
+    
     users() {
         return this.$store.state.users
     },
@@ -100,25 +104,26 @@ export default {
   },
   
   methods :{
+    
     addPost: function () {
       const formData = new FormData();
-      formData.append('post', this.post);
+      formData.append('comment', this.comment);
       formData.append('username', this.userName);
-      instance.post(`/${user.userId}`, formData, {
+      instance.post(`/post/${user.userId}`, formData, {
       })
       .then(response => {
-        this.post = response.data
+        this.comment = response.data
         this.userName = response.data 
         this.$router.go("/wall");
       })
     },
     modifyComment: function () {
       const formData = new FormData();
-      formData.append('post', this.post);
+      formData.append('comment', this.comment);
       instance.put(`/${comment.id}`, formData, {
       })
       .then(response => {
-        this.post = response.data
+        this.postContent = response.data
         this.$router.go("/wall");
       })
     },

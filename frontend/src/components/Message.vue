@@ -4,14 +4,14 @@
     <h1>Accueil - Exprimez vous 😊</h1>
   </div>
     <div class="card">
-          <input class="form-row__input" type="text" id="title" name="title" ref="title" v-model="title" placeholder="Titre"><br><br>
-          <label for="attachement">Image : </label><br>
-          <input  type="file" ref="image" @change="imgSelected()" class="form-row__input">
-          <br><br>
-          <textarea  class="form-row__input" type="content" id="content" name="content" ref="content" v-model="content" placeholder="Exprimez-vous"></textarea><br>
-          <button @click="addMessage()" class="button-size btn-primary" data-bs-toggle="button" autocomplete="off">
-            Publier
-          </button>
+      <input class="form-row__input" type="text" id="title" name="title" ref="title" v-model="title" placeholder="Titre"><br><br>
+      <label for="attachement">Image : </label><br>
+      <input  type="file" ref="image" @change="imgSelected()" class="form-row__input">
+      <br><br>
+      <textarea  class="form-row__input" type="content" id="content" name="content" ref="content" v-model="content" placeholder="Exprimez-vous"></textarea><br>
+      <button @click="addMessage()" class="button-size btn-primary" data-bs-toggle="button" autocomplete="off">
+        Publier
+      </button>
     </div><br>
     <div class="card">
       <div v-for="message in messages" :key="message.id">
@@ -32,20 +32,20 @@
         </div>
         <div class="update">
           <div>
-            <input v-if='!toggle' class="form-row__input" type="text" id="title" name="title" ref="title" v-model="title" placeholder="Modifier le titre"><br><br>
-            <label v-if='!toggle' for="attachment" class="text-black">Image : </label><br>
-            <input v-if='!toggle' type="file" ref="image" @change="imgSelected()">
+            <input v-if="this.$store.state.user.userId == message.UserId && !toggle|| this.$store.state.user.isAdmin == 1 && !toggle" class="form-row__input" type="text" id="title" name="title" ref="title" v-model="title" placeholder="Modifier le titre"><br><br>
+            <label v-if="this.$store.state.user.userId == message.UserId && !toggle || this.$store.state.user.isAdmin == 1 && !toggle " for="attachment" class="text-black">Image : </label><br>
+            <input v-if="this.$store.state.user.userId == message.UserId && !toggle || this.$store.state.user.isAdmin == 1 && !toggle" type="file" ref="image" @change="imgSelected()" class="form-row__input">
             <br><br>
-            <textarea v-if='!toggle' class="form-row__input" type="content" id="content" name="content" ref="content" v-model="content" placeholder="Modifier le commentaire"></textarea><br>
-            <button v-if='!toggle' @click="modifyMessage()" class="button-small btn-primary" data-bs-toggle="button" autocomplete="off">
+            <textarea v-if="this.$store.state.user.userId == message.UserId && !toggle || this.$store.state.user.isAdmin == 1 && !toggle" class="form-row__input" type="content" id="content" name="content" ref="content" v-model="content" placeholder="Modifier le commentaire"></textarea><br>
+            <button v-if="this.$store.state.user.userId == message.UserId && !toggle || this.$store.state.user.isAdmin == 1 && !toggle" @click="modifyMessage()" class="button-small btn-primary" data-bs-toggle="button" autocomplete="off">
               enregistrer
-            </button>
+            </button><br><br>
           </div>
           <div>
             <button v-if="this.$store.state.user.userId == message.UserId || this.$store.state.user.isAdmin == 1" @click="toggle = !toggle" class="button-small btn-primary" data-bs-toggle="button" autocomplete="off">
               Modifier
             </button><br><br>
-            <button v-if='!toggle' name="delete" class="button-small btn-primary" data-bs-toggle="button" autocomplete="off" @click="deleteMessage()">
+            <button v-if="this.$store.state.user.userId == message.UserId && !toggle || this.$store.state.user.isAdmin == 1 && !toggle "  name="delete" class="button-small btn-primary" data-bs-toggle="button" autocomplete="off" @click="deleteMessage()">
               Supprimer
             </button><br><br>
           </div>
@@ -80,7 +80,6 @@ if (!user) {
 } else {
   try {
     user = JSON.parse(user);
-    //instance.defaults.headers.common = {'Authorization': `bearer ${user.token}`};
   } catch (ex) {
     user = {
       userId: -1,
@@ -107,7 +106,7 @@ export default {
       title:'',
       userName:'',
       likes:'',
-      // messages: []
+      id: this.$route.params.id,
     }
       
   },
@@ -145,7 +144,6 @@ export default {
 },
   imgSelected: function () {
     this.attachement = this.$refs.image.files[0];
-    // this.message.attachement = URL.createObjectURL(this.image)
   },
   addMessage: function () {
     const formData = new FormData();
@@ -185,10 +183,10 @@ export default {
       }, function (error) {
         console.log(error);
       })
-    }
-  },
-  
+    },
 }
+}
+
 </script>
 
 <style scoped>
@@ -196,9 +194,12 @@ export default {
   display: flex;
   justify-content: space-between;
   padding: 20px;
+  flex-wrap: wrap;
+  width: 100%;
 }
 .message-display {
   display: flex;
+  flex-direction: column;
   justify-content: space-around;
   align-items: center;
   flex-wrap: wrap;
@@ -208,6 +209,7 @@ export default {
 }
 .title-display {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: clamp(0.7rem, 1rem + 10vw, 0.5rem);
 }
 .content-display {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -233,22 +235,23 @@ export default {
     flex-wrap: wrap;
   }
   .card {
-    width: 80%;
-    padding: 10px;
+    width: 70%;
+    padding: 20px;
     flex-wrap: wrap;
     border: 5px solid rgb(212, 104, 104);
+    border-radius: 30px;
   }
   .jumbotron {
     padding: 10px;
   }
   .button-size {
   margin : 0 25%;
-  width: 50%;
+  width: min(max(50%), 50%);
   background-color: rgb(19, 16, 168);
   color:#f2f2f2;
 }
 .image {
-    width: min(max(100%), 100%);
+    width: min(max(100%), 70%);
     height : 250px;
     flex-wrap: wrap;
     object-fit: contain;
@@ -262,7 +265,7 @@ export default {
   color:#f2f2f2;
 }
 .message-container {
-  border: 3px solid rgb(231, 154, 154);
+  border-bottom: 3px solid rgb(231, 154, 154);
 }
 .date-format {
   padding:10px;

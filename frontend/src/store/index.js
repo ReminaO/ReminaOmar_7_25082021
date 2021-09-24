@@ -39,6 +39,7 @@ const store = createStore({
       imageUrl: '',
       isAdmin:'',
     },
+    message: message,
     messages: [],
     messageInfos: {
       title:'',
@@ -47,10 +48,11 @@ const store = createStore({
       likes: '',
       userName: ''
     },
+    comment: comment,
     comments: [],
     commentInfos: {
       userName: '',
-      post: ''
+      postContent: ''
     },
     users: [],
     likes: [],
@@ -73,9 +75,7 @@ const store = createStore({
         userId: -1,
         token: '',
       }
-      localStorage.removeItem('user');
-      localStorage.removeItem('message');
-      localStorage.removeItem('comment');
+      localStorage.clear();
     },
     deleteInfos: function (state) {
       state.user = {
@@ -97,15 +97,22 @@ const store = createStore({
       }
       localStorage.removeItem('message');
     },
-    message: function (state, messages) {
+    message: function (state, message) {
       localStorage.setItem('message', JSON.stringify(message));
+      state.message = message;
+      
+    },
+    messages: function (state, messages) {
       state.messages = messages;
     },
     commentInfos: function (state, commentInfos) {
       state.commentinfos = commentInfos;
     },
-    comment: function (state, comments) {
+    comment: function (state, comment) {
       localStorage.setItem('comment', JSON.stringify(comment));
+      state.comment = comment;
+    },
+    comments: function (state, comments) {
       state.comments = comments;
     },
     deleteComment: function (state) {
@@ -168,6 +175,7 @@ const store = createStore({
       instance.get(`messages`)
       .then(function (response) {
         commit('message', response.data);
+        commit('messages', response.data);
       })
       .catch(function () {
       });
@@ -185,6 +193,7 @@ const store = createStore({
       instance.get(`comments`)
       .then(function (response) {
         commit('comment', response.data);
+        commit('comments', response.data);
       })
       .catch(function () {
       });
@@ -199,6 +208,14 @@ const store = createStore({
       });
     }
   },
+  displayMessage: function ({ commit}) {
+    instance.get(`messages/${this.id}`)
+    .then(function (response) {
+      commit('userInfos', response.data);
+    })
+    .catch(function () {
+    });
+    },
 })
 
 export default store;

@@ -1,34 +1,23 @@
 <template>
 <div class="container">
-  <div class="card">
-    <input class="form-row__input form-control" type="text" id="comment" name="comment" ref="comment" placeholder="Commentaire"><br><br>
+  <div class="card comment-publish">
+    <input class="form-row__input form-control" type="text" id="comment" name="comment" ref="comment" v-model="comment" placeholder="Commentaire"><br>
     <button @click="addPost()" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
       Publier
     </button>
   </div><br>
-  <div class="card">
+  <div  class="card">
     <div v-for="comment in comments" :key="comment.id">
-      <div>
-        <img :src="users.map((user) => { 
-          if (this.$store.state.user.userId === comment.userId) {
-            return user.imageUrl
-            };
-            }).join('')" 
-        class="h-12 w-12 rounded-full flex-none"/>
-        <div class=" ml-3">
-            <p> {{ comment.userName }} </p>
-            <p> {{ comment.comment}} </p>
+      <div v-if="$store.state.message.id == comment.messageId" class="comment-display">
+        <img :src="$store.state.user.imageUrl"/>
+        <div class="comment-display__content">
+            <p class="comment-display__username"> {{ comment.userName }} </p>
+            <p class="comment-display__comment"> {{ comment.comment }} </p>
         </div>
       </div>
       <div>
-        <input v-if='!toggle' class="form-row__input" type="text" id="comment" name="comment" ref="comment" placeholder="Modifier le commentaire"><br><br>
-        <button v-if='!toggle' @click="modifyComment()" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
-        enregistrer
-        </button>
-        <button v-if="this.$store.state.user.userId == comment.UserId || this.$store.state.user.isAdmin == 1" @click="toggle = !toggle" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
-        Modifier
-        </button><br>
-        <button v-if='!toggle' name="delete" class="button btn-primary" data-bs-toggle="button" autocomplete="off" @click="deleteMessage()">
+        
+        <button v-if="this.$store.state.user.userId == comment.userId || this.$store.state.user.isAdmin == 1" name="delete" class="button btn-primary" data-bs-toggle="button" autocomplete="off" @click="deleteMessage()">
         Supprimer
         </button>
       </div> 
@@ -44,8 +33,6 @@ import { mapState } from 'vuex';
 const axios = require('axios');
 
 let user = localStorage.getItem('user');
-let comment = localStorage.getItem('comment');
-// let message = JSON.parse(localStorage.getItem('message'));
 
 if (!user) {
  user = {
@@ -64,7 +51,7 @@ if (!user) {
   }
 }
 const instance = axios.create({
-  baseURL: 'http://localhost:3000/api/comments',
+  baseURL: 'http://localhost:3000/api/comments/',
   headers: {'Authorization': 'Bearer '+ `${user.token}`}
 });
 
@@ -73,7 +60,7 @@ export default {
   data () {
     return{
       toggle: true,
-      post:'',
+      comment : '',
     }
       
   },
@@ -91,11 +78,11 @@ export default {
     },
     comments() {
         return this.$store.state.comments
-    }
+    },
+    
     },     
   
   mounted: function () {
-    console.log(this.$store.state.user);
     if (this.$store.state.user.userId == -1) {
       this.$router.push('/');
       return ;
@@ -106,26 +93,19 @@ export default {
   methods :{
     
     addPost: function () {
+      let message = JSON.parse(localStorage.getItem('message'));
+      message.forEach(function (message) {
       const formData = new FormData();
       formData.append('comment', this.comment);
       formData.append('username', this.userName);
-      instance.post(`/post/${user.userId}`, formData, {
+      instance.post(`comment/${message.id}/${user.userId}`, formData, {
       })
       .then(response => {
         this.comment = response.data
         this.userName = response.data 
         this.$router.go("/wall");
       })
-    },
-    modifyComment: function () {
-      const formData = new FormData();
-      formData.append('comment', this.comment);
-      instance.put(`/${comment.id}`, formData, {
-      })
-      .then(response => {
-        this.postContent = response.data
-        this.$router.go("/wall");
-      })
+    })
     },
     deleteComment: function () {
       const self = this;
@@ -146,7 +126,7 @@ export default {
     padding:8px;
     border: none;
     border-radius: 8px;
-    background:#f2f2f2;
+    background:#e9ace4;
     font-weight: 500;
     font-size: 16px;
     flex:1;
@@ -154,17 +134,46 @@ export default {
     color: black;
   }
   .card {
-    padding: 10px;
     background-color: #ffffff;
-    color: white;
+    border: none;
   }
   button {
-  margin : 0 25%;
-  width: 50%;
+  margin : 0 35%;
+  width: 30%;
   background-color: rgb(19, 16, 168);
   color:#f2f2f2;
 }
 .form-row__input {
     width: min(max(100%), 100%);
+}
+.comment-display__content {
+  display: flex;
+  justify-content: space-between;
+}
+.comment-display__comment{
+  padding:8px;
+    border: none;
+    border-radius: 8px;
+    background:#f87cee;
+    font-weight: 500;
+    font-size: 16px;
+    color: black;
+    text-align: right;
+    width: min(max(100%), 80%);
+    min-width: 50px;
+}
+.comment-display__username {
+  display: flex;
+  text-align: center;
+  align-items: center;
+  border: solid 1px #eb5b5b;
+  border-radius: 30px;
+  padding: 10px;
+  background:#eb5b5b;
+}
+.comment-publish {
+  border: solid 1px #e9ace4;
+  border-radius : 30px;
+  padding: 10px
 }
 </style>

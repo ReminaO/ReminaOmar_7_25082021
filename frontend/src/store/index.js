@@ -52,7 +52,7 @@ const store = createStore({
     comments: [],
     commentInfos: {
       userName: '',
-      postContent: ''
+      comment: ''
     },
     users: [],
     likes: [],
@@ -194,12 +194,13 @@ const store = createStore({
       .then(function (response) {
         commit('comment', response.data);
         commit('comments', response.data);
+        commit('commentInfos', response.data);
       })
       .catch(function () {
       });
     },
     deletecomment: ({ commit }) => {
-      instance.delete(`comments/${comment.userId}/post`)
+      instance.delete(`comments/${comment.userId}`)
         .then(function (response) {
           commit('deleteComment', message.id)
           alert(response.data);
@@ -208,14 +209,6 @@ const store = createStore({
       });
     }
   },
-  displayMessage: function ({ commit}) {
-    instance.get(`messages/${this.id}`)
-    .then(function (response) {
-      commit('userInfos', response.data);
-    })
-    .catch(function () {
-    });
-    },
 })
 
 export default store;

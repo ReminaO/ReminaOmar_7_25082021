@@ -7,59 +7,46 @@ exports.createComment = (req, res, next) => {
     // Paramètre
     const comment = req.body.comment;
     const userId = req.params.userId;
-    const messageId = req.params.messageId;
 
     if (comment == null) {
         return res.status(400).json({ 'error': 'Champs manquant' });
     }
 
     asyncLib.waterfall([
-
         // 1. recherche l'utilsateur
         function(done) {
-            models.Message.findOne({
-              where: { id: messageId }
+            models.User.findOne({
+                where: { id: userId },
+                attributes : ["id", "username"]
             })
-            .then(function(messageFound) {
-              done(null, messageFound);
+            .then(function(userFound) {
+                done(null, userFound);
             })
             .catch(function(err) {
-              return res.status(500).json({ 'error': 'unable to verify message' });
+            return res.status(500).json({ 'error': 'Impossible d\'atteindre l\'utilisateur' });
             });
-          },
-          function(messageFound, done) {
-            if(messageFound) {
-              models.User.findOne({
-                where: { id: userId }
-              })
-              .then(function(userFound) {
-                done(null, messageFound, userFound);
-              })
-              .catch(function(err) {
-                return res.status(500).json({ 'error': 'unable to verify user' });
-              });
-            }
-          },
+        },
+        
         // 2. si trouvé créé le commentaire
-        function(messagefound, userFound, done) {
-            if (messagefound) {
-                // Créé le postContent et l'enregistre dans la BD
+        function (userFound, done) {
+            if (userFound) {
+                // Créé le commentaire et l'enregistre dans la BDD
                 models.Comment.create({
                 comment: comment,
-                UserId: userFound.id,
+                userId: userFound.id,
                 messageId: req.params.messageId,
                 userName: userFound.username,
                     })
                     .then(function(newComment) {
-                        done(done(null, messageFound, userFound, newComment));
+                        done(newComment);
                     })
-                    .catch(() => res.status(400).json({ message: "erreur commentaire controller" }));
+                    .catch(() => res.status(400).json({ message: "erreur controller commentaire" }));
             } else {
                 res.status(404).json({ 'error': 'user not found' });
             }
         },
 
-        // 3. Confiramtion une fois le commenatire créé
+        // 3. Confirmation une fois le commenatire créé
     ], function(newComment) {
         if (newComment) {
             return res.status(201).json(newComment);
@@ -129,12 +116,7 @@ const userId = req.params.id;
   
   // Controllers pour afficher toutes les commentaires
   exports.getAllComments = (req, res, next) => {
-    models.Comment.findAll({
-      include: [{ // relie le poste et l'utilisateur
-          model: models.User,
-          attributes: ['username', 'imageUrl', 'isAdmin']
-      }]
-  })
+    models.Comment.findAll()
   .then((comment => res.status(200).json(comment)))
   .catch(() => res.status(400).json({ error: "Erreur lors de l'affichage des commentaires" }));
 },
@@ -180,7 +162,7 @@ const userId = req.params.id;
             // Soft-deletion modifying the postContent the ad a timestamp to deletedAt
             models.Comment.updateOne({
               where: { id: req.params.id },
-              postContent: req.body.postContent,
+              comment: req.body.comment,
                 })
                 .then(() => res.status(200).json({ message: 'Comment supprimé !' }))
                 .catch(error => res.status(400).json({ error }));

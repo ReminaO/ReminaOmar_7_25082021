@@ -1,15 +1,14 @@
 <template>
 <div class="container">
   <div class="card comment-publish">
-    <input class="form-row__input form-control" type="text" id="comment" name="comment" ref="comment" v-model="comment" placeholder="Commentaire"><br>
-    <button @click="addPost()" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
+    <input class="form-row__input form-control" type="text" id="comment"  v-bind="$attrs" ref="postComment" name="postComment" v-model="postComment" placeholder="Commentaire"><br>
+    <button @click="addPost($attrs)"  v-bind="$attrs" ref="comment" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
       Publier
     </button>
   </div><br>
   <div  class="card">
-    <div v-for="comment in comments" :key="comment.id">
-      <div v-if="$store.state.message.id == comment.messageId" class="comment-display">
-        <img :src="$store.state.user.imageUrl"/>
+    <div v-for="comment in comments" ref="message" :key="comment.id">
+      <div class="comment-display">
         <div class="comment-display__content">
             <p class="comment-display__username"> {{ comment.userName }} </p>
             <p class="comment-display__comment"> {{ comment.comment }} </p>
@@ -23,9 +22,8 @@
       </div> 
     <br>
     </div>
-</div>
-  
   </div>
+</div>
 </template>
 
 <script>
@@ -59,8 +57,7 @@ export default {
   name: 'Comment',
   data () {
     return{
-      toggle: true,
-      comment : '',
+      postComment : '',
     }
       
   },
@@ -79,6 +76,9 @@ export default {
     comments() {
         return this.$store.state.comments
     },
+    message (){
+        return this.$store.state.message
+    },
     
     },     
   
@@ -93,19 +93,15 @@ export default {
   methods :{
     
     addPost: function () {
-      let message = JSON.parse(localStorage.getItem('message'));
-      message.forEach(function (message) {
+      let messageId = this.$refs.comment.id;
       const formData = new FormData();
-      formData.append('comment', this.comment);
-      formData.append('username', this.userName);
-      instance.post(`comment/${message.id}/${user.userId}`, formData, {
+      formData.append('postComment', this.comment);
+      instance.post(`comment/${messageId}/${user.userId}`, formData, {
       })
       .then(response => {
         this.comment = response.data
-        this.userName = response.data 
         this.$router.go("/wall");
-      })
-    })
+      });
     },
     deleteComment: function () {
       const self = this;
@@ -154,7 +150,7 @@ export default {
   padding:8px;
     border: none;
     border-radius: 8px;
-    background:#f87cee;
+    background:#e9ace4;
     font-weight: 500;
     font-size: 16px;
     color: black;
@@ -166,10 +162,10 @@ export default {
   display: flex;
   text-align: center;
   align-items: center;
-  border: solid 1px #eb5b5b;
+  border: solid 1px #e9aaaa;
   border-radius: 30px;
   padding: 10px;
-  background:#eb5b5b;
+  background:#e9aaaa;
 }
 .comment-publish {
   border: solid 1px #e9ace4;

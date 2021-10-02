@@ -8,7 +8,7 @@ const auth = require('../middleware/auth');
 //import du controller
 const commentsCtrl = require('../controllers/comments');
 
-//Routes pour appeler les controllers messages
+//Routes pour appeler les controllers comment
 router.post('/comment/:messageId/:userId', auth, commentsCtrl.createComment);
 router.put('/comment/:id', auth, commentsCtrl.modifyComment)
 router.delete('/comment/:id', auth, commentsCtrl.deleteComment);

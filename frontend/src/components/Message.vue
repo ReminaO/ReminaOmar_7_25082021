@@ -9,7 +9,7 @@
       <input  type="file" ref="image" @change="imgSelected()" class="form-row__input">
       <br><br>
       <textarea  class="form-row__input" type="content" id="content" name="content" ref="content" v-model="content" placeholder="Exprimez-vous"></textarea><br>
-      <button @click="addMessage()" class="button-size btn-primary" data-bs-toggle="button" autocomplete="off">
+      <button @click="addMessage()" v-bind="message" class="button-size btn-primary" data-bs-toggle="button" autocomplete="off">
         Publier
       </button>
     </div><br>
@@ -17,10 +17,6 @@
       <div v-for="message in messages" :key="message.id">
         <div class="message-container">
         <div >
-          <img  
-            :src="users.map((user) => {
-            if (this.$store.state.user.userId == message.UserId) 
-            return this.$store.state.user.imageUrl;})"/>
           <div class=" message-display">
             <div>
               <p class="username-display text-black"> {{ message.userName }} </p>
@@ -53,7 +49,7 @@
       <br>
       <Vote />
       <span class="date-format">Publié le {{ formatDate(message.createdAt)}}</span><br><br>
-      <Comment />
+      <Comment v-bind="message"/>
       </div>
       </div>
   </div>
@@ -107,6 +103,7 @@ export default {
       userName:'',
       likes:'',
       id: this.$route.params.id,
+      message: {}
     }
       
   },
@@ -166,7 +163,7 @@ export default {
       formData.append('image', this.attachement);
       formData.append('content', this.content);
       formData.append('title', this.title);
-      instance.put(`/${message.userId}/post`, formData, {
+      instance.put(`/${message.id}/post`, formData, {
       })
       .then(response => {
         this.title = response.data 

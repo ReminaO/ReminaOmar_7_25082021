@@ -1,7 +1,7 @@
 <template>
 <div class="container">
   <div class="card comment-publish">
-    <input class="form-row__input form-control" type="text" id="comment"  v-bind="$attrs" ref="postComment" name="postComment" v-model="postComment" placeholder="Commentaire"><br>
+    <input class="form-row__input form-control" type="text" id="comment"  v-bind="$attrs" ref="comment" name="comment" v-model="comment" placeholder="Commentaire"><br>
     <button @click="addPost($attrs)"  v-bind="$attrs" ref="comment" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
       Publier
     </button>
@@ -57,7 +57,7 @@ export default {
   name: 'Comment',
   data () {
     return{
-      postComment : '',
+      comment : '',
     }
       
   },
@@ -94,20 +94,20 @@ export default {
     
     addPost: function () {
       let messageId = this.$refs.comment.id;
-      const formData = new FormData();
-      formData.append('postComment', this.comment);
-      instance.post(`comment/${messageId}/${user.userId}`, formData, {
+      instance.post(`comment/${messageId}/${user.userId}`, {
+        comment: this.comment
       })
       .then(response => {
-        this.comment = response.data
+        this.comment = response.data.comment
         this.$router.go("/wall");
       });
     },
     deleteComment: function () {
-      const self = this;
-      this.$store.dispatch('deleteComment')
+      let messageId = this.$refs.comment.id;
+      instance.delete(`comment/${messageId}/${user.userId}`, {
+      })
       .then(function () {
-        self.$router.go('/wall')
+        this.$router.go('/wall')
       }, function (error) {
         console.log(error);
       })

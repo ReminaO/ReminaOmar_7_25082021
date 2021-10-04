@@ -1,5 +1,6 @@
 //import des modèles
 const models = require('../models/');
+const Message = require('../models/message');
 const asyncLib = require('async');
 
 // Controllers pour créer un commenataire
@@ -116,9 +117,14 @@ const userId = req.params.id;
   
   // Controllers pour afficher toutes les commentaires
   exports.getAllComments = (req, res, next) => {
-    models.Comment.findAll()
-  .then((comment => res.status(200).json(comment)))
-  .catch(() => res.status(400).json({ error: "Erreur lors de l'affichage des commentaires" }));
+      models.Comment.findAll({
+        include: [{ // Relie le message avec les tables User and Comments
+        model: models.Message,
+        attributes: ['id', 'userName'],
+      }]}
+        )
+    .then((comment => res.status(200).json(comment)))
+    .catch(() => res.status(400).json({ error: "Erreur lors de l'affichage des commentaires" }));
 },
 
   

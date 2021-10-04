@@ -76,7 +76,7 @@ exports.createMessages = (req, res, next) => {
 // Controllers pour modifier un message
 exports.modifyMessages = (req, res, next) => {
   
-  const userId = req.params.id;
+  const userId = req.params.userId;
   
   asyncLib.waterfall([
 
@@ -136,7 +136,7 @@ exports.modifyMessages = (req, res, next) => {
   // Controllers por effacer un message grâce a l'ID
 exports.deleteMessages = (req, res, next) => {
 
-  const userId = req.params.id;
+  const userId = req.params.userId;
   
     asyncLib.waterfall([
 
@@ -170,7 +170,7 @@ exports.deleteMessages = (req, res, next) => {
         // Checks if the user is the owner of the targeted one
         if (userFound.id == postFound.userId || userFound.isAdmin == true) { // or if he's admin
 
-          // Soft-deletion modifying the post the ad a timestamp to deletedAt
+          // Soft-deletion modifying the post and add a timestamp to deletedAt
           models.Message.destroy({
             where: { id: req.params.id }
           })
@@ -215,9 +215,10 @@ exports.deleteMessages = (req, res, next) => {
           limit: (!isNaN(limit)) ? limit : null,
           offset: (!isNaN(offset)) ? offset : null,
           include: [{ // Relie le message avec les tables User and Comments
-            model: models.User, 
-            attributes: ['username', 'imageUrl'],
-            Model: models.Comment,
+            // model: models.User,
+            // attributes: ['username', 'imageUrl', 'isAdmin'],
+            model: models.Comment,
+            attributes: ['messageId']
           }]
         }).then(function (posts) {
           done(posts)

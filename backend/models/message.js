@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
       models.Message.hasMany(models.Comment, {
         onDelete: 'cascade',
       });
+
+      models.User.hasMany(models.Comment, {
+        onDelete: 'cascade',
+      });
     }
   };
   Message.init({

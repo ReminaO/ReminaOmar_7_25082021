@@ -13,8 +13,8 @@ const messagesCtrl = require('../controllers/messages');
 
 //Routes pour appeler les controllers messages
 router.post('/post/:id', auth, multer, messagesCtrl.createMessages);
-router.put('/:id/post', auth, multer, messagesCtrl.modifyMessages)
-router.delete('/:id/post', auth, messagesCtrl.deleteMessages);
+router.put('/post/:id/:userId', auth, multer, messagesCtrl.modifyMessages)
+router.delete('/post/:id/:userId', auth, messagesCtrl.deleteMessages);
 router.get('/', auth, messagesCtrl.getAllMessages);
 
 

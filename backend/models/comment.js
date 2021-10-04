@@ -11,28 +11,31 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      models.User.belongsToMany(models.Message, {
-        onDelete: 'cascade',
-        through: models.Comment,
-        foreignKey: 'userId',
-        otherKey: 'messageId',
-      });
-      models.Message.belongsToMany(models.User, {
-          onDelete: 'cascade',
-          through: models.Comment,
-          foreignKey: 'messageId',
-          otherKey: 'userId',
-      });
+      // models.User.belongsToMany(models.Message, {
+      //   onDelete: 'cascade',
+      //   through: models.Comment,
+      //   foreignKey: 'userId',
+      //   otherKey: 'messageId',
+      // });
+      // models.Message.belongsToMany(models.User, {
+      //     onDelete: 'cascade',
+      //     through: models.Comment,
+      //     foreignKey: 'messageId',
+      //     otherKey: 'userId',
+      // });
       models.Comment.belongsTo(models.User, {
         onDelete: 'cascade',
-        foreignKey: 'userId',
-        as: 'user',
+        foreignKey: {
+          name: 'userId',
+          allowNull: false,
+      },
       });
-
       models.Comment.belongsTo(models.Message, {
         onDelete: 'cascade',
-        foreignKey: 'messageId',
-        as: 'message',
+        foreignKey: {
+          name: 'messageId',
+          allowNull: false,
+      },
       });
     }
   };

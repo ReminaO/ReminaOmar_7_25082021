@@ -14,7 +14,7 @@
       </button>
     </div><br>
     <div class="card">
-      <div v-for="message in messages" :key="message.id">
+      <div v-for="message in messages" v-bind='post' ref="post" :key="message.id">
         <div class="message-container">
         <div >
           <div class=" message-display">
@@ -22,13 +22,16 @@
               <p class="username-display text-black"> {{ message.userName }} </p>
               <p class="title-display text-black"> Titre : {{ message.title }} </p>
               <p class="content-display text-black"> {{ message.content }} </p>
+              
             </div>
               <img :src="message.attachement" class="img-fluid image"/>
           </div>
+          
+          <span class="date-format">Publié le {{ formatDate(message.createdAt)}}</span><br><br>
         </div>
         <div class="update">
-          <div>
-            <input v-if="this.$store.state.user.userId == message.UserId && !toggle|| this.$store.state.user.isAdmin == 1 && !toggle" class="form-row__input" type="text" id="title" name="title" ref="title" v-model="title" placeholder="Modifier le titre"><br><br>
+          <!-- <div class="update-form">
+            <input v-if="this.$store.state.user.userId == message.UserId && !toggle|| this.$store.state.user.isAdmin == 1 && !toggle" class="form-row__input" type="text" id="title" name="title" ref="title" placeholder="Modifier le titre"><br><br>
             <label v-if="this.$store.state.user.userId == message.UserId && !toggle || this.$store.state.user.isAdmin == 1 && !toggle " for="attachment" class="text-black">Image : </label><br>
             <input v-if="this.$store.state.user.userId == message.UserId && !toggle || this.$store.state.user.isAdmin == 1 && !toggle" type="file" ref="image" @change="imgSelected()" class="form-row__input">
             <br><br>
@@ -36,19 +39,17 @@
             <button v-if="this.$store.state.user.userId == message.UserId && !toggle || this.$store.state.user.isAdmin == 1 && !toggle" @click="modifyMessage()" class="button-small btn-primary" data-bs-toggle="button" autocomplete="off">
               enregistrer
             </button><br><br>
-          </div>
+          </div> -->
           <div>
-            <button v-if="this.$store.state.user.userId == message.UserId || this.$store.state.user.isAdmin == 1" @click="toggle = !toggle" class="button-small btn-primary" data-bs-toggle="button" autocomplete="off">
+            <!-- <button v-if="this.$store.state.user.userId == message.UserId || this.$store.state.user.isAdmin == 1" @click="toggle = !toggle" class="button-small btn-primary" data-bs-toggle="button" autocomplete="off">
               Modifier
-            </button><br><br>
-            <button v-if="this.$store.state.user.userId == message.UserId && !toggle || this.$store.state.user.isAdmin == 1 && !toggle "  name="delete" class="button-small btn-primary" data-bs-toggle="button" autocomplete="off" @click="deleteMessage()">
+            </button><br><br> -->
+            <button v-if="this.$store.state.user.userId == message.UserId || this.$store.state.user.isAdmin == 1"  name="delete" class="button-small btn-primary" data-bs-toggle="button" autocomplete="off" @click="deleteMessage()">
               Supprimer
-            </button><br><br>
+            </button><br>
           </div>
         </div> 
       <br>
-      <Vote />
-      <span class="date-format">Publié le {{ formatDate(message.createdAt)}}</span><br><br>
       <Comment v-bind="message"/>
       </div>
       </div>
@@ -60,14 +61,14 @@
 import { mapState } from 'vuex';
 import moment from 'moment';
 import Comment from '@/components/Comment.vue';
-import Vote from '@/components/Vote.vue';
+
 
 const axios = require('axios');
 
 
 
 let user = localStorage.getItem('user');
-let message = localStorage.getItem('message');
+// let message = localStorage.getItem('message');
 if (!user) {
  user = {
     userId: -1,
@@ -92,7 +93,6 @@ export default {
   name: 'Message',
   components : {
     Comment, 
-    Vote
   },
   data () {
     return{
@@ -102,8 +102,9 @@ export default {
       title:'',
       userName:'',
       likes:'',
-      id: this.$route.params.id,
-      message: {}
+      id: localStorage.getItem('message').id,
+      message: {},
+      post: {}
     }
       
   },
@@ -158,25 +159,27 @@ export default {
       this.$router.go("/wall");
     })
   },
-  modifyMessage: function () {
-      const formData = new FormData();
-      formData.append('image', this.attachement);
-      formData.append('content', this.content);
-      formData.append('title', this.title);
-      instance.put(`/${message.id}/post`, formData, {
-      })
-      .then(response => {
-        this.title = response.data 
-        this.content = response.data 
-        this.attachement = response.data
-        this.$router.go("/wall");
-      })
-    },
+  // modifyMessage: function () {
+  //     let messageId = this.$refs.post.id;
+  //     const formData = new FormData();
+  //     formData.append('image', this.attachement);
+  //     formData.append('content', this.content);
+  //     formData.append('title', this.title);
+  //     instance.put(`/post/${messageId}/${user.userId}`, formData, {
+  //     })
+  //     .then(response => {
+  //       this.title = response.data 
+  //       this.content = response.data 
+  //       this.attachement = response.data
+  //       this.$router.go("/wall");
+  //     })
+  //   },
   deleteMessage: function () {
-      const self = this;
-      this.$store.dispatch('deleteMessage')
+      let messageId = this.$refs.post.id;
+      instance.delete(`/post/${messageId}/${user.userId}`, {
+      })
       .then(function () {
-        self.$router.go('/wall')
+        this.$router.go('/wall')
       }, function (error) {
         console.log(error);
       })
@@ -196,10 +199,11 @@ export default {
 }
 .message-display {
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
   justify-content: space-around;
   align-items: center;
   flex-wrap: wrap;
+  border-bottom: solid 3px rgb(231, 154, 154);
 }
 .username-display {
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
@@ -248,16 +252,17 @@ export default {
   color:#f2f2f2;
 }
 .image {
-    width: min(max(100%), 70%);
+    width: min(max(100%), 50%);
     height : 250px;
     flex-wrap: wrap;
     object-fit: contain;
+    padding: 10px;
 }
 /* img { 
   height: 250px;
 } */
 .button-small {
-  width: 100%;
+  /* width: 100%; */
   background-color: rgb(19, 16, 168);
   color:#f2f2f2;
 }
@@ -267,4 +272,8 @@ export default {
 .date-format {
   padding:10px;
 }
+/* .update-form {
+  display : flex;
+  flex-wrap: wrap;
+} */
 </style>

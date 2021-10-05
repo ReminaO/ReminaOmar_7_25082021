@@ -14,7 +14,7 @@
       </button>
     </div><br>
     <div class="card">
-      <div v-for="message in messages" v-bind='post' ref="post" :key="message.id">
+      <div v-for="message in messages" v-bind="$attrs" ref="message" :key="message.id">
         <div class="message-container">
         <div >
           <div class=" message-display">
@@ -44,7 +44,7 @@
             <!-- <button v-if="this.$store.state.user.userId == message.UserId || this.$store.state.user.isAdmin == 1" @click="toggle = !toggle" class="button-small btn-primary" data-bs-toggle="button" autocomplete="off">
               Modifier
             </button><br><br> -->
-            <button v-if="this.$store.state.user.userId == message.UserId || this.$store.state.user.isAdmin == 1"  name="delete" class="button-small btn-primary" data-bs-toggle="button" autocomplete="off" @click="deleteMessage()">
+            <button v-if="this.$store.state.user.userId == message.UserId || this.$store.state.user.isAdmin == 1"  name="delete" class="button-small btn-primary" data-bs-toggle="button" autocomplete="off" @click="deleteMessage($attrs)">
               Supprimer
             </button><br>
           </div>
@@ -102,7 +102,6 @@ export default {
       title:'',
       userName:'',
       likes:'',
-      id: localStorage.getItem('message').id,
       message: {},
       post: {}
     }
@@ -159,6 +158,16 @@ export default {
       this.$router.go("/wall");
     })
   },
+  deleteMessage: function () {
+      let messageId = this.$refs.message.id;
+      instance.delete(`/post/${messageId}/${user.userId}`, {
+      })
+      .then(function () {
+        this.$router.go('/wall')
+      }, function (error) {
+        console.log(error);
+      })
+    },
   // modifyMessage: function () {
   //     let messageId = this.$refs.post.id;
   //     const formData = new FormData();
@@ -174,16 +183,7 @@ export default {
   //       this.$router.go("/wall");
   //     })
   //   },
-  deleteMessage: function () {
-      let messageId = this.$refs.post.id;
-      instance.delete(`/post/${messageId}/${user.userId}`, {
-      })
-      .then(function () {
-        this.$router.go('/wall')
-      }, function (error) {
-        console.log(error);
-      })
-    },
+  
 }
 }
 

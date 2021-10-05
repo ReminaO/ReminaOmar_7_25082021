@@ -10,7 +10,7 @@ const commentsCtrl = require('../controllers/comments');
 
 //Routes pour appeler les controllers comment
 router.post('/comment/:messageId/:userId', auth, commentsCtrl.createComment);
-router.delete('/comment/:messageId/:userId', auth, commentsCtrl.deleteComment);
+router.delete('/comment/:id/:userId', auth, commentsCtrl.deleteComment);
 router.get('/', auth, commentsCtrl.getAllComments);
 
 

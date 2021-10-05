@@ -59,7 +59,7 @@ exports.createComment = (req, res, next) => {
   
 // Controllers pour effacer un commentaire grâce a l'ID
 exports.deleteComment = (req, res, next) => {
-const userId = req.params.id;
+const userId = req.params.userId;
 
   asyncLib.waterfall([
 
@@ -125,65 +125,65 @@ const userId = req.params.id;
         )
     .then((comment => res.status(200).json(comment)))
     .catch(() => res.status(400).json({ error: "Erreur lors de l'affichage des commentaires" }));
-},
+}
 
   
 // Controllers pour modifier un commentaire
-  exports.modifyComment = (req, res, next) => {
+//   exports.modifyComment = (req, res, next) => {
       
-      const userId = req.params.id;
+//       const userId = req.params.id;
       
-  asyncLib.waterfall([
+//   asyncLib.waterfall([
 
-    // Checks if the request is sent from an registered user
-    function(done) {
-        User.findOne({
-                where: { id: userId }
-            }).then(function(userFound) {
-                done(null, userFound);
-            })
-            .catch(function(err) {
-                return res.status(500).json({ 'error': 'utilisateur inexistant' });
-            });
-    },
+//     // Checks if the request is sent from an registered user
+//     function(done) {
+//         User.findOne({
+//                 where: { id: userId }
+//             }).then(function(userFound) {
+//                 done(null, userFound);
+//             })
+//             .catch(function(err) {
+//                 return res.status(500).json({ 'error': 'utilisateur inexistant' });
+//             });
+//     },
 
-    // Get the targeted comment infos
-    function(userFound, done) {
-        models.Comment.findOne({
-                where: { id: req.params.id }
-            })
-            .then(function(commentFound) {
-                done(null, userFound, commentFound);
-            })
-            .catch(function(err) {
-                return res.status(500).json({ 'error': 'Commentaire non trouvé' });
-            });
-    },
+//     // Get the targeted comment infos
+//     function(userFound, done) {
+//         models.Comment.findOne({
+//                 where: { id: req.params.id }
+//             })
+//             .then(function(commentFound) {
+//                 done(null, userFound, commentFound);
+//             })
+//             .catch(function(err) {
+//                 return res.status(500).json({ 'error': 'Commentaire non trouvé' });
+//             });
+//     },
 
-    function(userFound, commentFound, done) {
+//     function(userFound, commentFound, done) {
 
-        // Checks if the user is the owner of the targeted one
-        if (userFound.id == commentFound.userId || userFound.isAdmin == true) { // or if he's admin
+//         // Checks if the user is the owner of the targeted one
+//         if (userFound.id == commentFound.userId || userFound.isAdmin == true) { // or if he's admin
 
-            // Soft-deletion modifying the postContent the ad a timestamp to deletedAt
-            models.Comment.updateOne({
-              where: { id: req.params.id },
-              comment: req.body.comment,
-                })
-                .then(() => res.status(200).json({ message: 'Comment supprimé !' }))
-                .catch(error => res.status(400).json({ error }));
+//             // Soft-deletion modifying the postContent the ad a timestamp to deletedAt
+//             models.Comment.updateOne({
+//               where: { id: req.params.id },
+//               comment: req.body.comment,
+//                 })
+//                 .then(() => res.status(200).json({ message: 'Comment supprimé !' }))
+//                 .catch(error => res.status(400).json({ error }));
 
-        } else {
-            res.status(401).json({ 'error': 'utilisateur non autorisé' });
-        }
-    },
-],
+//         } else {
+//             res.status(401).json({ 'error': 'utilisateur non autorisé' });
+//         }
+//     },
+// ],
 
-function(userFound) {
-    if (userFound) {
-        return res.status(201).json({ 'message': 'commentaire modifié' });
-    } else {
-        return res.status(500).json({ 'error': 'commentaire ne peut être modifié' });
-    }
-});
-  };
+// function(userFound) {
+//     if (userFound) {
+//         return res.status(201).json({ 'message': 'commentaire modifié' });
+//     } else {
+//         return res.status(500).json({ 'error': 'commentaire ne peut être modifié' });
+//     }
+//  });
+// };

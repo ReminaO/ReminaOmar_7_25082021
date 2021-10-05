@@ -7,7 +7,7 @@
     </button>
   </div><br>
   <div  class="card">
-    <div v-for="comment in comments" ref="message" :key="comment.id">
+    <div v-for="comment in comments" :key="comment.id">
       <div class="comment-display">
         <div class="comment-display__content">
             <p class="comment-display__username"> {{ comment.userName }} </p>
@@ -16,7 +16,7 @@
       </div>
       <div>
         
-        <button v-if="this.$store.state.user.userId == comment.userId || this.$store.state.user.isAdmin == 1" name="delete" class="button btn-primary" data-bs-toggle="button" autocomplete="off" @click="deleteMessage()">
+        <button v-if="this.$store.state.user.userId == comment.userId || this.$store.state.user.isAdmin == 1" name="delete" class="button btn-primary" data-bs-toggle="button" autocomplete="off" @click="deleteComment()">
         Supprimer
         </button>
       </div> 
@@ -103,8 +103,8 @@ export default {
       });
     },
     deleteComment: function () {
-      let messageId = this.$refs.comment.id;
-      instance.delete(`comment/${messageId}/${user.userId}`, {
+     let commentId = this.$refs.comment.id;
+      instance.delete(`comment/${commentId}/${user.userId}`, {
       })
       .then(function () {
         this.$router.go('/wall')

@@ -24,14 +24,14 @@ module.exports = (sequelize, DataTypes) => {
       //     otherKey: 'userId',
       // });
       models.Comment.belongsTo(models.User, {
-        onDelete: 'cascade',
+        onDelete: 'CASCADE',
         foreignKey: {
           name: 'userId',
           allowNull: false,
       },
       });
       models.Comment.belongsTo(models.Message, {
-        onDelete: 'cascade',
+        onDelete: 'CASCADE',
         foreignKey: {
           name: 'messageId',
           allowNull: false,

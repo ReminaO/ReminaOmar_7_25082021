@@ -193,7 +193,7 @@ const store = createStore({
       });
     },
     deletecomment: ({ commit }, comment) => {
-      instance.delete(`comments/${comment.id}`)
+      instance.delete(`comments/comment/${comment.id}/${user.userId}/`)
         .then(function (response) {
           commit('deleteComment', message.id)
           alert(response.data);

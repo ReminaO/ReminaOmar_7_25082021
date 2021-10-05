@@ -1,7 +1,7 @@
 <template>
 <div class="container-fluid">
   <Nav />
-  <Message />
+  <Message v-bind="message"/>
   <Footer />
   </div>
 </template>
@@ -19,6 +19,11 @@ export default {
     Nav,
     Footer,
     Message
+  },
+  data () {
+    return{
+      message: {},
+    }
   },
   computed : {
     ...mapState(['status']),

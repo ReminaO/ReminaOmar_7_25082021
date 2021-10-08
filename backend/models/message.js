@@ -16,16 +16,17 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: {
           allowNull: false
         }
-      });
+      }),
       models.Message.hasMany(models.Comment, {
         onDelete: 'CASCADE',
-        foreignKey: 'messageId'
-      });
-
+        foreignKey:  {
+          name: 'messageId',
+          allowNull: false
+      },
+      }),
       models.User.hasMany(models.Comment, {
         onDelete: 'CASCADE',
-        foreignKey: 'userId'
-      });
+      })
     }
   };
   Message.init({

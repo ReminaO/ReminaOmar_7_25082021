@@ -2,6 +2,7 @@
 <div class="container-fluid">
   <div class="jumbotron text-black">
     <h1>Accueil - Exprimez vous 😊</h1>
+    <p class="text-center">Bienvenue sur la plateforme d'échange de Groupomania</p>
   </div>
     <div class="card">
       <input class="form-row__input" type="text" id="title" name="title" ref="title" v-model="title" placeholder="Titre"><br><br>
@@ -9,12 +10,11 @@
       <input  type="file" ref="image" @change="imgSelected()" class="form-row__input">
       <br><br>
       <textarea  class="form-row__input" type="content" id="content" name="content" ref="content" v-model="content" placeholder="Exprimez-vous"></textarea><br>
-      <button @click="addMessage()" v-bind="message" class="button-size btn-primary" data-bs-toggle="button" autocomplete="off">
+      <button @click="addMessage()" class="button-size btn-primary" data-bs-toggle="button" autocomplete="off">
         Publier
       </button>
     </div><br>
-    <div class="card">
-      <div v-for="message in messages" v-bind="$attrs" ref="message" :key="message.id">
+    <div v-for="message in messages" :key="message.id" class="card">
         <div class="message-container">
         <div >
           <div class=" message-display">
@@ -25,33 +25,34 @@
               
             </div>
               <img :src="message.attachement" class="img-fluid image"/>
+              
           </div>
+          <span class="date-format">Publié le {{ formatDate(message.createdAt)}}</span>
           
-          <span class="date-format">Publié le {{ formatDate(message.createdAt)}}</span><br><br>
         </div>
         <div class="update">
           <!-- <div class="update-form">
-            <input v-if="this.$store.state.user.userId == message.UserId && !toggle|| this.$store.state.user.isAdmin == 1 && !toggle" class="form-row__input" type="text" id="title" name="title" ref="title" placeholder="Modifier le titre"><br><br>
-            <label v-if="this.$store.state.user.userId == message.UserId && !toggle || this.$store.state.user.isAdmin == 1 && !toggle " for="attachment" class="text-black">Image : </label><br>
+            <input v-if="this.$store.state.user.userId == message.UserId && !toggle || this.$store.state.user.isAdmin == 1 && !toggle" class="form-row__input" type="text" id="title" name="title" ref="title" v-model="title" placeholder="Modifier le titre"><br><br>
+            <label v-if="this.$store.state.user.userId == message.UserId && !toggle || this.$store.state.user.isAdmin == 1 && !toggle " for="attachement" class="text-black">Image : </label><br>
             <input v-if="this.$store.state.user.userId == message.UserId && !toggle || this.$store.state.user.isAdmin == 1 && !toggle" type="file" ref="image" @change="imgSelected()" class="form-row__input">
             <br><br>
-            <textarea v-if="this.$store.state.user.userId == message.UserId && !toggle || this.$store.state.user.isAdmin == 1 && !toggle" class="form-row__input" type="content" id="content" name="content" ref="content" v-model="content" placeholder="Modifier le commentaire"></textarea><br>
-            <button v-if="this.$store.state.user.userId == message.UserId && !toggle || this.$store.state.user.isAdmin == 1 && !toggle" @click="modifyMessage()" class="button-small btn-primary" data-bs-toggle="button" autocomplete="off">
-              enregistrer
+            <textarea v-if="this.$store.state.user.userId == message.UserId && !toggle || this.$store.state.user.isAdmin == 1 && !toggle" class="form-row__input" type="content" id="content" name="content" v-model="content" ref="content" placeholder="Modifier le commentaire"></textarea><br>
+            <button v-if="this.$store.state.user.userId == message.UserId && !toggle || this.$store.state.user.isAdmin == 1 && !toggle" @click="modifyMessage(message.id)" class="button-small btn-primary" data-bs-toggle="button" autocomplete="off">
+              Enregistrer
             </button><br><br>
+            
           </div> -->
           <div>
             <!-- <button v-if="this.$store.state.user.userId == message.UserId || this.$store.state.user.isAdmin == 1" @click="toggle = !toggle" class="button-small btn-primary" data-bs-toggle="button" autocomplete="off">
               Modifier
             </button><br><br> -->
-            <button v-if="this.$store.state.user.userId == message.UserId || this.$store.state.user.isAdmin == 1"  name="delete" class="button-small btn-primary" data-bs-toggle="button" autocomplete="off" @click="deleteMessage($attrs)">
+            <button v-if="this.$store.state.user.userId == message.UserId  || this.$store.state.user.isAdmin == 1"  name="delete" class="button-small btn-primary" data-bs-toggle="button" autocomplete="off" @click="deleteMessage(message.id)">
               Supprimer
-            </button><br>
+            </button> 
           </div>
         </div> 
       <br>
       <Comment v-bind="message"/>
-      </div>
       </div>
   </div>
 </div>
@@ -103,7 +104,7 @@ export default {
       userName:'',
       likes:'',
       message: {},
-      post: {}
+      post: {},
     }
       
   },
@@ -158,15 +159,29 @@ export default {
       this.$router.go("/wall");
     })
   },
-  deleteMessage: function () {
-      let messageId = this.$refs.message.id;
-      instance.delete(`/post/${messageId}/${user.userId}`, {
-      })
-      .then(function () {
-        this.$router.go('/wall')
-      }, function (error) {
-        console.log(error);
-      })
+  // modifyMessage: function (message) {
+  //   const formData = new FormData();
+  //   formData.append('image', this.attachement);
+  //   formData.append('content', this.content);
+  //   formData.append('title', this.title);
+  //   instance.put(`/post/${message}/${user.userId}`, formData, {
+  //   })
+  //   .then(response => {
+  //     this.title = response.data 
+  //     this.content = response.data 
+  //     this.attachement = response.data
+  //     this.$router.go("/wall");
+  //   })
+  // },
+  deleteMessage: function (message) {
+    const self = this;
+    instance.delete(`/post/${message}/${user.userId}`, {
+    })
+    .then(function () {
+      self.$router.go('/wall')
+    }, function (error) {
+      console.log(error);
+    })
     },
   // modifyMessage: function () {
   //     let messageId = this.$refs.post.id;
@@ -256,24 +271,14 @@ export default {
     height : 250px;
     flex-wrap: wrap;
     object-fit: contain;
-    padding: 10px;
+    padding-bottom: 10px;
 }
-/* img { 
-  height: 250px;
-} */
 .button-small {
   /* width: 100%; */
   background-color: rgb(19, 16, 168);
   color:#f2f2f2;
 }
-.message-container {
-  border-bottom: 3px solid rgb(231, 154, 154);
-}
 .date-format {
   padding:10px;
 }
-/* .update-form {
-  display : flex;
-  flex-wrap: wrap;
-} */
 </style>

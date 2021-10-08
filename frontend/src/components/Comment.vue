@@ -16,7 +16,7 @@
       </div>
       <div>
         
-        <button v-if="this.$store.state.user.userId == comment.userId || this.$store.state.user.isAdmin == 1" name="delete" class="button btn-primary" data-bs-toggle="button" autocomplete="off" @click="deleteComment()">
+        <button v-if="this.$store.state.user.userId == comment.userId || this.$store.state.user.isAdmin == 1" name="delete" class="button btn-primary" data-bs-toggle="button" autocomplete="off" @click="deleteComment(comment.id)">
         Supprimer
         </button>
       </div> 
@@ -102,12 +102,12 @@ export default {
         this.$router.go("/wall");
       });
     },
-    deleteComment: function () {
-     let commentId = this.$refs.comment.id;
-      instance.delete(`comment/${commentId}/${user.userId}`, {
+    deleteComment: function (comment) {
+      const self = this;
+      instance.delete(`comment/${comment}/${user.userId}`, {
       })
       .then(function () {
-        this.$router.go('/wall')
+        self.$router.go('/wall')
       }, function (error) {
         console.log(error);
       })

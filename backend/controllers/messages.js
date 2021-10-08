@@ -77,6 +77,8 @@ exports.createMessages = (req, res, next) => {
 exports.modifyMessages = (req, res, next) => {
   
   const userId = req.params.userId;
+  //Vérification d'un fichier existant ou laisse le lien vide
+  const attachement = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null;
   
   asyncLib.waterfall([
 
@@ -108,11 +110,11 @@ exports.modifyMessages = (req, res, next) => {
     function (userFound, postFound) {
 
       // verifie que l'utilisateur soit l'auteur du post
-      if (userFound.id == postFound.userId || userFound.isAdmin == true) { // ou soit admin
+      if (userFound.id == postFound.UserId || userFound.isAdmin == true) { // ou soit admin
 
         // Met a jour le post
-        models.Message.updateOne({
-          where: { id: req.params.id },
+        postFound.update({
+          title: req.body.title,
           content: req.body.content,
           attachement: attachement,
         })
@@ -168,7 +170,7 @@ exports.deleteMessages = (req, res, next) => {
       function (userFound, postFound) {
 
         // Checks if the user is the owner of the targeted one
-        if (userFound.id == postFound.userId || userFound.isAdmin == true) { // or if he's admin
+        if (userFound.id == postFound.UserId || userFound.isAdmin == true) { // or if he's admin
 
           // Soft-deletion modifying the post and add a timestamp to deletedAt
           models.Message.destroy({
@@ -214,12 +216,15 @@ exports.deleteMessages = (req, res, next) => {
           attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
           limit: (!isNaN(limit)) ? limit : null,
           offset: (!isNaN(offset)) ? offset : null,
-          include: [{ // Relie le message avec les tables User and Comments
-            // model: models.User,
-            // attributes: ['username', 'imageUrl', 'isAdmin'],
-            model: models.Comment,
-            attributes: ['messageId']
-          }]
+          // include: [{ // Relie le message avec les tables User and Comments
+          //   // model: models.User,
+          //   // attributes: ['username', 'imageUrl', 'isAdmin'],
+          //   model: models.Comment,
+          //   through: {
+          //     attributes: ['messageId', 'userName']
+          //   }
+
+          // }]
         }).then(function (posts) {
           done(posts)
         }).catch(function (err) {

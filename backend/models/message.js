@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      models.User.hasMany(models.Comment, {
+        onDelete: 'CASCADE',
+        foreignKey: 'userId'
+      }),
       models.Message.belongsTo(models.User, {
         onDelete: 'CASCADE',
         foreignKey: {
@@ -19,13 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       }),
       models.Message.hasMany(models.Comment, {
         onDelete: 'CASCADE',
-        foreignKey:  {
-          name: 'messageId',
-          allowNull: false
-      },
-      }),
-      models.User.hasMany(models.Comment, {
-        onDelete: 'CASCADE',
+        foreignKey: 'messageId'
       })
     }
   };

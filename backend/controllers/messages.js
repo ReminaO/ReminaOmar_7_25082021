@@ -216,15 +216,12 @@ exports.deleteMessages = (req, res, next) => {
           attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
           limit: (!isNaN(limit)) ? limit : null,
           offset: (!isNaN(offset)) ? offset : null,
-          // include: [{ // Relie le message avec les tables User and Comments
-          //   // model: models.User,
-          //   // attributes: ['username', 'imageUrl', 'isAdmin'],
-          //   model: models.Comment,
-          //   through: {
-          //     attributes: ['messageId', 'userName']
-          //   }
-
-          // }]
+          include: [{ // Relie le message avec les tables User and Comments  
+            model: models.User,
+            model: models.Comment,
+            // required: true,
+          }
+           ]
         }).then(function (posts) {
           done(posts)
         }).catch(function (err) {

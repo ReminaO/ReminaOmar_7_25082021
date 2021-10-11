@@ -180,6 +180,7 @@ exports.modifyProfile = (req, res, next) => {
     let username = req.body.username;
     let bio = req.body.bio;
     let imageUrl = req.body && req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null;
+    let password = req.body.password;
 
         asyncLib.waterfall([
             // Vérifie que la requête est envoyé par un compte existant
@@ -194,11 +195,23 @@ exports.modifyProfile = (req, res, next) => {
                         return res.status(500).json({ 'error': 'impossible de vérifier l\'utilisateur' });
                     });
             },
-            function (userFound, done) {
+            //Si l'utilisateur existe, le mot de passe est hashé
+            function(userFound, done) { 
+                if (userFound) {
+                    // Mot de passe salé 12 fois (paramètre par défait)
+                    bcrypt.hash(password, 12, function(err, bcryptedPassword) { // nouveau paramètre
+                        done(null, userFound, bcryptedPassword);
+                    });
+                } else {
+                    return res.status(409).json({ error: 'Utilisateur déjà existant' });
+                }
+            },
+            function (userFound, bcryptedPassword, done) {
                 // Vérification que l'utilisateur est le propriétaire du profil
                 if (userFound) {
                     userFound.update({
                         username: (username ? username : userFound.username),
+                        password: (bcryptedPassword ? bcryptedPassword : userFound.password),
                         bio: (bio ? bio : userFound.bio),
                         imageUrl: (imageUrl ? imageUrl : userFound.imageUrl)
                     })
@@ -209,7 +222,8 @@ exports.modifyProfile = (req, res, next) => {
                             res.status(500).json({ 'error' : 'Impossible de mettre a jour l\'utilisateur' });
                         })
                 }
-            }
+            },
+            
         ],
             function (userFound) {
                 if (userFound) {

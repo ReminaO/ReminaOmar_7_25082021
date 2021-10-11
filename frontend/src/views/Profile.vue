@@ -1,7 +1,7 @@
 <template>
 <div class="container-fluid">
-  <Nav />
-  <h1>Espace Perso</h1>
+  <Nav /><br>
+  <h1 class="text-center">Espace Perso</h1>
   <div class="card formulaire">
     <div class="form-group">
         <!-- Modifier ma photo de profil -->
@@ -9,15 +9,15 @@
         <input v-if='!toggle' class="image" type="file" ref="image" @change="fileSelected()">
           
         <br><br>
+        <label v-if='this.$store.state.user.isAdmin == 1' for="isAdmin">Admin : {{user.isAdmin}} </label><br>
         <label for="email"> Email : {{user.email}}</label><br>
         <label for="username">Pseudo :  {{user.username}}</label><br>
-        <input v-if='!toggle' class="form-row__input" type="text" id="pseudo" name="username" ref="username" v-model="username"> <br>
-        
-        <label for="bio">Petit mot sur moi : {{user.bio}} </label><br>
-        <textarea v-if='!toggle' class="form-row__input" type="bio" id="bio" name="bio" ref="bio" v-model="bio"></textarea><br>
-        <label for="isAdmin">Admin : {{user.isAdmin}} </label>
-        <button v-if='!toggle' @click="modifyProfile()" class="button">
-          enregistrer
+        <label for="bio">Petit mot sur moi : {{user.bio}} </label><br><br>
+        <input v-if='!toggle' class="form-row__input" type="text" id="pseudo" name="username" ref="username" v-model="username" placeholder="Modifier le pseudo"> <br><br>
+        <textarea v-if='!toggle' class="form-row__input" type="bio" id="bio" name="bio" ref="bio" v-model="bio" placeholder="Modifier ma bio"></textarea><br><br>
+        <input v-if='!toggle' class="form-row__input" type="password" id="password" name="password" ref="password" v-model="password" placeholder="Modifier le mot de passe"> <br><br>
+        <button v-if='!toggle' @click="modifyProfile()" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
+          Enregistrer
         </button>
     </div><br>
     <div class="form-row">
@@ -80,7 +80,8 @@ export default {
     username: '',
     bio: '',
     imageUrl:'',
-    isAdmin:''
+    isAdmin:'',
+    password:''
    }
  },
   mounted: function () {
@@ -111,13 +112,14 @@ export default {
         formData.append('image', this.image);
         formData.append('username', this.username);
         formData.append('bio', this.bio);
-      
+        formData.append('password', this.password);      
       instance.put(`/${user.userId}/profile`, formData, {
       })
       .then(response => {
         this.username = response.data 
         this.bio = response.data 
-        this.image = response.data 
+        this.image = response.data
+        this.password = response.data
         this.$router.go("/profile");
       })
     },
@@ -143,6 +145,9 @@ html, body{
   margin: 5% 15%;
   width: 75%;
   padding:15px;
+  flex-wrap: wrap;
+    border: 5px solid rgb(212, 104, 104);
+    border-radius: 30px;
   }
 img {
   height: 150px;
@@ -178,6 +183,11 @@ button {
 }
 .container-fluid {
   background-color: #ffffff;
+}
+
+label {
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 20px;
 }
 
 </style>>

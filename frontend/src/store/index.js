@@ -37,7 +37,8 @@ const store = createStore({
       username: '',
       bio: '',
       imageUrl: '',
-      isAdmin:'',
+      isAdmin: '',
+      password:''
     },
     message: message,
     messages: [],

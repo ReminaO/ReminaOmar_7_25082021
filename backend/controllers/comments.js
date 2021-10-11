@@ -117,7 +117,13 @@ const userId = req.params.userId;
   
   // Controllers pour afficher toutes les commentaires
   exports.getAllComments = (req, res, next) => {
-      models.Comment.findAll()
+      models.Comment.findAll({
+        include: [{ // Relie le message avec les tables User and Comments
+            model: models.User,
+            model: models.Message, 
+            // required: true,
+      }
+       ]})
     .then((comment => res.status(200).json(comment)))
     .catch(() => res.status(400).json({ error: "Erreur lors de l'affichage des commentaires" }));
 }

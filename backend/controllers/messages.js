@@ -73,68 +73,6 @@ exports.createMessages = (req, res, next) => {
     }
   })
 };
-// Controllers pour modifier un message
-exports.modifyMessages = (req, res, next) => {
-  
-  const userId = req.params.userId;
-  //Vérification d'un fichier existant ou laisse le lien vide
-  const attachement = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null;
-  
-  asyncLib.waterfall([
-
-    // Vérification que la requête soit envoyé d'un compte existant
-    function (done) {
-      models.User.findOne({
-        where: { id: userId }
-      }).then(function (userFound) {
-        done(null, userFound);
-      })
-        .catch(function (err) {
-          return res.status(500).json({ 'error': 'Utilisateur inexistant' });
-        });
-    },
-
-    // Affichage du message ciblé
-    function (userFound, done) {
-      models.Message.findOne({
-        where: { id: req.params.id }
-      })
-        .then(function (postFound) {
-          done(null, userFound, postFound);
-        })
-        .catch(function (err) {
-          return res.status(500).json({ 'error': 'Message non trouvé' });
-        });
-    },
-
-    function (userFound, postFound) {
-
-      // verifie que l'utilisateur soit l'auteur du post
-      if (userFound.id == postFound.UserId || userFound.isAdmin == true) { // ou soit admin
-
-        // Met a jour le post
-        postFound.update({
-          title: req.body.title,
-          content: req.body.content,
-          attachement: attachement,
-        })
-          .then(() => res.status(200).json({ message: 'Post modifié !' }))
-          .catch(error => res.status(400).json({ message: "Post introuvable", error: error }))
-
-      } else {
-        res.status(401).json({ 'error': 'utilisateur non autorisé' });
-      }
-    },
-  ],
-
-    function (userFound) {
-      if (userFound) {
-        return res.status(201).json({ 'message': 'post modifié' });
-      } else {
-        return res.status(500).json({ 'error': 'Impossible de mettre a jour le post' });
-      }
-    })
-}
   // Controllers por effacer un message grâce a l'ID
 exports.deleteMessages = (req, res, next) => {
 

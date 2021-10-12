@@ -33,7 +33,7 @@
             <button v-if="this.$store.state.user.userId == message.UserId  || this.$store.state.user.isAdmin == 1"  name="delete" class="button-small btn-primary" data-bs-toggle="button" autocomplete="off" @click="deleteMessage(message.id)">
               Supprimer
             </button> 
-      <br>
+      <br><br>
       <Comment v-bind="message"/>
       <div v-if="comments">
     <div 

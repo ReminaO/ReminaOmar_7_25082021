@@ -14,11 +14,15 @@ module.exports = (sequelize, DataTypes) => {
       
       models.Comment.belongsTo(models.User, {
         onDelete: 'CASCADE',
-        foreignKey: 'userId'
+        foreignKey: {
+          name: 'userId',
+          allowNull: false}
       });
       models.Comment.belongsTo(models.Message, {
         onDelete: 'CASCADE',
-        foreignKey: 'messageId',
+        foreignKey: {
+          name: 'messageId',
+          allowNull: false}
           
       })
     }

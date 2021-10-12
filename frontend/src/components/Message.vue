@@ -30,29 +30,33 @@
           <span class="date-format">Publié le {{ formatDate(message.createdAt)}}</span>
           
         </div>
-        <div class="update">
-          <!-- <div class="update-form">
-            <input v-if="this.$store.state.user.userId == message.UserId && !toggle || this.$store.state.user.isAdmin == 1 && !toggle" class="form-row__input" type="text" id="title" name="title" ref="title" v-model="title" placeholder="Modifier le titre"><br><br>
-            <label v-if="this.$store.state.user.userId == message.UserId && !toggle || this.$store.state.user.isAdmin == 1 && !toggle " for="attachement" class="text-black">Image : </label><br>
-            <input v-if="this.$store.state.user.userId == message.UserId && !toggle || this.$store.state.user.isAdmin == 1 && !toggle" type="file" ref="image" @change="imgSelected()" class="form-row__input">
-            <br><br>
-            <textarea v-if="this.$store.state.user.userId == message.UserId && !toggle || this.$store.state.user.isAdmin == 1 && !toggle" class="form-row__input" type="content" id="content" name="content" v-model="content" ref="content" placeholder="Modifier le commentaire"></textarea><br>
-            <button v-if="this.$store.state.user.userId == message.UserId && !toggle || this.$store.state.user.isAdmin == 1 && !toggle" @click="modifyMessage(message.id)" class="button-small btn-primary" data-bs-toggle="button" autocomplete="off">
-              Enregistrer
-            </button><br><br>
-            
-          </div> -->
-          <div>
-            <!-- <button v-if="this.$store.state.user.userId == message.UserId || this.$store.state.user.isAdmin == 1" @click="toggle = !toggle" class="button-small btn-primary" data-bs-toggle="button" autocomplete="off">
-              Modifier
-            </button><br><br> -->
             <button v-if="this.$store.state.user.userId == message.UserId  || this.$store.state.user.isAdmin == 1"  name="delete" class="button-small btn-primary" data-bs-toggle="button" autocomplete="off" @click="deleteMessage(message.id)">
               Supprimer
             </button> 
-          </div>
-        </div> 
       <br>
       <Comment v-bind="message"/>
+      <div v-if="comments">
+    <div 
+      v-for="(comment) in comments.filter((comment) => { 
+        return comment.messageId == message.id 
+        })" 
+      :key="comment.id"
+      class="comment-content">
+      <div class="comment-display">
+        <div class="comment-display__content">
+            <p class="comment-display__username"> {{ comment.userName }} </p>
+            <p class="comment-display__comment"> {{ comment.comment }} </p>
+        </div>
+      </div>
+      <div>
+        
+        <button v-if="this.$store.state.user.userId == comment.userId || this.$store.state.user.isAdmin == 1" name="delete" class="button deleteBtn btn-primary" data-bs-toggle="button" autocomplete="off" @click="deleteComment(comment.id)">
+        Supprimer
+        </button>
+      </div> 
+    <br>
+    </div>
+  </div>
       </div>
   </div>
 </div>
@@ -86,7 +90,7 @@ if (!user) {
   }
 }
 const instance = axios.create({
-  baseURL: 'http://localhost:3000/api/messages',
+  baseURL: 'http://localhost:3000/api/',
   headers: {'Authorization': 'Bearer '+ `${user.token}`}
 });
 
@@ -104,7 +108,6 @@ export default {
       userName:'',
       likes:'',
       message: {},
-      post: {},
     }
       
   },
@@ -122,6 +125,9 @@ export default {
     },
     comments() {
         return this.$store.state.comments
+    },
+    comment() {
+        return this.$store.state.comment
     }
     },     
   
@@ -149,7 +155,7 @@ export default {
     formData.append('content', this.content);
     formData.append('title', this.title);
     formData.append('username', this.userName);
-    instance.post(`/post/${user.userId}`, formData, {
+    instance.post(`messages/post/${user.userId}`, formData, {
     })
     .then(response => {
       this.title = response.data 
@@ -159,23 +165,9 @@ export default {
       this.$router.go("/wall");
     })
   },
-  // modifyMessage: function (message) {
-  //   const formData = new FormData();
-  //   formData.append('image', this.attachement);
-  //   formData.append('content', this.content);
-  //   formData.append('title', this.title);
-  //   instance.put(`/post/${message}/${user.userId}`, formData, {
-  //   })
-  //   .then(response => {
-  //     this.title = response.data 
-  //     this.content = response.data 
-  //     this.attachement = response.data
-  //     this.$router.go("/wall");
-  //   })
-  // },
   deleteMessage: function (message) {
     const self = this;
-    instance.delete(`/post/${message}/${user.userId}`, {
+    instance.delete(`messages/post/${message}/${user.userId}`, {
     })
     .then(function () {
       self.$router.go('/wall')
@@ -183,22 +175,16 @@ export default {
       console.log(error);
     })
     },
-  // modifyMessage: function () {
-  //     let messageId = this.$refs.post.id;
-  //     const formData = new FormData();
-  //     formData.append('image', this.attachement);
-  //     formData.append('content', this.content);
-  //     formData.append('title', this.title);
-  //     instance.put(`/post/${messageId}/${user.userId}`, formData, {
-  //     })
-  //     .then(response => {
-  //       this.title = response.data 
-  //       this.content = response.data 
-  //       this.attachement = response.data
-  //       this.$router.go("/wall");
-  //     })
-  //   },
-  
+    deleteComment: function (comment) {
+      const self = this;
+      instance.delete(`comments/comment/${comment}/${user.userId}`, {
+      })
+      .then(function () {
+        self.$router.go('/wall')
+      }, function (error) {
+        console.log(error);
+      })
+    }
 }
 }
 
@@ -280,5 +266,35 @@ export default {
 }
 .date-format {
   padding:10px;
+}
+.comment-display__content {
+  display: flex;
+  justify-content: space-between;
+}
+.comment-display__comment{
+  padding:8px;
+    border: none;
+    border-radius: 8px;
+    background:#e9ace4;
+    font-weight: 500;
+    font-size: 16px;
+    color: black;
+    text-align: right;
+    width: min(max(100%), 80%);
+    min-width: 50px;
+}
+.comment-display__username {
+  display: flex;
+  text-align: center;
+  align-items: center;
+  border: solid 1px #e9aaaa;
+  border-radius: 30px;
+  padding: 10px;
+  background:#e9aaaa;
+}
+.deleteBtn{
+  text-align: center;
+  background-color: rgb(19, 16, 168);
+  color:#f2f2f2;
 }
 </style>

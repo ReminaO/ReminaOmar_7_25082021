@@ -1,13 +1,17 @@
 <template>
 <div class="container">
   <div class="card comment-publish">
-    <input class="form-row__input form-control" type="text" id="comment"  v-bind="$attrs" ref="comment" name="comment" v-model="comment" placeholder="Commentaire"><br>
+    <input class="form-row__input form-control" type="text" id="comment"  v-bind="$attrs" ref="comment" name="comment" v-model="comment" placeholder="Votre Commentaire..."><br>
     <button @click="addPost($attrs)"  v-bind="$attrs" ref="comment" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
       Publier
     </button>
   </div><br>
-  <div  class="card">
-    <div v-for="comment in comments" :key="comment.id">
+  <div v-if="comments" class="card">
+    <div 
+      v-for="(comment) in comments.filter((comment) => { 
+        return comment.messageId == message.id 
+        })" 
+      :key="comment.id">
       <div class="comment-display">
         <div class="comment-display__content">
             <p class="comment-display__username"> {{ comment.userName }} </p>
@@ -76,7 +80,7 @@ export default {
     comments() {
         return this.$store.state.comments
     },
-    message (){
+    message() {
         return this.$store.state.message
     },
     

@@ -14,7 +14,7 @@
         Publier
       </button>
     </div><br>
-    <div v-for="message in messages" :key="message.id" class="card">
+    <div v-for="message in messages" :key="message.id" class="card card-margin">
         <div class="message-container">
         <div >
           <div class=" message-display">
@@ -30,7 +30,7 @@
           <span class="date-format">Publié le {{ formatDate(message.createdAt)}}</span>
           
         </div><br>
-            <button v-if="this.$store.state.user.userId == message.UserId  || this.$store.state.user.isAdmin == 1"  name="delete" class="button-small btn-primary" data-bs-toggle="button" autocomplete="off" @click="deleteMessage(message.id)">
+            <button v-if="this.$store.state.user.userId == message.UserId  || this.$store.state.user.isAdmin == 1"  name="delete" class="button-small btn-danger" data-bs-toggle="button" autocomplete="off" @click="deleteMessage(message.id)">
               Supprimer
             </button> 
       <br><br><br><br>
@@ -50,7 +50,7 @@
       </div>
       <div>
         
-        <button v-if="this.$store.state.user.userId == comment.userId || this.$store.state.user.isAdmin == 1" name="delete" class="button deleteBtn btn-primary" data-bs-toggle="button" autocomplete="off" @click="deleteComment(comment.id)">
+        <button v-if="this.$store.state.user.userId == comment.userId || this.$store.state.user.isAdmin == 1" name="delete" class="button deleteBtn btn-danger" data-bs-toggle="button" autocomplete="off" @click="deleteComment(comment.id)">
         Supprimer
         </button>
       </div> 
@@ -297,5 +297,7 @@ export default {
   background-color: rgb(19, 16, 168);
   color:#f2f2f2;
 }
-
+.card-margin {
+  margin: 10px;
+}
 </style>

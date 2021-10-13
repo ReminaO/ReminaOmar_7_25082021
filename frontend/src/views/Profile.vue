@@ -15,21 +15,23 @@
         <label for="bio">Petit mot sur moi : {{user.bio}} </label><br><br>
         <input v-if='!toggle' class="form-row__input" type="text" id="pseudo" name="username" ref="username" v-model="username" placeholder="Modifier le pseudo"> <br><br>
         <textarea v-if='!toggle' class="form-row__input" type="bio" id="bio" name="bio" ref="bio" v-model="bio" placeholder="Modifier ma bio"></textarea><br><br>
-        <input v-if='!toggle' class="form-row__input" type="password" id="password" name="password" ref="password" v-model="password" placeholder="Modifier le mot de passe"> <br><br>
+        <input v-if='!toggle' class="form-row__input" type="password" id="password" name="password" ref="password"  placeholder="Modifier le mot de passe**"> <br><br>
+        <p v-if='!toggle'>**Champs obligatoires</p>
         <button v-if='!toggle' @click="modifyProfile()" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
           Enregistrer
         </button>
     </div><br>
     <div class="form-row">
+      <button v-if='!toggle' @click="deleteProfile()" class="button btn-danger" data-bs-toggle="button" autocomplete="off">
+        Supprimer
+      </button> <br>
       <button @click="logout()" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
         Déconnexion
       </button><br>
       <button @click="toggle = !toggle" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
         Modifier
       </button><br>
-      <button @click="deleteProfile()" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
-        Supprimer
-      </button> 
+      
     </div>
   </div>
   
@@ -180,6 +182,9 @@ button {
   margin : 0 25%;
   width: 50%;
   background-color: rgb(19, 16, 168);
+}
+.btn-danger {
+  border : 3px solid red
 }
 .container-fluid {
   background-color: #ffffff;

@@ -115,7 +115,7 @@ export default {
 <style scoped>
     .card {
       text-align: center;
-      width: 100%;
+      width: 80%;
       background-image: linear-gradient(rgba(0, 0, 255, 0.5), rgba(230, 91, 91, 0.795)),
       url("../assets/network.jpg"); 
       background-repeat: no-repeat;

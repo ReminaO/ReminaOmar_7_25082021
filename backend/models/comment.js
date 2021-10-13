@@ -13,13 +13,15 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       
       models.Comment.belongsTo(models.User, {
-        onDelete: 'CASCADE',
+        onDelete: 'cascade',
+        hooks: true,
         foreignKey: {
           name: 'userId',
-          allowNull: false}
+          allowNull: false }
       });
       models.Comment.belongsTo(models.Message, {
-        onDelete: 'CASCADE',
+        onDelete: 'cascade',
+        hooks: true,
         foreignKey: {
           name: 'messageId',
           allowNull: false}
@@ -59,7 +61,6 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Comment',
-    paranoid: true,
   });
   return Comment;
 };

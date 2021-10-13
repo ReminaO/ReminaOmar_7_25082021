@@ -29,12 +29,12 @@
           </div>
           <span class="date-format">Publié le {{ formatDate(message.createdAt)}}</span>
           
-        </div>
+        </div><br>
             <button v-if="this.$store.state.user.userId == message.UserId  || this.$store.state.user.isAdmin == 1"  name="delete" class="button-small btn-primary" data-bs-toggle="button" autocomplete="off" @click="deleteMessage(message.id)">
               Supprimer
             </button> 
-      <br><br>
-      <Comment v-bind="message"/>
+      <br><br><br><br>
+      </div>
       <div v-if="comments">
     <div 
       v-for="(comment) in comments.filter((comment) => { 
@@ -57,7 +57,7 @@
     <br>
     </div>
   </div>
-      </div>
+      <Comment v-bind="message"/>
   </div>
 </div>
 </template>
@@ -297,4 +297,5 @@ export default {
   background-color: rgb(19, 16, 168);
   color:#f2f2f2;
 }
+
 </style>

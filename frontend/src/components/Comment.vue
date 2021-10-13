@@ -6,27 +6,7 @@
       Publier
     </button>
   </div><br>
-  <div v-if="comments" class="card">
-    <div 
-      v-for="(comment) in comments.filter((comment) => { 
-        return comment.messageId == message.id 
-        })" 
-      :key="comment.id">
-      <div class="comment-display">
-        <div class="comment-display__content">
-            <p class="comment-display__username"> {{ comment.userName }} </p>
-            <p class="comment-display__comment"> {{ comment.comment }} </p>
-        </div>
-      </div>
-      <div>
-        
-        <button v-if="this.$store.state.user.userId == comment.userId || this.$store.state.user.isAdmin == 1" name="delete" class="button btn-primary" data-bs-toggle="button" autocomplete="off" @click="deleteComment(comment.id)">
-        Supprimer
-        </button>
-      </div> 
-    <br>
-    </div>
-  </div>
+  
 </div>
 </template>
 
@@ -106,16 +86,7 @@ export default {
         this.$router.go("/wall");
       });
     },
-    deleteComment: function (comment) {
-      const self = this;
-      instance.delete(`comment/${comment}/${user.userId}`, {
-      })
-      .then(function () {
-        self.$router.go('/wall')
-      }, function (error) {
-        console.log(error);
-      })
-    }
+    
   },
   
 }
@@ -146,31 +117,7 @@ export default {
 .form-row__input {
     width: min(max(100%), 100%);
 }
-.comment-display__content {
-  display: flex;
-  justify-content: space-between;
-}
-.comment-display__comment{
-  padding:8px;
-    border: none;
-    border-radius: 8px;
-    background:#e9ace4;
-    font-weight: 500;
-    font-size: 16px;
-    color: black;
-    text-align: right;
-    width: min(max(100%), 80%);
-    min-width: 50px;
-}
-.comment-display__username {
-  display: flex;
-  text-align: center;
-  align-items: center;
-  border: solid 1px #e9aaaa;
-  border-radius: 30px;
-  padding: 10px;
-  background:#e9aaaa;
-}
+
 .comment-publish {
   border: solid 1px #e9ace4;
   border-radius : 30px;

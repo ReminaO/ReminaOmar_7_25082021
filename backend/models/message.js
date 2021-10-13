@@ -12,18 +12,20 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       models.User.hasMany(models.Comment),
-      models.Message.belongsTo(models.User, {
-        onDelete: 'CASCADE',
-        foreignKey: {
-          allowNull: false
-        }
-      }),
       models.Message.hasMany(models.Comment, {
         foreignKey: {
           name: 'messageId',
+          allowNull: false,
+        }
+    }),
+      models.Message.belongsTo(models.User, {
+        onDelete: 'cascade',
+        hooks: true,
+        foreignKey: {
           allowNull: false
         }
       })
+        
     }
   };
   Message.init({
@@ -40,7 +42,6 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Message',
-    paranoid: true,
   });
   return Message;
 };

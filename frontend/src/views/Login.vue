@@ -113,15 +113,17 @@ export default {
 </script>
 
 <style scoped>
-    .card {
+  .card {
       text-align: center;
-      width: 70%;
+      width: 60%;
       background-image: linear-gradient(rgba(0, 0, 255, 0.5), rgba(230, 91, 91, 0.795)),
       url("../assets/network.jpg"); 
       background-repeat: no-repeat;
       background-attachment: fixed;
       color: white;
       background-position: 50% 50%;
+      border: 5px solid rgb(212, 104, 104);
+      padding: 10px;
         }
   .form-row {
     display: flex;
@@ -152,9 +154,9 @@ export default {
   .container-fluid {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    
-    
+    align-items: center; 
+    margin: 0;
+    padding: 0;
   }
   button {
   background-color: rgb(19, 16, 168);

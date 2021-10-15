@@ -1,11 +1,10 @@
 <template>
 <nav class="navbar navbar-expand-lg navbar-dark">
   <div class="container-fluid">
-    <img :src="require(`../assets/icon.png`)" alt="logo"><router-link to="/wall" class="navbar-brand text-white">Groupomania</router-link>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-  <div class="collapse navbar-collapse " id="navbarTogglerDemo02">
+    <div>
+      <img :src="require(`../assets/icon.png`)" alt="logo" /><router-link to="/wall" class="navbar-brand text-white">Groupomania</router-link>
+    </div>
+  <div>
     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
       <li class="nav-item">
         <router-link  class="nav-link active " aria-current="page" to="/wall">Accueil</router-link>
@@ -41,7 +40,10 @@ computed: {
 <style scoped>
 .navbar{
   background-color:#d65959;
+  flex-wrap: wrap;
+  
 }
+
 img { 
   height: 50px;
 }

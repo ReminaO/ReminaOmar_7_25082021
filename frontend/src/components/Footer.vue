@@ -4,7 +4,7 @@
         <div class="col col-sm12 col-md12">
             <ul class="footer-link">
                 <li><a href="#" class="text-white">Mentions Légales</a></li>
-                <li><a href="#" class="text-white">About us</a></li>
+                <li><a href="#" class="text-white">About Us</a></li>
                 <li><a href="#" class="text-white">Contact</a></li>
             </ul>
         </div>
@@ -25,16 +25,22 @@ computed: {
 <style scoped>
 .footer-link {
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
     list-style: none;
+    margin-top: 30px;
 }
 .footer{
-    padding-top:20px;
     background-color:#d65959;
+    height: 150px;
 }
 a {
     list-style: none;
     text-decoration : none; 
     text-decoration-style : solid;
+    
+}
+li {
+    padding: 5px;
 }
 </style>

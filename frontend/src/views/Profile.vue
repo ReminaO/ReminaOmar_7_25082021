@@ -189,7 +189,8 @@ button {
   border : 3px solid red
 }
 .container-fluid {
-  background-color: #ffffff;
+  margin: 0;
+  padding: 0;
 }
 
 label {

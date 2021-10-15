@@ -217,7 +217,7 @@ export default {
 }
 .content-display {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: clamp(1rem, 1rem + 10vw, 2rem);
+  font-size: clamp(1.5rem, 1rem + 10vw, 1rem);
 }
 .form-row__input {
     padding:8px;
@@ -239,7 +239,7 @@ export default {
     flex-wrap: wrap;
   }
   .card {
-    width: 70%;
+    width: 75%;
     padding: 20px;
     flex-wrap: wrap;
     border: 5px solid rgb(212, 104, 104);
@@ -255,7 +255,7 @@ export default {
   color:#f2f2f2;
 }
 .image {
-    width: min(max(100%), 50%);
+    width: auto;
     height : 250px;
     flex-wrap: wrap;
     object-fit: contain;
@@ -282,8 +282,8 @@ export default {
     font-size: 16px;
     color: black;
     text-align: right;
-    width: min(max(100%), 80%);
-    min-width: 50px;
+    width: 80%;
+    min-width: 10px;
 }
 .comment-display__username {
   display: flex;
@@ -293,6 +293,7 @@ export default {
   border-radius: 30px;
   padding: 10px;
   background:#e9aaaa;
+  width: auto;
 }
 .deleteBtn{
   text-align: center;

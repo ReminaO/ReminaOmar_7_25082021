@@ -122,6 +122,7 @@ export default {
         this.bio = response.data 
         this.image = response.data
         this.password = response.data
+        alert("Profile mis à jour ! ");
         this.$router.go("/profile");
       })
     },
@@ -129,6 +130,7 @@ export default {
       const self = this;
       this.$store.dispatch('deleteInfos')
       .then(function () {
+        alert("Profile supprimé !");
         self.$router.push('/')
       }, function (error) {
         console.log(error);

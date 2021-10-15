@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Home from '@/views/Home.vue';
 import Login from '@/views/Login.vue';
 import Profile from '@/views/Profile.vue';
-import Message from '@/components/Message.vue';
 
 const routes = [
     {
@@ -28,15 +27,6 @@ const routes = [
         props: true,
         meta: {
             title: 'Profil'
-        },
-    },
-    {
-        name: 'Message',
-        path: '/message/:id',
-        component: Message,
-        props: true,
-        meta: {
-            title: 'Message'
         },
     },
 ]

@@ -170,6 +170,7 @@ export default {
     instance.delete(`messages/post/${message}/${user.userId}`, {
     })
     .then(function () {
+      alert("Message supprimé !");
       self.$router.go('/wall')
     }, function (error) {
       console.log(error);
@@ -180,6 +181,7 @@ export default {
       instance.delete(`comments/comment/${comment}/${user.userId}`, {
       })
       .then(function () {
+        alert("Commentaire supprimé !");
         self.$router.go('/wall')
       }, function (error) {
         console.log(error);

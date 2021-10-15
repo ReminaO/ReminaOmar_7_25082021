@@ -18,10 +18,10 @@
       <div class="form-row">
         <input v-model="password" class="form-row__input" type="password" placeholder="Mot de passe"/>
       </div>
-      <div class="form-row" v-if="mode == 'login' && status == 'error_login'">
+      <div class="form-row text-warning" v-if="mode == 'login' && status == 'error_login'">
         Adresse mail et/ou mot de passe invalide
       </div>
-      <div class="form-row" v-if="mode == 'create' && status == 'error_create'">
+      <div class="form-row text-warning" v-if="mode == 'create' && status == 'error_create'">
         Adresse mail déjà utilisée
       </div>
       <div class="form-row">
@@ -115,7 +115,7 @@ export default {
 <style scoped>
     .card {
       text-align: center;
-      width: 80%;
+      width: 70%;
       background-image: linear-gradient(rgba(0, 0, 255, 0.5), rgba(230, 91, 91, 0.795)),
       url("../assets/network.jpg"); 
       background-repeat: no-repeat;

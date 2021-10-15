@@ -56,8 +56,6 @@ const store = createStore({
       comment: ''
     },
     users: [],
-    likes: [],
-    dislikes : []
   },
   
   mutations: {

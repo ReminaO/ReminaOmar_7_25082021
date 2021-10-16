@@ -165,11 +165,12 @@ const store = createStore({
     },
     getAllMessages: ({ commit }) => {
       instance.get(`messages`)
-      .then(function (response) {
+        .then(function (response) {
         commit('message', response.data);
         commit('messages', response.data);
       })
-      .catch(function () {
+        .catch(function () {
+          location.reload();
       });
     },
     deleteMessage: ({ commit }, message) => {

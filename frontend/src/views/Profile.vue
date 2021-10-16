@@ -9,7 +9,7 @@
         <input v-if='!toggle' class="image" type="file" ref="image" @change="fileSelected()">
           
         <br><br>
-        <label for="isAdmin">Admin</label> <input type="checkbox" v-model="checked" v-if='$store.state.user.isAdmin == 1' id='isAdmin' :checked="$store.state.user.isAdmin"/><br>
+        <label for="isAdmin" v-if='$store.state.user.isAdmin == 1'>Admin</label> <input type="checkbox" v-model="checked" v-if='$store.state.user.isAdmin == 1' id='isAdmin' :checked="$store.state.user.isAdmin"/><br>
         <label for="email"> Email : {{user.email}}</label><br>
         <label for="username">Pseudo :  {{user.username}}</label><br>
         <label for="bio">Petit mot sur moi : {{user.bio}} </label><br><br>

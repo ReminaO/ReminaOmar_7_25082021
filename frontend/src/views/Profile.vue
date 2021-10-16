@@ -13,6 +13,7 @@
         <label for="email"> Email : {{user.email}}</label><br>
         <label for="username">Pseudo :  {{user.username}}</label><br>
         <label for="bio">Petit mot sur moi : {{user.bio}} </label><br><br>
+        <!-- Modifier mes informations de profil -->
         <input v-if='!toggle' class="form-row__input" type="text" id="pseudo" name="username" ref="username" v-model="username" placeholder="Modifier le pseudo"> <br><br>
         <textarea v-if='!toggle' class="form-row__input" type="bio" id="bio" name="bio" ref="bio" v-model="bio" placeholder="Modifier ma bio"></textarea><br><br>
         <input v-if='!toggle' class="form-row__input" type="password" id="password" name="password" ref="password"  placeholder="Modifier le mot de passe**"> <br><br>

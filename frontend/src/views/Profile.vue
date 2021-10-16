@@ -9,7 +9,7 @@
         <input v-if='!toggle' class="image" type="file" ref="image" @change="fileSelected()">
           
         <br><br>
-        <label v-if='this.$store.state.user.isAdmin == 1' for="isAdmin">Admin : {{user.isAdmin}} </label><br>
+        <label for="isAdmin">Admin</label> <input type="checkbox" v-model="checked" v-if='$store.state.user.isAdmin == 1' id='isAdmin' :checked="$store.state.user.isAdmin"/><br>
         <label for="email"> Email : {{user.email}}</label><br>
         <label for="username">Pseudo :  {{user.username}}</label><br>
         <label for="bio">Petit mot sur moi : {{user.bio}} </label><br><br>
@@ -83,16 +83,17 @@ export default {
     bio: '',
     imageUrl:'',
     isAdmin:'',
-    password:''
+    password:'',
    }
  },
   mounted: function () {
+    const self = this;
     console.log(this.$store.state.user);
     if (this.$store.state.user.userId == -1) {
       this.$router.push('/');
       return ;
     }
-    this.$store.dispatch('getUserInfos');
+    self.$store.dispatch('getUserInfos');
   },
   
   computed: {

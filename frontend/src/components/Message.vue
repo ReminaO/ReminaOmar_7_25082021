@@ -132,12 +132,13 @@ export default {
     },     
   
   mounted: function () {
+    const self = this;
     console.log(this.$store.state.user);
     if (this.$store.state.user.userId == -1) {
       this.$router.push('/');
       return ;
     }
-    this.$store.dispatch('getAllMessages');
+    self.$store.dispatch('getAllMessages');
   },
   
   methods :{

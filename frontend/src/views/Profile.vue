@@ -3,7 +3,7 @@
   <Nav /><br>
   <h1 class="text-center">Espace Perso</h1>
   <div class="card formulaire">
-    <div class="form-group">
+    <form @submit="checkForm" class="form-group">
         <!-- Modifier ma photo de profil -->
         <img :src="user.imageUrl"/><br>
         <input v-if='!toggle' class="image" type="file" ref="image" @change="fileSelected()">
@@ -11,26 +11,37 @@
         <br><br>
         <label for="isAdmin" v-if='$store.state.user.isAdmin == 1'>Admin</label> <input type="checkbox" v-model="checked" v-if='$store.state.user.isAdmin == 1' id='isAdmin' :checked="$store.state.user.isAdmin"/><br>
         <label for="email"> Email : {{user.email}}</label><br>
-        <label for="username">Pseudo :  {{user.username}}</label><br>
+        <label for="username">Nom :  {{user.username}}</label><br>
         <label for="bio">Petit mot sur moi : {{user.bio}} </label><br><br>
         <!-- Modifier mes informations de profil -->
-        <input v-if='!toggle' class="form-row__input" type="text" id="pseudo" name="username" ref="username" v-model="username" placeholder="Modifier le pseudo"> <br><br>
-        <textarea v-if='!toggle' class="form-row__input" type="bio" id="bio" name="bio" ref="bio" v-model="bio" placeholder="Modifier ma bio"></textarea><br><br>
-        <input v-if='!toggle' class="form-row__input" type="password" id="password" name="password" ref="password"  placeholder="Modifier le mot de passe**"> <br><br>
+        <input v-if='!toggle' class="form-row__input" type="text" id="username" name="username" ref="username" v-model="username" placeholder="Modifier mon nom"> <br><br>
+        <textarea v-if='!toggle' class="form-row__input" type="text" id="bio" name="bio" ref="bio" v-model="bio" placeholder="Modifier ma bio"></textarea><br><br>
+        <input v-if='!toggle' class="form-row__input" type="password" id="password" name="password" ref="password" v-model="password" placeholder="Modifier le mot de passe**"> <br><br>
         <p v-if='!toggle'>**Champs obligatoires</p>
-        <button v-if='!toggle' @click="modifyProfile()" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
+        <p v-if="errors.length && !toggle">
+          <b class="text-danger">Merci de corriger l'erreur suivante:</b>
+          <ul>
+            <li class="text-danger" v-for="error in errors" :key='error.index'>{{ error }}</li>
+          </ul>
+        </p>
+        <button v-if='!toggle && !show' @click="modifyProfile()" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
           Enregistrer
-        </button>
-    </div><br>
+        </button><br>
+        
+    </form><br>
     <div class="form-row">
-      <button v-if='!toggle' @click="deleteProfile()" class="button btn-danger" data-bs-toggle="button" autocomplete="off">
+      <button @click="show = !show" v-if='!toggle && !show' class="button btn-primary" data-bs-toggle="button" autocomplete="off">
+        Annuler
+      </button><br><br>
+      <button v-if='!toggle && !show' @click="deleteProfile()" class="button btn-danger" data-bs-toggle="button" autocomplete="off">
         Supprimer
       </button> <br>
-      <button @click="logout()" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
-        Déconnexion
-      </button><br>
+      
       <button @click="toggle = !toggle" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
         Modifier
+      </button><br>
+      <button @click="logout()" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
+        Déconnexion
       </button><br>
       
     </div>
@@ -78,6 +89,7 @@ export default {
   data () {
    return {
     toggle: true,
+    show: false,
     id:'',
     email: '',
     username: '',
@@ -85,6 +97,7 @@ export default {
     imageUrl:'',
     isAdmin:'',
     password:'',
+    errors: []
    }
  },
   mounted: function () {
@@ -112,21 +125,24 @@ export default {
       this.user.imageUrl = URL.createObjectURL(this.image)
     },
     modifyProfile: function () {
-      const formData = new FormData();
+      if (!this.password){
+        return false
+      } else {
+        const formData = new FormData();
         formData.append('image', this.image);
         formData.append('username', this.username);
         formData.append('bio', this.bio);
         formData.append('password', this.password);      
-      instance.put(`/${user.userId}/profile`, formData, {
+        instance.put(`/${user.userId}/profile`, formData, {
+          })
+          .then(response => {
+            this.username = response.data 
+            this.bio = response.data 
+            this.image = response.data
+            this.password = response.data
       })
-      .then(response => {
-        this.username = response.data 
-        this.bio = response.data 
-        this.image = response.data
-        this.password = response.data
-        alert("Profile mis à jour ! ");
-        this.$router.go("/profile");
-      })
+      }
+      
     },
     deleteProfile: function () {
       const self = this;
@@ -137,9 +153,26 @@ export default {
       }, function (error) {
         console.log(error);
       })
+    }, 
+    checkForm: function (e) {
+      if (this.password) {
+        alert("Profile mis à jour ! ");
+        this.$router.go("/profile");
+        return true;
+      }
+
+      this.errors = [];
+
+      if (!this.password) {
+        this.errors.push('Mot de passe obligatoire');
+      }
+
+      e.preventDefault();
     }
   }
+
 }
+
 </script>
 
 <style scoped>

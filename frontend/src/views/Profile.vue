@@ -6,7 +6,7 @@
     <form @submit="checkForm" class="form-group">
         <!-- Modifier ma photo de profil -->
         <img :src="user.imageUrl"/><br>
-        <input v-if='!toggle' class="image" type="file" ref="image" @change="fileSelected()">
+        <input v-if='!toggle && !show' class="image" type="file" ref="image" @change="fileSelected()">
           
         <br><br>
         <label for="isAdmin" v-if='$store.state.user.isAdmin == 1'>Admin</label> <input type="checkbox" v-model="checked" v-if='$store.state.user.isAdmin == 1' id='isAdmin' :checked="$store.state.user.isAdmin"/><br>
@@ -14,14 +14,14 @@
         <label for="username">Nom :  {{user.username}}</label><br>
         <label for="bio">Petit mot sur moi : {{user.bio}} </label><br><br>
         <!-- Modifier mes informations de profil -->
-        <input v-if='!toggle' class="form-row__input" type="text" id="username" name="username" ref="username" v-model="username" placeholder="Modifier mon nom"> <br><br>
-        <textarea v-if='!toggle' class="form-row__input" type="text" id="bio" name="bio" ref="bio" v-model="bio" placeholder="Modifier ma bio"></textarea><br><br>
-        <input v-if='!toggle' class="form-row__input" type="password" id="password" name="password" ref="password" v-model="password" placeholder="Modifier le mot de passe**"> <br><br>
-        <p v-if='!toggle'>**Champs obligatoires</p>
-        <p v-if="errors.length && !toggle">
+        <input v-if='!toggle && !show' class="form-row__input" type="text" id="username" name="username" ref="username" v-model="username" placeholder="Modifier mon nom"> <br><br>
+        <textarea v-if='!toggle && !show' class="form-row__input" type="text" id="bio" name="bio" ref="bio" v-model="bio" placeholder="Modifier ma bio"></textarea><br><br>
+        <input v-if='!toggle && !show' class="form-row__input" type="password" id="password" name="password" ref="password" v-model="password" placeholder="Modifier le mot de passe**"> <br><br>
+        <p v-if='!toggle && !show'>**Champs obligatoires</p>
+        <p v-if="errors.length && !toggle && !show">
           <b class="text-danger">Merci de corriger l'erreur suivante:</b>
           <ul>
-            <li class="text-danger" v-for="error in errors" :key='error.index'>{{ error }}</li>
+            <p class="text-danger text-center" v-for="error in errors" :key='error.index'>{{ error }}</p>
           </ul>
         </p>
         <button v-if='!toggle && !show' @click="modifyProfile()" class="button btn-primary" data-bs-toggle="button" autocomplete="off">

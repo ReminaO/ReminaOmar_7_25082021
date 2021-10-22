@@ -4,16 +4,22 @@
     <h1>Accueil - Exprimez vous 😊</h1>
     <p class="text-center">Bienvenue sur la plateforme d'échange de Groupomania</p>
   </div>
-    <div class="card">
+    <form @submit="sendForm" class="card">
       <input class="form-row__input" type="text" id="title" name="title" ref="title" v-model="title" placeholder="Titre"><br><br>
       <label for="attachement">Image : </label><br>
       <input  type="file" ref="image" @change="imgSelected()" class="form-row__input">
       <br><br>
-      <textarea  class="form-row__input" type="content" id="content" name="content" ref="content" v-model="content" placeholder="Exprimez-vous"></textarea><br>
+      <textarea  class="form-row__input" type="content" id="content" name="content" ref="content" v-model="content" placeholder="Exprimez-vous..."></textarea><br>
+      <p v-if="errors.length">
+          <b class="text-danger">Merci de corriger l'erreur suivante:</b>
+          <ul>
+            <li class="text-danger" v-for="error in errors" :key='error.index'>{{ error }}</li>
+          </ul>
+      </p>
       <button @click="addMessage()" class="button-size btn-primary" data-bs-toggle="button" autocomplete="off">
         Publier
       </button>
-    </div><br>
+    </form><br>
     <!-- Section Message -->
     <div v-for="message in messages" :key="message.id" class="card card-margin">
         <div class="message-container">
@@ -110,6 +116,7 @@ export default {
       userName:'',
       likes:'',
       message: {},
+      errors: []
     }
       
   },
@@ -154,6 +161,9 @@ export default {
     this.attachement = this.$refs.image.files[0];
   },
   addMessage: function () {
+    if (!this.title || !this.content || !this.attachement){
+        return false
+      } else {
     const formData = new FormData();
     formData.append('image', this.attachement);
     formData.append('content', this.content);
@@ -165,9 +175,10 @@ export default {
       this.title = response.data 
       this.content = response.data 
       this.attachement = response.data
-      this.userName = response.data 
-      this.$router.go("/wall");
+      this.userName = response.data
+       
     })
+  }
   },
   deleteMessage: function (message) {
     const self = this;
@@ -190,6 +201,31 @@ export default {
       }, function (error) {
         console.log(error);
       })
+    }, 
+    sendForm: function (e) {
+      if (this.title && this.content && this.attachement ) {
+        this.$router.go("/wall");
+        return true;
+      }
+
+      this.errors = [];
+
+      if (!this.title) {
+        this.errors.push('Titre requis');
+      }
+
+      if (!this.content) {
+        this.errors.push('Contenu requis');
+      }
+
+      if (!this.image) {
+        this.errors.push('Image requise ');
+      }
+
+      if (!this.errors.length) {
+        return true;
+      }
+      e.preventDefault();
     }
 }
 }

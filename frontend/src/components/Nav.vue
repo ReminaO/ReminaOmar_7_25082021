@@ -41,13 +41,10 @@ computed: {
 .navbar{
   background-color:#d65959;
   flex-wrap: wrap;
-  
 }
-
 img { 
   height: 50px;
 }
-
 header {
   display: flex;
   justify-content: space-between;

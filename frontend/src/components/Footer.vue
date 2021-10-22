@@ -38,7 +38,6 @@ a {
     list-style: none;
     text-decoration : none; 
     text-decoration-style : solid;
-    
 }
 li {
     padding: 5px;

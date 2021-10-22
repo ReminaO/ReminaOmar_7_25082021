@@ -7,7 +7,6 @@
         <!-- Modifier ma photo de profil -->
         <img :src="user.imageUrl"/><br>
         <input v-if='!toggle && !show' class="image" type="file" ref="image" @change="fileSelected()">
-          
         <br><br>
         <label for="isAdmin" v-if='$store.state.user.isAdmin == 1'>Admin</label> <input type="checkbox" v-model="checked" v-if='$store.state.user.isAdmin == 1' id='isAdmin' :checked="$store.state.user.isAdmin"/><br>
         <label for="email"> Email : {{user.email}}</label><br>
@@ -27,26 +26,22 @@
         <button v-if='!toggle && !show' @click="modifyProfile()" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
           Enregistrer
         </button><br>
-        
     </form><br>
     <div class="form-row">
-      <button @click="show = !show" v-if='!toggle && !show' class="button btn-primary" data-bs-toggle="button" autocomplete="off">
+      <button @click="reload()" v-if='!toggle && !show' class="button btn-primary" data-bs-toggle="button" autocomplete="off">
         Annuler
       </button><br><br>
       <button v-if='!toggle && !show' @click="deleteProfile()" class="button btn-danger" data-bs-toggle="button" autocomplete="off">
         Supprimer
       </button> <br>
-      
       <button @click="toggle = !toggle" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
         Modifier
       </button><br>
       <button @click="logout()" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
         Déconnexion
       </button><br>
-      
     </div>
   </div>
-  
 <Footer />
 </div>
 </template>
@@ -140,9 +135,8 @@ export default {
             this.bio = response.data 
             this.image = response.data
             this.password = response.data
-      })
-      }
-      
+          })
+        }
     },
     deleteProfile: function () {
       const self = this;
@@ -168,11 +162,12 @@ export default {
       }
 
       e.preventDefault();
+    }, 
+    reload: function() {
+      location.reload();
     }
   }
-
 }
-
 </script>
 
 <style scoped>
@@ -185,8 +180,8 @@ html, body{
   width: 75%;
   padding:15px;
   flex-wrap: wrap;
-    border: 5px solid rgb(212, 104, 104);
-    border-radius: 30px;
+  border: 5px solid rgb(212, 104, 104);
+  border-radius: 30px;
   }
 img {
   height: 150px;
@@ -199,19 +194,17 @@ img {
 .form-group {
   text-align: center;
 }
-
 .form-row__input {
-    padding:8px;
-    border: none;
-    border-radius: 8px;
-    background:#f2f2f2;
-    font-weight: 500;
-    font-size: 16px;
-    flex:1;
-    min-width: 100px;
-    color: black;
-  }
-  
+  padding:8px;
+  border: none;
+  border-radius: 8px;
+  background:#f2f2f2;
+  font-weight: 500;
+  font-size: 16px;
+  flex:1;
+  min-width: 100px;
+  color: black;
+}
 .formulaire {
   display: flex;
 }
@@ -227,10 +220,8 @@ button {
   margin: 0;
   padding: 0;
 }
-
 label {
   font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 20px;
 }
-
 </style>>

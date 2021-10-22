@@ -118,7 +118,6 @@ export default {
       message: {},
       errors: []
     }
-      
   },
   computed : {
     ...mapState({
@@ -136,9 +135,6 @@ export default {
           return this.$store.state.comment
       }
     }),
-    
-    
-    
     },     
   
   mounted: function () {

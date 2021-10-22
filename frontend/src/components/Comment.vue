@@ -6,7 +6,6 @@
       Publier
     </button>
   </div><br>
-  
 </div>
 </template>
 
@@ -42,8 +41,7 @@ export default {
   data () {
     return{
       comment : '',
-    }
-      
+    } 
   },
   computed : {
     ...mapState(['status']),
@@ -63,7 +61,6 @@ export default {
     message() {
         return this.$store.state.message
     },
-    
     },     
   
   mounted: function () {
@@ -86,9 +83,7 @@ export default {
         this.$router.go("/wall");
       });
     },
-    
   },
-  
 }
 </script>
 
@@ -117,7 +112,6 @@ export default {
 .form-row__input {
     width: min(max(100%), 100%);
 }
-
 .comment-publish {
   border: solid 1px #e9ace4;
   border-radius : 30px;

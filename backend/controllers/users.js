@@ -1,5 +1,4 @@
 const bcrypt = require('bcrypt'); // import Bcrypt module
-const User = require('../models/user'); // import modèle user
 const jwt = require('jsonwebtoken'); // import jsonwebtoken module
 const models = require('../models/')
 const asyncLib = require('async');
@@ -255,14 +254,14 @@ exports.deleteProfile = (req, res, next) => {
         },
 
         function(userFound, done) {
-            //Vérification que la requête soit envoyé par le propriétaire du compteChecks if the user is the owner of the targeted one
-            if (userFound.id == req.params.id || userFound.isAdmin == true) { // or if he's admin
+            //Vérification que la requête soit envoyé par le propriétaire du compte
+            if (userFound.id == req.params.id || userFound.isAdmin == true) { // ou s'il est admin
 
-                // Soft-deletion modifying the post the ad a timestamp to deletedAt
+                // Suppression du profil
                 models.User.destroy({
                         where: { id: req.params.id }
                     })
-                    .then(() => res.status(200).json({ message: 'Utilisateur supprimé' })) // send confirmation if done
+                    .then(() => res.status(200).json({ message: 'Utilisateur supprimé' })) // envoie un message de confirmation une fois fait
                     .catch(error => res.status(500).json({ 'error': 'L\'utilisateur ne peut être supprimé' }))
 
             } else {

@@ -1,6 +1,5 @@
 //import des modèles
 const models = require('../models/');
-const Message = require('../models/message');
 const asyncLib = require('async');
 
 // Controllers pour créer un commenataire
@@ -56,12 +55,12 @@ exports.createComment = (req, res, next) => {
         }
     })
 };
-  
+
 // Controllers pour effacer un commentaire grâce a l'ID
 exports.deleteComment = (req, res, next) => {
-const userId = req.params.userId;
+    const userId = req.params.userId;
 
-  asyncLib.waterfall([
+    asyncLib.waterfall([
 
     // Vérifie que l'utilisateur soit existant
     function(done) {
@@ -90,10 +89,10 @@ const userId = req.params.userId;
 
     function(userFound, commentFound, done) {
 
-        // Checks if the user is the owner of the targeted one
+        // Vérification que l'utilisateur soit l'auteur du commentaire
         if (userFound.id == commentFound.userId || userFound.isAdmin == true) { // or if he's admin
 
-            // Soft-deletion modifying the postContent the ad a timestamp to deletedAt
+            // Suppression du commentaire
             models.Comment.destroy({
                     where: { id: req.params.id }
                 })
@@ -106,24 +105,23 @@ const userId = req.params.userId;
     },
 ],
 
-  function(userFound) {
-      if (userFound) {
-          return res.status(201).json({ 'message': 'commentaire effacé' });
-      } else {
-          return res.status(500).json({ 'error': 'le commentaire ne peut être effacé' });
-      }
-  });
+    function(userFound) {
+        if (userFound) {
+            return res.status(201).json({ 'message': 'commentaire effacé' });
+        } else {
+            return res.status(500).json({ 'error': 'le commentaire ne peut être effacé' });
+        }
+    });
 };
-  
+
   // Controllers pour afficher toutes les commentaires
-  exports.getAllComments = (req, res, next) => {
-      models.Comment.findAll({
-        include: [{ // Relie le message avec les tables User and Comments
-            model: models.User,
-            model: models.Message, 
-            // required: true,
-      }
-       ]})
-    .then((comment => res.status(200).json(comment)))
-    .catch(() => res.status(400).json({ error: "Erreur lors de l'affichage des commentaires" }));
+    exports.getAllComments = (req, res, next) => {
+        models.Comment.findAll({
+            include: [{ // Relie le message avec les tables User and Comments
+                model: models.User,
+                model: models.Message, 
+            }
+        ]})
+            .then((comment => res.status(200).json(comment)))
+            .catch(() => res.status(400).json({ error: "Erreur lors de l'affichage des commentaires" }));
 }

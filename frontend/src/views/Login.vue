@@ -50,7 +50,6 @@ export default {
       username: '',
       password: '',
       bio: '',
-      
     }
   },
   mounted: function () {

@@ -3,13 +3,10 @@ const asyncLib = require('async');
 //import des modèles
 const models = require('../models/');
 
-
-
 //Paramètres
 const TITLE_LIMIT   = 2;
 const CONTENT_LIMIT = 2;
 const ITEMS_LIMIT = 50;
-
 // Controllers pour créer un message
 exports.createMessages = (req, res, next) => {
   
@@ -21,11 +18,13 @@ exports.createMessages = (req, res, next) => {
 
   //Vérification d'un fichier existant ou laisse le lien vide
   const attachement = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null;
-
+  
+  //Vérification que le titre et le contenu ne soit pas nul
   if (title == null || content == null) {
     return res.status(400).json({ 'error': 'champs manquant' });
   }
 
+  //Vérification de la longueur du titre et du contenu
   if (title.length <= TITLE_LIMIT || content.length <= CONTENT_LIMIT) {
     return res.status(400).json({ 'error': 'champs invalide' });
   }
@@ -107,10 +106,10 @@ exports.deleteMessages = (req, res, next) => {
 
       function (userFound, postFound) {
 
-        // Checks if the user is the owner of the targeted one
-        if (userFound.id == postFound.UserId || userFound.isAdmin == true) { // or if he's admin
+        // Vérification que l'utilisateur est l'auteur du poste
+        if (userFound.id == postFound.UserId || userFound.isAdmin == true) { // ou s'il est admin
 
-          // Soft-deletion modifying the post and add a timestamp to deletedAt
+          // Suppression du message
           models.Message.destroy({
             where: { id: req.params.id }
           })

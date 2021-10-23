@@ -104,7 +104,6 @@ export default {
     }
     self.$store.dispatch('getUserInfos');
   },
-  
   computed: {
     ...mapState({
       user: 'userInfos',

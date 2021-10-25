@@ -1,9 +1,9 @@
 const bcrypt = require('bcrypt'); // import Bcrypt module
 const jwt = require('jsonwebtoken'); // import jsonwebtoken module
-const models = require('../models/')
-const asyncLib = require('async');
+const models = require('../models/'); // import des modèles
+const asyncLib = require('async'); // import async Waterfall module
 
-
+// Paramètres
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 // Controllers pour créer un compte
@@ -141,9 +141,8 @@ exports.login = (req, res, next) => {
                 userId: userFound.id,
                 // créé un token avec la method jwt.sign
                 token: jwt.sign({ userId: userFound.id },
-                    // must be a long non specific and random characters
                     process.env.DB_TOKEN,
-                    // make the token expires after 24h
+                    // Limite la validité du token a 24h
                     { expiresIn: process.env.DB_EXPIRES_IN }
                 ),
                 isAdmin: userFound.isAdmin

@@ -1,10 +1,11 @@
 //import des modèles
 const models = require('../models/');
+// import du module
 const asyncLib = require('async');
 
 // Controllers pour créer un commenataire
 exports.createComment = (req, res, next) => {
-    // Paramètre
+    // Paramètres
     const comment = req.body.comment;
     const userId = req.params.userId;
 
@@ -117,7 +118,7 @@ exports.deleteComment = (req, res, next) => {
   // Controllers pour afficher toutes les commentaires
     exports.getAllComments = (req, res, next) => {
         models.Comment.findAll({
-            include: [{ // Relie le message avec les tables User and Comments
+            include: [{ // Relie le message avec les tables User et Comments
                 model: models.User,
                 model: models.Message, 
             }

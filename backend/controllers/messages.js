@@ -7,6 +7,7 @@ const models = require('../models/');
 const TITLE_LIMIT   = 2;
 const CONTENT_LIMIT = 2;
 const ITEMS_LIMIT = 50;
+
 // Controllers pour créer un message
 exports.createMessages = (req, res, next) => {
   
@@ -156,9 +157,8 @@ exports.deleteMessages = (req, res, next) => {
           include: [{ // Relie le message avec les tables User and Comments  
             model: models.User,
             model: models.Comment,
-            // required: true,
           }
-           ]
+        ]
         }).then(function (posts) {
           done(posts)
         }).catch(function (err) {

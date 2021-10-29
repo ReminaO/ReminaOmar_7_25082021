@@ -9,7 +9,6 @@ const path = require('path');
 //import des routes
 const messagesRoutes = require('./routes/messages');
 const userRoutes = require('./routes/users');
-const likesRoutes = require('./routes/likes');
 const commentsRoutes = require('./routes/comments');
 
 const app = express();
@@ -30,7 +29,6 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 //Définition du chemin des routes
 app.use('/api/messages', messagesRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/likes', likesRoutes);
 app.use('/api/comments', commentsRoutes);
 
 

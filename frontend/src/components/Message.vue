@@ -83,7 +83,7 @@ const axios = require('axios');
 let user = localStorage.getItem('user');
 // let message = localStorage.getItem('message');
 if (!user) {
- user = {
+  user = {
     userId: -1,
     token: '',
   }; 

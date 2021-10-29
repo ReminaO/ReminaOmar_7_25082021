@@ -10,7 +10,7 @@
         <router-link  class="nav-link active " aria-current="page" to="/wall">Accueil</router-link>
       </li>
       <li class="nav-item">
-        <router-link  class="nav-link"  to="/profile">Profil</router-link>
+        <router-link  class="nav-link" to="/profile">Profil</router-link>
       </li>
       <li class="nav-item">
         <router-link @click="logout()"  class="nav-link" to="/">Déconnexion</router-link>

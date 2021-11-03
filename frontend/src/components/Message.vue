@@ -310,13 +310,13 @@ export default {
 .button-size:hover {
   background-color: rgb(51, 89, 151)
 }
-.image {
+  .image {
     width: auto;
     height : 250px;
     flex-wrap: wrap;
     object-fit: contain;
     border-radius: 10px;
-}
+  }
 .button-small {
   /* width: 100%; */
   background-color: white;

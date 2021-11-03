@@ -102,6 +102,16 @@ export default {
       this.$router.push('/');
       return ;
     }
+    if( window.localStorage )
+  {
+    if( !localStorage.getItem('firstLoad') )
+    {
+      localStorage['firstLoad'] = true;
+      window.location.reload();
+    }  
+    else
+      localStorage.removeItem('firstLoad');
+  }
     self.$store.dispatch('getUserInfos');
   },
   computed: {

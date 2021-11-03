@@ -9,7 +9,7 @@
       <p class="card__subtitle" v-if="mode == 'login'">Tu n'as pas encore de compte ? <span class="card__action" @click="switchToCreateAccount()">Créer un compte</span></p>
       <p class="card__subtitle" v-else>Tu as déjà un compte ? <span class="card__action" @click="switchToLogin()">Se connecter</span></p>
       <div class="form-row">
-        <input v-model="email" class="form-row__input" type="text" placeholder="Adresse mail"/>
+        <input v-model="email" @change="isEmailValid" class="form-row__input" type="text" placeholder="Adresse mail"/>
       </div>
       <div class="form-row" v-if="mode == 'create'">
         <input v-model="username" class="form-row__input" type="text" placeholder="Pseudo"/>
@@ -21,15 +21,19 @@
       <div class="form-row text-warning" v-if="mode == 'login' && status == 'error_login'">
         Adresse mail et/ou mot de passe invalide
       </div>
-      <div class="form-row text-warning" v-if="mode == 'create' && status == 'error_create'">
-        Adresse mail déjà utilisée
+      <div class="form-row text-warning"  v-if="mode == 'create' && status == 'error_create'">
+        <p v-if="errors.length">
+          <span>
+            <p class="text-warning" v-for="error in errors" :key='error.index'>{{ error }}</p>
+          </span>
+        </p>
       </div>
       <div class="form-row">
-        <button @click="login()" class="button btn-primary" data-bs-toggle="button" autocomplete="off" :class="{'button--disabled' : !validatedFields}" v-if="mode == 'login'">
+        <button @click="login()" class="button" :class="{'button--disabled' : !validatedFields}" v-if="mode == 'login'">
           <span v-if="status == 'loading'">Connexion en cours...</span>
           <span v-else>Connexion</span>
         </button>
-        <button @click="signup()" class="button btn-primary" data-bs-toggle="button" autocomplete="off" :class="{'button--disabled' : !validatedFields}" v-else>
+        <button @click="signup()" class="button"  :class="{'button--disabled' : !validatedFields}" v-else>
           <span v-if="status == 'loading'">Création en cours...</span>
           <span v-else>Créer mon compte</span>
         </button>
@@ -50,6 +54,7 @@ export default {
       username: '',
       password: '',
       bio: '',
+      errors: []
     }
   },
   mounted: function () {
@@ -105,8 +110,25 @@ export default {
         self.login();
       }, function (error) {
         console.log(error);
+        // alert('Merci de compléter tous les champs !')
       })
     },
+    isEmailValid() {
+      const email_regex = /^(([^<>()[\].,;:s@"]+(.[^<>()[\].,;:s@"]+)*)|(".+"))@((s[[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/;
+      const email = this.email;
+      const empty = /^(\w+\S+)$/
+      
+      this.errors = [];
+      if (!empty.test(email)) {
+        this.errors.push('Merci de compléter l\'adresse mail !');
+    }
+      if (!email_regex.test(email)) {
+        this.errors.push('Merci de saisir le bon format d\'adresse mail !');
+    }  else {
+        this.errors.push('Adresse mail déjà utilisée !');
+      }
+      
+    }, 
   }
 }
 </script>
@@ -161,12 +183,7 @@ export default {
   background-color: rgb(19, 16, 168);
   color:#f2f2f2;
 }
-  /* div {
-    height: 100%;
-    background-image: linear-gradient(rgba(0, 0, 255, 0.5), rgba(230, 91, 91, 0.795)),
-    url("../assets/network.jpg"); 
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    
-  } */
+.button--disabled {
+  background-color:grey;
+}
 </style>>

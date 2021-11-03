@@ -18,7 +18,7 @@
               <li class="text-danger" v-for="error in errors" :key='error.index'>{{ error }}</li>
             </ul>
         </p>
-        <button @click="addMessage()" class="button-size btn-primary" data-bs-toggle="button" autocomplete="off">
+        <button @click="addMessage()" class="button-size" data-bs-toggle="button" autocomplete="off">
           Publier
         </button>
       </form><br>
@@ -39,8 +39,8 @@
             <span class="date-format">Publié le {{ formatDate(message.createdAt)}}</span>
             
           </div><br>
-          <button v-if="this.$store.state.user.userId == message.UserId  || this.$store.state.user.isAdmin == 1"  name="delete" class="button-small btn-danger" data-bs-toggle="button" autocomplete="off" @click="deleteMessage(message.id)">
-            Supprimer
+          <button v-if="this.$store.state.user.userId == message.UserId  || this.$store.state.user.isAdmin == 1"  name="delete" class="button-small" data-bs-toggle="button" autocomplete="off" @click="deleteMessage(message.id)">
+            🗑️
           </button> 
         <br><br><br><br>
         </div>
@@ -53,14 +53,15 @@
         :key="comment.id"
         class="comment-content">
         <div class="comment-display">
+        <img :src="require(`../assets/icon.png`)" class='icon-image img-fluid' alt="logo-groupomania">
           <div class="comment-display__content">
-              <p class="comment-display__username"> {{ comment.userName }} </p>
+              <div class="comment-display__username"> {{ comment.userName }} </div>
               <p class="comment-display__comment"> {{ comment.comment }} </p>
           </div>
         </div>
         <div>
-          <button v-if="this.$store.state.user.userId == comment.userId || this.$store.state.user.isAdmin == 1" name="delete" class="button deleteBtn btn-danger" data-bs-toggle="button" autocomplete="off" @click="deleteComment(comment.id)">
-          Supprimer
+          <button v-if="this.$store.state.user.userId == comment.userId || this.$store.state.user.isAdmin == 1" name="delete" class="button deleteBtn" data-bs-toggle="button" autocomplete="off" @click="deleteComment(comment.id)">
+          🗑️
           </button>
         </div> 
       <br>
@@ -246,6 +247,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+  padding-bottom: 15px;
   border-bottom: solid 3px rgb(209, 81, 90);
 }
 .username-display {
@@ -301,55 +303,63 @@ export default {
     width: min(max(50%), 50%);
     background-color: rgb(9, 31, 67);
     color:#f2f2f2;
+    border-radius: 10px;
+    border: none;
+    padding: 10px;
+}
+.button-size:hover {
+  background-color: rgb(51, 89, 151)
 }
 .image {
     width: auto;
     height : 250px;
     flex-wrap: wrap;
     object-fit: contain;
-    padding-bottom: 10px;
+    border-radius: 10px;
 }
 .button-small {
   /* width: 100%; */
-  background-color: rgb(9, 31, 67);
-  color:#f2f2f2;
+  background-color: white;
+  border: none;
 }
 .date-format {
   padding:10px;
 }
 .comment-display__content {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-start;
+  background-color:#e6f3f8;
+  border-radius: 20px;
+  padding: 0 25px;
+  margin-bottom : 15px;
 }
-.comment-display__comment{
-  padding:8px;
-    border: none;
-    border-radius: 8px;
-    background:rgb(242, 242, 242);
-    font-weight: 500;
-    font-size: 16px;
-    color: black;
-    text-align: right;
-    width: 80%;
-    min-width: 10px;
+.comment-content{
+  display:flex;
+  align-items: center;
+}
+.comment-display {
+  display: flex;
 }
 .comment-display__username {
-  display: flex;
-  text-align: center;
-  align-items: center;
-  border: solid 1px rgb(9, 31, 67);
-  border-radius: 30px;
-  padding: 10px;
-  background:rgb(9, 31, 67);
-  width: auto;
-  color: white;
+  font-size: 20px;
+  /* color:  */
+  margin-bottom: 3px;
+  border-bottom: 1px dashed grey;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+}
+.comment-display__content {
+  font-size: 18px;
 }
 .deleteBtn{
-  text-align: center;
-  background-color: rgb(19, 16, 168);
-  color:#f2f2f2;
+  background-color: white;
+  border: none;
 }
 .card-margin {
   margin-bottom: 10px;
+}
+.icon-image {
+  height:30px;
+  object-fit: contain;
 }
 </style>

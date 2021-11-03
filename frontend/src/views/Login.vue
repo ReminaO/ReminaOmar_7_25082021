@@ -136,15 +136,13 @@ export default {
 <style scoped>
   .card {
       text-align: center;
-      width: 60%;
-      background-image: linear-gradient(rgba(0, 0, 255, 0.5), rgb(209, 81, 90)),
-      url("../assets/network.jpg"); 
-      background-repeat: no-repeat;
-      background-attachment: fixed;
+      width: 50%;
+      background: rgb(255, 178, 162);
       color: white;
       background-position: 50% 50%;
-      border: 2px solid rgb(209, 81, 90);
+      border: 1px solid rgb(253, 88, 55);
       padding: 10px;
+      border-radius: 8px;
         }
   .form-row {
     display: flex;
@@ -155,19 +153,23 @@ export default {
   }
   .form-row__input {
     padding:8px;
-    border: #fff6f6 solid 0.5px;
+    border: rgb(204, 43, 54) solid 1px;
     border-radius: 8px;
-    background-color: #fff6f6;
-    opacity: 0.33;
+    background-color: rgba(201, 55, 65,0.5);
     font-weight: 500;
-    font-size: 16px;
+    font-size: 20px;
     flex:1;
     min-width: 100px;
+    color: white;
   }
   .form-row__input::placeholder {
-    color:#000000;
+    color:rgba(255,255,255,0.8);
+    
   }
-
+.form-row__input {
+    outline:rgb(255, 101, 70);
+    
+  }
   .logo img{
     height: 300px;
     object-fit: contain;
@@ -180,11 +182,27 @@ export default {
     padding: 0;
   }
   button {
-  background-color: rgb(9, 31, 67);
-  color:white;
+  background-color:rgb(255, 101, 70);
+  color:rgba(255,255,255,1);
+  border-radius: 8px;
+  padding: 10px 25px;
+  font-size: 23px;
+  border: none;
 }
 .button--disabled {
-  background-color:rgb(184, 184, 184);
-  color:rgb(9, 31, 67);
+  background-color:rgba(253, 45, 1, 0.2);
+  color:rgba(255,255,255,0.8);
+}
+.card__action {
+  color: rgb(167, 39, 14);
+  cursor: pointer;
+}
+.card__action:hover {
+  color: rgb(253, 45, 1);
+  text-decoration: underline;
+
+}
+.card__subtitle {
+  font-size: 23px;
 }
 </style>>

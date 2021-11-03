@@ -2,7 +2,7 @@
 <div class="container">
   <div class="card comment-publish">
     <input class="form-row__input form-control" type="text" id="comment"  v-bind="$attrs" ref="comment" name="comment" v-model="comment" placeholder="Votre Commentaire..."><br>
-    <button @click="addPost($attrs)"  v-bind="$attrs" ref="comment" class="button btn-primary" data-bs-toggle="button" autocomplete="off">
+    <button @click="addPost($attrs)"  v-bind="$attrs" ref="comment" class="button" data-bs-toggle="button" autocomplete="off">
       Publier
     </button>
   </div><br>
@@ -108,6 +108,12 @@ export default {
   width: 30%;
   background-color: rgb(9, 31, 67);
   color:#f2f2f2;
+  border-radius: 10px;
+  border: none;
+  padding:10px
+}
+.button:hover {
+  background-color: rgb(51, 89, 151)
 }
 .form-row__input {
     width: min(max(100%), 100%);

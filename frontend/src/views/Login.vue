@@ -1,5 +1,5 @@
 <template>
-<div class="container-fluid">
+  <div class="container-fluid">
     <div class='logo'>
       <img :src="require(`../assets/icon-above-font.png`)" alt="logo-groupomania">
     </div>
@@ -137,13 +137,13 @@ export default {
   .card {
       text-align: center;
       width: 60%;
-      background-image: linear-gradient(rgba(0, 0, 255, 0.5), rgba(230, 91, 91, 0.795)),
+      background-image: linear-gradient(rgba(0, 0, 255, 0.5), rgb(209, 81, 90)),
       url("../assets/network.jpg"); 
       background-repeat: no-repeat;
       background-attachment: fixed;
       color: white;
       background-position: 50% 50%;
-      border: 5px solid rgb(212, 104, 104);
+      border: 2px solid rgb(209, 81, 90);
       padding: 10px;
         }
   .form-row {
@@ -180,10 +180,11 @@ export default {
     padding: 0;
   }
   button {
-  background-color: rgb(19, 16, 168);
-  color:#f2f2f2;
+  background-color: rgb(9, 31, 67);
+  color:white;
 }
 .button--disabled {
-  background-color:grey;
+  background-color:rgb(184, 184, 184);
+  color:rgb(9, 31, 67);
 }
 </style>>

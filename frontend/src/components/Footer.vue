@@ -29,10 +29,14 @@ computed: {
     align-items: center;
     list-style: none;
     margin-top: 30px;
+    margin-bottom: 0px;
+    padding: 0;
 }
-.footer{
-    background-color:#d65959;
+.container-fluid{
+    background-color:rgb(9, 31, 67);
     height: 150px;
+    padding: 0;
+    margin:0;
 }
 a {
     list-style: none;
@@ -41,5 +45,8 @@ a {
 }
 li {
     padding: 5px;
+}
+.col{
+    padding:0;
 }
 </style>

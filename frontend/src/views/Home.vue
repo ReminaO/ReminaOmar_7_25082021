@@ -1,5 +1,6 @@
 <template>
 <div class="container-fluid">
+  <PageLoader />
   <Nav />
   <Message />
   <Footer />
@@ -12,13 +13,15 @@ import { mapState } from 'vuex';
 import Nav from '@/components/Nav.vue';
 import Footer from '@/components/Footer.vue';
 import Message from '@/components/Message.vue';
+import PageLoader from '@/components/PageLoader.vue';
 
 export default {
   name: 'Home',
   components : {
     Nav,
     Footer,
-    Message
+    Message,
+    PageLoader
   },
   computed : {
     ...mapState(['status']),

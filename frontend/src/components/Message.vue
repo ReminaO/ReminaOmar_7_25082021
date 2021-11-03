@@ -1,72 +1,75 @@
 <template>
 <div class="container-fluid">
   <div class="jumbotron text-black">
-    <h1>Accueil - Exprimez vous 😊</h1>
+    <h1 class="text-center">Accueil - Exprimez vous 😊</h1>
     <p class="text-center">Bienvenue sur la plateforme d'échange de Groupomania</p>
   </div>
-    <form @submit="sendForm" class="card">
-      <input class="form-row__input" type="text" id="title" name="title" ref="title" v-model="title" placeholder="Titre"><br><br>
-      <label for="attachement">Image : </label><br>
-      <input  type="file" ref="image" @change="imgSelected()" class="form-row__input">
-      <br><br>
-      <textarea  class="form-row__input" type="content" id="content" name="content" ref="content" v-model="content" placeholder="Exprimez-vous..."></textarea><br>
-      <p v-if="errors.length">
-          <b class="text-danger">Merci de corriger l'erreur suivante:</b>
-          <ul>
-            <li class="text-danger" v-for="error in errors" :key='error.index'>{{ error }}</li>
-          </ul>
-      </p>
-      <button @click="addMessage()" class="button-size btn-primary" data-bs-toggle="button" autocomplete="off">
-        Publier
-      </button>
-    </form><br>
-    <!-- Section Message -->
-    <div v-for="message in messages" :key="message.id" class="card card-margin">
-        <div class="message-container">
-        <div >
-          <div class=" message-display">
-            <div>
-              <p class="username-display text-black"> {{ message.userName }} </p>
-              <p class="title-display text-black"> Titre : {{ message.title }} </p>
-              <p class="content-display text-black"> {{ message.content }} </p>
-              
-            </div>
-              <img :src="message.attachement" class="img-fluid image"/>
-              
-          </div>
-          <span class="date-format">Publié le {{ formatDate(message.createdAt)}}</span>
-          
-        </div><br>
-            <button v-if="this.$store.state.user.userId == message.UserId  || this.$store.state.user.isAdmin == 1"  name="delete" class="button-small btn-danger" data-bs-toggle="button" autocomplete="off" @click="deleteMessage(message.id)">
-              Supprimer
-            </button> 
-      <br><br><br><br>
-      </div>
-      <!-- Section commentaires -->
-      <div v-if="comments">
-    <div 
-      v-for="(comment) in comments.filter((comment) => { 
-        return comment.messageId == message.id 
-        })" 
-      :key="comment.id"
-      class="comment-content">
-      <div class="comment-display">
-        <div class="comment-display__content">
-            <p class="comment-display__username"> {{ comment.userName }} </p>
-            <p class="comment-display__comment"> {{ comment.comment }} </p>
-        </div>
-      </div>
-      <div>
-        
-        <button v-if="this.$store.state.user.userId == comment.userId || this.$store.state.user.isAdmin == 1" name="delete" class="button deleteBtn btn-danger" data-bs-toggle="button" autocomplete="off" @click="deleteComment(comment.id)">
-        Supprimer
+  <div class="row">
+    <div class="col col-xl-10 d-flex flex-column">
+      <form @submit="sendForm" class="card">
+        <input class="form-row__input" type="text" id="title" name="title" ref="title" v-model="title" placeholder="Titre"><br><br>
+        <label for="attachement">Image : </label><br>
+        <input  type="file" ref="image" @change="imgSelected()" class="form-row__input">
+        <br><br>
+        <textarea  class="form-row__input" type="content" id="content" name="content" ref="content" v-model="content" placeholder="Exprimez-vous..."></textarea><br>
+        <p v-if="errors.length">
+            <b class="text-danger">Merci de corriger l'erreur suivante:</b>
+            <ul>
+              <li class="text-danger" v-for="error in errors" :key='error.index'>{{ error }}</li>
+            </ul>
+        </p>
+        <button @click="addMessage()" class="button-size btn-primary" data-bs-toggle="button" autocomplete="off">
+          Publier
         </button>
-      </div> 
-    <br>
+      </form><br>
+      <!-- Section Message -->
+      <div v-for="message in messages" :key="message.id" class="card card-margin">
+        <div class="message-container">
+          <div >
+            <div class=" message-display">
+              <div>
+                <p class="username-display text-black"> {{ message.userName }} </p>
+                <p class="title-display text-black"> Titre : {{ message.title }} </p>
+                <p class="content-display text-black"> {{ message.content }} </p>
+                
+              </div>
+                <img :src="message.attachement" class="img-fluid image"/>
+                
+            </div>
+            <span class="date-format">Publié le {{ formatDate(message.createdAt)}}</span>
+            
+          </div><br>
+          <button v-if="this.$store.state.user.userId == message.UserId  || this.$store.state.user.isAdmin == 1"  name="delete" class="button-small btn-danger" data-bs-toggle="button" autocomplete="off" @click="deleteMessage(message.id)">
+            Supprimer
+          </button> 
+        <br><br><br><br>
+        </div>
+        <!-- Section commentaires -->
+        <div v-if="comments">
+      <div 
+        v-for="(comment) in comments.filter((comment) => { 
+          return comment.messageId == message.id 
+          })" 
+        :key="comment.id"
+        class="comment-content">
+        <div class="comment-display">
+          <div class="comment-display__content">
+              <p class="comment-display__username"> {{ comment.userName }} </p>
+              <p class="comment-display__comment"> {{ comment.comment }} </p>
+          </div>
+        </div>
+        <div>
+          <button v-if="this.$store.state.user.userId == comment.userId || this.$store.state.user.isAdmin == 1" name="delete" class="button deleteBtn btn-danger" data-bs-toggle="button" autocomplete="off" @click="deleteComment(comment.id)">
+          Supprimer
+          </button>
+        </div> 
+      <br>
+      </div>
+    </div>
+      <Comment v-bind="message"/>
     </div>
   </div>
-      <Comment v-bind="message"/>
-  </div>
+</div>
 </div>
 </template>
 
@@ -81,7 +84,6 @@ const axios = require('axios');
 
 
 let user = localStorage.getItem('user');
-// let message = localStorage.getItem('message');
 if (!user) {
   user = {
     userId: -1,
@@ -144,6 +146,16 @@ export default {
       this.$router.push('/');
       return ;
     }
+    if( window.localStorage )
+  {
+    if( !localStorage.getItem('firstLoad') )
+    {
+      localStorage['firstLoad'] = true;
+      window.location.reload();
+    }  
+    else
+      localStorage.removeItem('firstLoad');
+  }
     self.$store.dispatch('getAllMessages');
   },
   
@@ -172,7 +184,6 @@ export default {
       this.content = response.data 
       this.attachement = response.data
       this.userName = response.data
-       
     })
   }
   },
@@ -229,20 +240,13 @@ export default {
 </script>
 
 <style scoped>
-.update {
-  display: flex;
-  justify-content: space-between;
-  padding: 20px;
-  flex-wrap: wrap;
-  width: 100%;
-}
 .message-display {
   display: flex;
   /* flex-direction: column; */
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  border-bottom: solid 3px rgb(231, 154, 154);
+  border-bottom: solid 3px rgb(209, 81, 90);
 }
 .username-display {
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
@@ -273,22 +277,30 @@ export default {
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
+    background-color: rgb(247, 245, 245);
   }
   .card {
-    width: 75%;
+    width:auto;
     padding: 20px;
     flex-wrap: wrap;
-    border: 5px solid rgb(212, 104, 104);
-    border-radius: 30px;
+    border-radius: 10px;
+    background-color: rgb(255, 255, 255);
   }
+  .col{
+    padding:0;
+}
+.row{
+  display: flex;
+  justify-content: center;
+}
   .jumbotron {
     padding: 10px;
   }
   .button-size {
-  margin : 0 25%;
-  width: min(max(50%), 50%);
-  background-color: rgb(19, 16, 168);
-  color:#f2f2f2;
+    margin : 0 25%;
+    width: min(max(50%), 50%);
+    background-color: rgb(9, 31, 67);
+    color:#f2f2f2;
 }
 .image {
     width: auto;
@@ -299,7 +311,7 @@ export default {
 }
 .button-small {
   /* width: 100%; */
-  background-color: rgb(19, 16, 168);
+  background-color: rgb(9, 31, 67);
   color:#f2f2f2;
 }
 .date-format {
@@ -313,7 +325,7 @@ export default {
   padding:8px;
     border: none;
     border-radius: 8px;
-    background:#e9ace4;
+    background:rgb(242, 242, 242);
     font-weight: 500;
     font-size: 16px;
     color: black;
@@ -325,11 +337,12 @@ export default {
   display: flex;
   text-align: center;
   align-items: center;
-  border: solid 1px #e9aaaa;
+  border: solid 1px rgb(9, 31, 67);
   border-radius: 30px;
   padding: 10px;
-  background:#e9aaaa;
+  background:rgb(9, 31, 67);
   width: auto;
+  color: white;
 }
 .deleteBtn{
   text-align: center;
@@ -337,6 +350,6 @@ export default {
   color:#f2f2f2;
 }
 .card-margin {
-  margin: 10px;
+  margin-bottom: 10px;
 }
 </style>

@@ -170,7 +170,6 @@ const store = createStore({
         commit('messages', response.data);
       })
         .catch(function () {
-          location.reload();
       });
     },
     deleteMessage: ({ commit }, message) => {

@@ -39,8 +39,9 @@ computed: {
 </script>
 <style scoped>
 .navbar{
-  background-color:#d65959;
+  background-color:rgb(9, 31, 67);
   flex-wrap: wrap;
+  padding: 0;
 }
 img { 
   height: 50px;
@@ -48,5 +49,8 @@ img {
 header {
   display: flex;
   justify-content: space-between;
+}
+.container-fluid {
+  padding:0;
 }
 </style>

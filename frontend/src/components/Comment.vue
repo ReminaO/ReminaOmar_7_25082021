@@ -92,7 +92,7 @@ export default {
     padding:8px;
     border: none;
     border-radius: 8px;
-    background:#e9ace4;
+    background:rgb(242, 242, 242);
     font-weight: 500;
     font-size: 16px;
     flex:1;
@@ -106,15 +106,15 @@ export default {
   button {
   margin : 0 35%;
   width: 30%;
-  background-color: rgb(19, 16, 168);
+  background-color: rgb(9, 31, 67);
   color:#f2f2f2;
 }
 .form-row__input {
     width: min(max(100%), 100%);
 }
 .comment-publish {
-  border: solid 1px #e9ace4;
-  border-radius : 30px;
+  border: solid 1px rgb(209, 81, 90);
+  border-radius : 10px;
   padding: 10px
 }
 </style>

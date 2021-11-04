@@ -333,6 +333,8 @@ export default {
   border-radius: 20px;
   padding: 0 25px;
   margin-bottom : 15px;
+  -webkit-box-shadow: 5px 5px 10px 0.5px rgba(0,0,0,0.2);
+  box-shadow: 5px 5px 10px 0.5px rgba(0,0,0,0.2);
 }
 .comment-content{
   display:flex;
@@ -354,6 +356,7 @@ export default {
 .deleteBtn{
   background-color: white;
   border: none;
+  margin-left:15px;
 }
 .card-margin {
   margin-bottom: 10px;

@@ -164,7 +164,7 @@ export default {
     }, 
     checkForm: function (e) {
       if (this.password) {
-        alert("Profile mis à jour ! ");
+        alert("Profil mis à jour ! ");
         this.$router.go("/profile");
         return true;
       }
@@ -192,7 +192,6 @@ html, body{
 .container-fluid {
   margin: 0;
   padding: 0;
-  /* background-color: rgb(247, 245, 245); */
 }
 .card {
   margin: 5% 15%;

@@ -60,7 +60,6 @@ import Footer from '@/components/Footer.vue';
 import PageLoader from '@/components/PageLoader.vue';
 
 let user = localStorage.getItem('user');
-// let tokenAccess = localStorage.getItem('token');
 if (!user) {
  user = {
     userId: -1,
@@ -69,7 +68,6 @@ if (!user) {
 } else {
   try {
     user = JSON.parse(user);
-    //instance.defaults.headers.common = {'Authorization': `bearer ${user.token}`};
   } catch (ex) {
     user = {
       userId: -1,
@@ -158,7 +156,7 @@ export default {
       const self = this;
       this.$store.dispatch('deleteInfos')
       .then(function () {
-        alert("Profile supprimé !");
+        alert("Profil supprimé !");
         self.$router.push('/')
       }, function (error) {
         console.log(error);
@@ -235,7 +233,8 @@ button {
   background-color: rgb(9, 31, 67);
 }
 .btn-danger {
-  border : 3px solid rgb(209, 81, 90)
+  border : 3px solid rgb(209, 81, 90);
+  background-color: rgb(209, 81, 90);
 }
 label {
   font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;

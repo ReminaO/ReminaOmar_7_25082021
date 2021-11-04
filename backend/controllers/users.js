@@ -5,7 +5,7 @@ const asyncLib = require('async'); // import async Waterfall module
 
 // Paramètres
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
+const pwd_regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 // Controllers pour créer un compte
 exports.signup = (req, res, next) => {
     //Paramètres
@@ -31,6 +31,10 @@ exports.signup = (req, res, next) => {
     //Vérification de l'email avec RegEx
     if (!EMAIL_REGEX.test(req.body.email)) {
         return res.status(400).json({ 'error': 'email is not valid' });
+    }
+
+    if (!pwd_regex.test(req.body.password)) {
+        return res.status(400).json({ 'error': 'Minimum eight in length, At least one digit,At least one lower case letter, At least one upper case letter' });
     }
     asyncLib.waterfall([
         // 1. Vérification de l'existance de l'utilisateur

@@ -3,7 +3,7 @@
     <div class='logo'>
       <img :src="require(`../assets/icon-above-font.png`)" alt="logo-groupomania">
     </div>
-    <div class="card">
+    <form @submit="checkForm" class="card">
       <h1 class="card__title" v-if="mode == 'login'">Connexion</h1>
       <h1 class="card__title" v-else>Inscription</h1>
       <p class="card__subtitle" v-if="mode == 'login'">Tu n'as pas encore de compte ? <span class="card__action" @click="switchToCreateAccount()">Créer un compte</span></p>
@@ -16,15 +16,15 @@
         <textarea v-model="bio" class="form-row__input" type="text" placeholder="Biographie"/>
       </div>
       <div class="form-row">
-        <input v-model="password" class="form-row__input" type="password" placeholder="Mot de passe"/>
+        <input v-model="password" @change="isPwdValid" class="form-row__input" type="password" placeholder="Mot de passe"/>
       </div>
-      <div class="form-row text-warning" v-if="mode == 'login' && status == 'error_login'">
+      <div class="form-row text-danger" v-if="mode == 'login' && status == 'error_login'">
         Adresse mail et/ou mot de passe invalide
       </div>
-      <div class="form-row text-warning"  v-if="mode == 'create' && status == 'error_create'">
+      <div class="form-row text-danger"  v-if="mode == 'create' && status == 'error_create'">
         <p v-if="errors.length">
           <span>
-            <p class="text-warning" v-for="error in errors" :key='error.index'>{{ error }}</p>
+            <p class="text-danger" v-for="error in errors" :key='error.index'>{{ error }}</p>
           </span>
         </p>
       </div>
@@ -38,7 +38,7 @@
           <span v-else>Créer mon compte</span>
         </button>
       </div>
-    </div>
+    </form>
   </div>
 </template>
 
@@ -113,10 +113,12 @@ export default {
         // alert('Merci de compléter tous les champs !')
       })
     },
-    isEmailValid() {
+    checkForm: function (e) {
       const email_regex = /^(([^<>()[\].,;:s@"]+(.[^<>()[\].,;:s@"]+)*)|(".+"))@((s[[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/;
       const email = this.email;
       const empty = /^(\w+\S+)$/
+      const pwd_regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+      const password = this.password;
       
       this.errors = [];
       if (!empty.test(email)) {
@@ -124,11 +126,15 @@ export default {
     }
       if (!email_regex.test(email)) {
         this.errors.push('Merci de saisir le bon format d\'adresse mail !');
-    }  else {
+    } else if (!pwd_regex.test(password)) {
+        this.errors.push('Le mot de passe doit comporter un minimum de 8 caractères, au moins un chiffre et au moins une lettre ');
+    } else {
         this.errors.push('Adresse mail déjà utilisée !');
       }
+
       
-    }, 
+      e.preventDefault();
+    },
   }
 }
 </script>

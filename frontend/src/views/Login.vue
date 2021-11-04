@@ -116,14 +116,11 @@ export default {
     checkForm: function (e) {
       const email_regex = /^(([^<>()[\].,;:s@"]+(.[^<>()[\].,;:s@"]+)*)|(".+"))@((s[[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/;
       const email = this.email;
-      const empty = /^(\w+\S+)$/
       const pwd_regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
       const password = this.password;
       
       this.errors = [];
-      if (!empty.test(email)) {
-        this.errors.push('Merci de compléter l\'adresse mail !');
-    }
+    
       if (!email_regex.test(email)) {
         this.errors.push('Merci de saisir le bon format d\'adresse mail !');
     } else if (!pwd_regex.test(password)) {
@@ -131,8 +128,6 @@ export default {
     } else {
         this.errors.push('Adresse mail déjà utilisée !');
       }
-
-      
       e.preventDefault();
     },
   }

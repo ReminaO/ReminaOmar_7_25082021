@@ -163,6 +163,7 @@ export default {
       })
     }, 
     checkForm: function (e) {
+      const pwd_regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
       if (this.password) {
         alert("Profil mis à jour ! ");
         this.$router.go("/profile");
@@ -173,6 +174,8 @@ export default {
 
       if (!this.password) {
         this.errors.push('Mot de passe obligatoire');
+      } else if (!pwd_regex.test(this.password)) {
+        this.errors.push('Le mot de passe doit comporter un minimum de 8 caractères, au moins un chiffre et au moins une lettre '); 
       }
 
       e.preventDefault();

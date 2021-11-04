@@ -34,7 +34,7 @@ exports.signup = (req, res, next) => {
     }
 
     if (!pwd_regex.test(req.body.password)) {
-        return res.status(400).json({ 'error': 'Minimum eight in length, At least one digit,At least one lower case letter, At least one upper case letter' });
+        return res.status(400).json({ 'error': 'Le mot de passe doit comporter un minimum de 8 caractères, au moins un chiffre et au moins une lettre' });
     }
     asyncLib.waterfall([
         // 1. Vérification de l'existance de l'utilisateur
@@ -187,7 +187,9 @@ exports.modifyProfile = (req, res, next) => {
     if (password == null) {
         return res.status(400).json({ 'error': 'Champs manquant' });
     }
-
+    if (!pwd_regex.test(req.body.password)) {
+        return res.status(400).json({ 'error': 'Le mot de passe doit comporter un minimum de 8 caractères, au moins un chiffre et au moins une lettre' });
+    }
         asyncLib.waterfall([
             // Vérifie que la requête est envoyé par un compte existant
             function (done) {

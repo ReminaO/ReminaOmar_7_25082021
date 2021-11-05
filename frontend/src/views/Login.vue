@@ -110,7 +110,6 @@ export default {
         self.login();
       }, function (error) {
         console.log(error);
-        // alert('Merci de compléter tous les champs !')
       })
     },
     checkForm: function (e) {

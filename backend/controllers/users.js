@@ -5,7 +5,7 @@ const asyncLib = require('async'); // import async Waterfall module
 
 // Paramètres
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-const pwd_regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
 // Controllers pour créer un compte
 exports.signup = (req, res, next) => {
     //Paramètres
@@ -15,6 +15,7 @@ exports.signup = (req, res, next) => {
     const bio = req.body.bio;
     const imageUrl = "https://pic.onlinewebfonts.com/svg/img_24787.png";
     const isAdmin = 0;
+    const pwd_regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
     //Vérification des champs vides
     if (username == null || email == null || password == null) {
@@ -32,7 +33,7 @@ exports.signup = (req, res, next) => {
     if (!EMAIL_REGEX.test(req.body.email)) {
         return res.status(400).json({ 'error': 'email is not valid' });
     }
-
+    //Vérification du mot de passe avec RegEx
     if (!pwd_regex.test(req.body.password)) {
         return res.status(400).json({ 'error': 'Le mot de passe doit comporter un minimum de 8 caractères, au moins un chiffre et au moins une lettre' });
     }
@@ -187,9 +188,7 @@ exports.modifyProfile = (req, res, next) => {
     if (password == null) {
         return res.status(400).json({ 'error': 'Champs manquant' });
     }
-    if (!pwd_regex.test(req.body.password)) {
-        return res.status(400).json({ 'error': 'Le mot de passe doit comporter un minimum de 8 caractères, au moins un chiffre et au moins une lettre' });
-    }
+    
         asyncLib.waterfall([
             // Vérifie que la requête est envoyé par un compte existant
             function (done) {

@@ -2,7 +2,7 @@
 
 ## Description ##
 
-Groupomania is an internal social network made to promote internal communication between employees
+This the seventh exercise of OpenClassrooms' school. Groupomania is an internal social network made to promote internal communication between employees
 
 ## Installation ##
 

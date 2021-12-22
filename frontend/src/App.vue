@@ -1,6 +1,8 @@
 <template>
- 
+ <body class="container-fluid">
+
 <router-view/>
+ </body>
 </template>
 
 <script>
@@ -21,5 +23,8 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+.container-fluid{
+  margin: 0;
 }
 </style>>

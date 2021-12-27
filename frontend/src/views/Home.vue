@@ -1,10 +1,10 @@
 <template>
-<div class="container-fluid">
-  <PageLoader />
-  <Nav />
-  <Message />
-  <Footer />
-  </div>
+  <div class="container-fluid">
+    <PageLoader />
+    <Nav />
+    <Message />
+    <Footer />
+    </div>
 </template>
 
 <script>

@@ -242,5 +242,7 @@ label {
 .row {
   display: flex;
   justify-content: center;
+  --bs-gutter-x: 0
 }
+
 </style>>

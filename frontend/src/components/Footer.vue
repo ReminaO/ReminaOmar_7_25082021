@@ -1,7 +1,7 @@
 <template>
 <div class="container-fluid footer">
     <div class="row">
-        <div class="col col-sm12 col-md12">
+        <div class="col">
             <ul class="footer-link">
                 <li><a href="#" class="text-white">Mentions Légales</a></li>
                 <li><a href="#" class="text-white">About Us</a></li>
@@ -29,10 +29,10 @@ computed: {
     align-items: center;
     list-style: none;
     margin-top: 30px;
-    margin-bottom: 0px;
+    margin-bottom: 0;
     padding: 0;
 }
-.container-fluid{
+.footer{
     background-color:rgb(9, 31, 67);
     height: 150px;
     padding: 0;
@@ -44,9 +44,14 @@ a {
     text-decoration-style : solid;
 }
 li {
-    padding: 5px;
+    padding: 0 0 5px;
+    margin: 0;
 }
 .col{
     padding:0;
+    margin: 0;
+}
+.row{
+    --bs-gutter-x: 0
 }
 </style>

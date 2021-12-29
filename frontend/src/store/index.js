@@ -86,11 +86,6 @@ const store = createStore({
     messageInfos: function (state, messageInfos) {
       state.messageinfos = messageInfos;
     },
-    deleteMessage: function (state, message) {
-      let messages = state.messages.filter(m => m.id != message.id)
-      state.messages = messages;
-      localStorage.removeItem('message');
-    },
     message: function (state, message) {
       localStorage.setItem('message', JSON.stringify(message));
       state.message = message;
@@ -108,11 +103,6 @@ const store = createStore({
     },
     comments: function (state, comments) {
       state.comments = comments;
-    },
-    deleteComment: function (state, comment) {
-      let comments = state.comments.filter(c => c.id != comment.id)
-      state.comments = comments;
-      localStorage.removeItem('comment');
     },
   },
   actions: {
@@ -172,15 +162,6 @@ const store = createStore({
         .catch(function () {
       });
     },
-    deleteMessage: ({ commit }, message) => {
-      instance.delete(`messages/${message.id}/post`)
-        .then(function (response) {
-          commit('deleteMessage', message.id)
-          alert(response.data);
-      })
-      .catch(function () {
-      });
-    },
     getAllComments: ({ commit }) => {
       instance.get(`comments`)
       .then(function (response) {
@@ -191,15 +172,6 @@ const store = createStore({
       .catch(function () {
       });
     },
-    deletecomment: ({ commit }, comment) => {
-      instance.delete(`comments/comment/${comment.id}/${user.userId}/`)
-        .then(function (response) {
-          commit('deleteComment', message.id)
-          alert(response.data);
-      })
-      .catch(function () {
-      });
-    }
   },
 })
 
